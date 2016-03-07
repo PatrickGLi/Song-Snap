@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class TrackTest < ActiveSupport::TestCase
+class StaticPagesControllerTest < ActionController::TestCase
   # test "the truth" do
   #   assert true
   # end

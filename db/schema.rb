@@ -13,6 +13,9 @@
 
 ActiveRecord::Schema.define(version: 20160307054601) do
 
+  # These are extensions that must be enabled in order to support this database
+  enable_extension "plpgsql"
+
   create_table "tracks", force: :cascade do |t|
     t.string   "title",      null: false
     t.string   "track_url",  null: false
