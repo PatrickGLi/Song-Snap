@@ -19666,23 +19666,32 @@
 	var Face = React.createClass({
 	  displayName: 'Face',
 
-
 	  componentDidMount: function () {
-	    // FaceActions.getFaceEmotions();
+	    this.getUserMedia();
+	  },
 
+	  getUserMedia: function () {
+	    navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia;
+
+	    var video = document.querySelector('video');
+
+	    if (navigator.getUserMedia) {
+	      navigator.getUserMedia({ audio: true, video: true }, function (stream) {
+	        video.src = window.URL.createObjectURL(stream);
+	      }, errorCallback);
+	    }
+
+	    function errorCallback() {
+	      alert("Something went wrong with your camera.");
+	    }
 	  },
 
 	  render: function () {
+
 	    return React.createElement(
 	      'div',
 	      null,
-	      'Face',
-	      React.createElement(
-	        'form',
-	        { action: 'server.cgi', method: 'post', encType: 'multipart/form-data' },
-	        React.createElement('input', { type: 'file', name: 'image', accept: 'image/*', capture: true }),
-	        React.createElement('input', { type: 'submit', value: 'Upload' })
-	      )
+	      React.createElement('video', { autoPlay: true })
 	    );
 	  }
 	});

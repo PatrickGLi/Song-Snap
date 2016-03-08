@@ -13,3 +13,18 @@
  *= require_tree .
  *= require_self
  */
+
+ video {
+  width: 307px;
+  height: 250px;
+  background: rgba(255,255,255,0.5);
+}
+.grayscale {
+   -webkit-filter: grayscale(90%);
+}
+.sepia {
+  -webkit-filter: sepia(100%);
+}
+.blur {
+  -webkit-filter: blur(3px);
+}
