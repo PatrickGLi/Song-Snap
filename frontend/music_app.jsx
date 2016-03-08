@@ -1,9 +1,10 @@
 var React = require('react'),
-    ReactDOM = require('react-dom');
+    ReactDOM = require('react-dom'),
+    Face = require('./components/face.jsx');
 
 $(function() {
   var content = document.getElementById('content');
   if (content) {
-    ReactDOM.render(<Router>{routes}</Router> , content);
+    ReactDOM.render(<Face/> , content);
   }
 });

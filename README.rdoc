@@ -1,4 +1,23 @@
+
+
 App is going to use Microsoft facial recognition API and soundcloud API
 to create playlists based on people's facial expressions. Does not currently
 need a database as no information is stored. Soundcloud will make requests
 to my soundcloud user for now.
+
+
+Client ID
+
+27d1204c9150d2c2fa5bfea61f026873
+Client Secret
+
+a6f87c877fac59759c04c3b8e654ddd7
+Redirect URI for Authentication
+
+End User Authorization
+
+https://soundcloud.com/connect
+Token
+
+https://api.soundcloud.com/oauth2/token
+Save app
