@@ -19667,33 +19667,64 @@
 	  displayName: 'Face',
 
 	  componentDidMount: function () {
+	    this.localMediaStream = null;
 	    this.getUserMedia();
+	    this.addPictureListener();
+	  },
+
+	  addPictureListener: function () {
+	    var cameraButton = document.getElementById('take-photo');
+	    cameraButton.addEventListener('click', this.getPhoto);
+	  },
+
+	  getPhoto: function () {
+	    var canvas = document.getElementById('canvas');
+	    canvas.width = this.video.videoWidth;
+	    canvas.height = this.video.videoHeight;
+	    canvas.getContext('2d').drawImage(this.video, 0, 0);
+	    // "image/webp" works in Chrome.
+	    // Other browsers will fall back to image/png.
+	    var dataURI = canvas.toDataURL('image/jpg');
+	    var blob = this.dataURItoBlob(dataURI);
+	    FaceActions.fetchEmotions(blob);
+	  },
+
+	  dataURItoBlob: function (dataURI) {
+	    var byteString;
+	    if (dataURI.split(',')[0].indexOf('base64') >= 0) byteString = atob(dataURI.split(',')[1]);else byteString = unescape(dataURI.split(',')[1]);
+	    var mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0];
+	    // write the bytes of the string to a typed array
+	    var ia = new Uint8Array(byteString.length);
+	    for (var i = 0; i < byteString.length; i++) {
+	      ia[i] = byteString.charCodeAt(i);
+	    }
+	    return new Blob([ia], { type: mimeString });
 	  },
 
 	  getUserMedia: function () {
 	    navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia;
 
-	    var video = document.querySelector('video');
+	    this.video = document.querySelector('video');
 
 	    if (navigator.getUserMedia) {
 	      navigator.getUserMedia({ audio: true, video: true }, function (stream) {
-	        video.src = window.URL.createObjectURL(stream);
-	      }, errorCallback);
-	    }
-
-	    function errorCallback() {
-	      alert("Something went wrong with your camera.");
+	        this.video.src = window.URL.createObjectURL(stream);
+	      }.bind(this), function (err) {
+	        console.log("There was this error: " + err);
+	      });
 	    }
 	  },
 
 	  render: function () {
-
 	    return React.createElement(
 	      'div',
 	      null,
-	      React.createElement('video', { autoPlay: true })
+	      React.createElement('video', { autoPlay: true }),
+	      React.createElement('button', { id: 'take-photo', value: 'Take Picture' }),
+	      React.createElement('canvas', { id: 'canvas', width: '500', style: { display: "none" } })
 	    );
 	  }
+
 	});
 
 	module.exports = Face;
@@ -19705,8 +19736,8 @@
 	var ApiUtil = __webpack_require__(161);
 
 	var FaceActions = {
-	  getFaceEmotions: function () {
-	    ApiUtil.fetchEmotions();
+	  fetchEmotions: function (data) {
+	    ApiUtil.fetchEmotions(data);
 	  }
 	};
 
@@ -19719,23 +19750,23 @@
 	var ReactConstants = __webpack_require__(162);
 
 	var ApiUtil = {
-	    fetchEmotions: function (image) {
-	        $.ajax({
-	            url: "https://api.projectoxford.ai/emotion/v1.0/recognize",
-	            beforeSend: function (xhrObj) {
-	                // Request headers
-	                xhrObj.setRequestHeader("Content-Type", "application/json");
-	                xhrObj.setRequestHeader("Ocp-Apim-Subscription-Key", ReactConstants.MICROSOFT_PRIMARY_KEY);
-	            },
-	            type: "POST",
-	            // Request body
-	            data: image
-	        }).done(function (data) {
-	            alert("success");
-	        }).fail(function () {
-	            alert("error");
-	        });
-	    }
+	  fetchEmotions: function (blobData) {
+	    $.ajax({
+	      url: "https://api.projectoxford.ai/emotion/v1.0/recognize",
+	      beforeSend: function (xhrObj) {
+	        // Request headers
+	        xhrObj.setRequestHeader("Content-Type", "application/octet-stream");
+	        xhrObj.setRequestHeader("Ocp-Apim-Subscription-Key", ReactConstants.MICROSOFT_PRIMARY_KEY);
+	      },
+	      type: "POST",
+	      processData: false,
+	      // Request body
+	      data: blobData,
+	      success: function (data) {
+	        console.log(data);
+	      }
+	    });
+	  }
 	};
 
 	module.exports = ApiUtil;

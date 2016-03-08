@@ -14,7 +14,7 @@
  *= require_self
  */
 
- video {
+ /*video {
   width: 307px;
   height: 250px;
   background: rgba(255,255,255,0.5);
@@ -27,4 +27,4 @@
 }
 .blur {
   -webkit-filter: blur(3px);
-}
+}*/
