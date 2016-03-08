@@ -19667,7 +19667,6 @@
 	  displayName: 'Face',
 
 	  componentDidMount: function () {
-	    this.localMediaStream = null;
 	    this.getUserMedia();
 	    this.addPictureListener();
 	  },
@@ -19682,8 +19681,6 @@
 	    canvas.width = this.video.videoWidth;
 	    canvas.height = this.video.videoHeight;
 	    canvas.getContext('2d').drawImage(this.video, 0, 0);
-	    // "image/webp" works in Chrome.
-	    // Other browsers will fall back to image/png.
 	    var dataURI = canvas.toDataURL('image/jpg');
 	    var blob = this.dataURItoBlob(dataURI);
 	    FaceActions.fetchEmotions(blob);
@@ -19693,7 +19690,6 @@
 	    var byteString;
 	    if (dataURI.split(',')[0].indexOf('base64') >= 0) byteString = atob(dataURI.split(',')[1]);else byteString = unescape(dataURI.split(',')[1]);
 	    var mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0];
-	    // write the bytes of the string to a typed array
 	    var ia = new Uint8Array(byteString.length);
 	    for (var i = 0; i < byteString.length; i++) {
 	      ia[i] = byteString.charCodeAt(i);
@@ -19721,7 +19717,7 @@
 	      null,
 	      React.createElement('video', { autoPlay: true }),
 	      React.createElement('button', { id: 'take-photo', value: 'Take Picture' }),
-	      React.createElement('canvas', { id: 'canvas', width: '500', style: { display: "none" } })
+	      React.createElement('canvas', { id: 'canvas', style: { display: "none" } })
 	    );
 	  }
 
