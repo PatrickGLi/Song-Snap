@@ -1,5 +1,5 @@
 var React = require('react'),
-    FaceActions = require('../actions/face_actions');
+    FaceActions = require('../../actions/face_actions');
 
 var Face = React.createClass({
   componentDidMount: function() {

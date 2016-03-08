@@ -28,3 +28,42 @@
 .blur {
   -webkit-filter: blur(3px);
 }*/
+
+body{
+  font-family: 'Raleway', 'sans-serif';
+  font-weight: lighter;
+
+  background: linear-gradient(156deg, #ff00f5, #ffc40d);
+  background-size: 400% 400%;
+
+  -webkit-animation: background-gradient 30s ease infinite;
+  -moz-animation: background-gradient 30s ease infinite;
+  animation: background-gradient 30s ease infinite;
+}
+
+  @-webkit-keyframes background-gradient {
+      0%{background-position:99% 0%}
+      50%{background-position:2% 100%}
+      100%{background-position:99% 0%}
+  }
+  @-moz-keyframes background-gradient {
+      0%{background-position:99% 0%}
+      50%{background-position:2% 100%}
+      100%{background-position:99% 0%}
+  }
+  @keyframes background-gradient {
+      0%{background-position:99% 0%}
+      50%{background-position:2% 100%}
+      100%{background-position:99% 0%}
+  }
+
+.song-snap-title {
+  position: absolute;
+  width: 500px;
+  font-size: 20px;
+  color: white;
+  letter-spacing: 8px;
+  top: 100px;
+  text-align: center;
+  margin: 0 auto;
+}
