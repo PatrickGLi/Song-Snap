@@ -2,6 +2,9 @@ class StaticPagesController < ApplicationController
   def root
 
   end
+
+  def callback
+  end
 end
 #   def signin
 #     client = Soundcloud.new(:client_id => ENV["SOUNDCLOUD_CLIENT_ID"],
