@@ -24,6 +24,3 @@ class StaticPagesController < ApplicationController
 
   end
 end
-
-
-https://song-snap.herokuapp.com/callback?code=a531c1ed3efe98d93366fc8dd84ade30#access_token=1-184282-141963235-71e5a652063f0&expires_in=21599&scope=%2A
