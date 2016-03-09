@@ -21,7 +21,7 @@ class StaticPagesController < ApplicationController
     code = params[:code]
     access_token = client.exchange_token(:code => code)
 
-    session[:access_token] = access_token
+    @access_token = access_token
 
     redirect_to "https://song-snap.herokuapp.com/"
   end
