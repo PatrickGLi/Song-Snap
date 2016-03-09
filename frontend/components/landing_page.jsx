@@ -1,11 +1,7 @@
 var React = require('react');
 
 var LandingPage = React.createClass({
-  signIn: function() {
-    $.get('/signin', {}, function() {
 
-    });
-  },
 
   render: function() {
     return(
@@ -13,9 +9,10 @@ var LandingPage = React.createClass({
         <div className="song-snap-title">
           <h1>songsnap</h1>
         </div>
-        <div onClick={this.signIn}>
-          <h2>Sign into SoundCloud</h2>
-        </div>
+
+        <form method="get" action="signin">
+              <input className="sign-out-link" type="submit" value="sign out"></input>
+            </form>
       </div>
     );
   }
