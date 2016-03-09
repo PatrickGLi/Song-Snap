@@ -24445,21 +24445,33 @@
 	var React = __webpack_require__(1);
 
 	var LandingPage = React.createClass({
-	  displayName: "LandingPage",
+	  displayName: 'LandingPage',
 
+	  signIn: function () {
+	    $.get('/signin', {}, function (eventsData) {});
+	  },
 
 	  render: function () {
 	    return React.createElement(
-	      "div",
+	      'div',
 	      null,
-	      React.createElement("div", { id: "gradient" }),
+	      React.createElement('div', { id: 'gradient' }),
 	      React.createElement(
-	        "div",
-	        { className: "song-snap-title" },
+	        'div',
+	        { className: 'song-snap-title' },
 	        React.createElement(
-	          "h1",
+	          'h1',
 	          null,
-	          "songsnap"
+	          'songsnap'
+	        )
+	      ),
+	      React.createElement(
+	        'div',
+	        { onClick: this.signIn },
+	        React.createElement(
+	          'h2',
+	          null,
+	          'Sign into SoundCloud'
 	        )
 	      )
 	    );
@@ -24625,7 +24637,9 @@
 
 	var ReactConstants = {
 	  MICROSOFT_PRIMARY_KEY: window.MICROSOFT_OPTIONS.primary,
-	  MICROSOFT_SECONDARY_KEY: window.MICROSOFT_OPTIONS.secondary
+	  MICROSOFT_SECONDARY_KEY: window.MICROSOFT_OPTIONS.secondary,
+	  SOUNDCLOUD_CLIENT_ID: window.SOUNDCLOUD_OPTIONS.clientId,
+	  SOUNDCLOUD_CLIENT_SECRET: window.SOUNDCLOUD_OPTIONS.clientSecret
 	};
 
 	module.exports = ReactConstants;
