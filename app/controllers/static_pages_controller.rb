@@ -26,15 +26,15 @@ end
 
 
 
-
-The redirect URI typically points to a server-side script that requests the access token through a POST to the authorization server.
-
-
-
-
-
-client = Soundcloud.new(:access_token => 'YOUR_ACCESS_TOKEN')
-
-# make an authenticated call
-current_user = client.get('/me')
-puts current_user.username
+# 
+# The redirect URI typically points to a server-side script that requests the access token through a POST to the authorization server.
+#
+#
+#
+#
+#
+# client = Soundcloud.new(:access_token => 'YOUR_ACCESS_TOKEN')
+#
+# # make an authenticated call
+# current_user = client.get('/me')
+# puts current_user.username
