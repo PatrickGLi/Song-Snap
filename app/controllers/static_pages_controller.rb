@@ -21,8 +21,11 @@ class StaticPagesController < ApplicationController
     code = params[:code]
     access_token = client.exchange_token(:code => code)
 
-    @access_token = access_token
 
-    redirect_to "https://song-snap.herokuapp.com/"
+    client = Soundcloud.new(:access_token => access_token)
+
+# make an authenticated call
+    @current_user = client.get('/me')
+
   end
 end
