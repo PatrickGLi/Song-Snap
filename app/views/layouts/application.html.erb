@@ -12,20 +12,5 @@
 <%= yield %>
 <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
 
-
-<script src="https://connect.soundcloud.com/sdk/sdk-3.0.0.js"></script>
-<script>
-SC.initialize({
-  client_id: window.SOUNDCLOUD_OPTIONS.clientId,
-  redirect_uri: '<%= callback_url %>'
-});
-
-// initiate auth popup
-SC.connect().then(function() {
-  return SC.get('/');
-}).then(function(me) {
-  alert('Hello, ' + me.username);
-});
-</script>
 </body>
 </html>

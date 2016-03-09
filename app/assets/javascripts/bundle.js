@@ -24448,14 +24448,13 @@
 	  displayName: 'LandingPage',
 
 	  signIn: function () {
-	    $.get('/signin', {}, function (eventsData) {});
+	    $.get('/signin', {}, function () {});
 	  },
 
 	  render: function () {
 	    return React.createElement(
 	      'div',
 	      null,
-	      React.createElement('div', { id: 'gradient' }),
 	      React.createElement(
 	        'div',
 	        { className: 'song-snap-title' },
