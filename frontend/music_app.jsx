@@ -15,8 +15,10 @@ var routes = (
 );
 
 $(function() {
+
   var content = document.getElementById('content');
   if (content) {
+      console.log("hey")
     ReactDOM.render(<Router>{ routes }</Router> , content);
   }
 });

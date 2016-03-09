@@ -61,8 +61,10 @@
 	);
 
 	$(function () {
+
 	  var content = document.getElementById('content');
 	  if (content) {
+	    console.log("hey");
 	    ReactDOM.render(React.createElement(
 	      Router,
 	      null,
