@@ -1,0 +1,16 @@
+<h1>
+  <%=@current_user.id%>
+  <%=@current_user.username%>
+    <%=@current_user.followers_count%>
+ </h1>
+
+ <script>
+ $.ajax({
+ method: "get",
+ url: 'http://api.soundcloud.com/users/' + @current_user.id + "/favorites",
+ success: function(successData) {
+   console.log(successData);
+ }
+});
+
+ </script>
