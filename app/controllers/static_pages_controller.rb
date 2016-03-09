@@ -23,6 +23,6 @@ class StaticPagesController < ApplicationController
 
     session[:access_token] = access_token
 
-    redirect_to root_url
+    redirect_to "https://song-snap.herokuapp.com/"
   end
 end
