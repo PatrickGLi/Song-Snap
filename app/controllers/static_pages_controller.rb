@@ -22,5 +22,6 @@ class StaticPagesController < ApplicationController
     access_token = client.exchange_token(:code => code)
     @current_user = client.get('/me')
 
+    redirect_to root_url
   end
 end
