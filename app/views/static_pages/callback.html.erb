@@ -7,7 +7,7 @@
  <script type="text/javascript">
  $.ajax({
  method: "get",
- url: 'http://api.soundcloud.com/users/' + <%=@current_user.id%> + "/favorites",
+ url: 'https://api.soundcloud.com/users/' + <%=@current_user.id%> + "/favorites",
  success: function(successData) {
    console.log(successData);
  }
