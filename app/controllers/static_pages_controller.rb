@@ -20,5 +20,9 @@ class StaticPagesController < ApplicationController
 # exchange authorization code for access token
     code = params[:code]
     access_token = client.exchange_token(:code => code)
+
+    session[:access_token] = access_token
+
+    redirect_to :root
   end
 end
