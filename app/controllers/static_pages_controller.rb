@@ -20,7 +20,7 @@ class StaticPagesController < ApplicationController
 # exchange authorization code for access token
     code = params[:code]
     access_token = client.exchange_token(:code => code)
-
+    @current_user = client.get('/me')
 
   end
 end
