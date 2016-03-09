@@ -8,12 +8,12 @@ var SignIn = React.createClass({
 
   toggleLogin: function() {
     SignInActions.destroySession();
-    this.history.pushState(null, "/");
+    // this.history.pushState(null, "/");
   },
 
   render: function() {
     var button;
-    if (ReactConstants.CURRENT_USER_ID !== -1) {
+    if (this.props.currentUser !== "") {
       button = <div onClick={this.toggleLogin}>Logout</div>
     } else {
       button = <button data-toggle="modal" data-target="#myModal">try me</button>
@@ -21,7 +21,6 @@ var SignIn = React.createClass({
 
     return(
       <div>
-        <div onClick={this.toggleLogin}>Logout</div>
         {button}
       </div>
     );

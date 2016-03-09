@@ -24467,6 +24467,8 @@
 	    var user = UserStore.find(this.props.currentUser);
 	    if (user) {
 	      this.setState({ user: user.username });
+	    } else {
+	      this.setState({ user: "" });
 	    }
 	  },
 
@@ -24483,7 +24485,7 @@
 	          'songsnap'
 	        )
 	      ),
-	      React.createElement(SignIn, null),
+	      React.createElement(SignIn, { currentUser: this.state.user }),
 	      React.createElement(
 	        'h1',
 	        null,
@@ -24517,12 +24519,12 @@
 
 	  toggleLogin: function () {
 	    SignInActions.destroySession();
-	    this.history.pushState(null, "/");
+	    // this.history.pushState(null, "/");
 	  },
 
 	  render: function () {
 	    var button;
-	    if (ReactConstants.CURRENT_USER_ID !== -1) {
+	    if (this.props.currentUser !== "") {
 	      button = React.createElement(
 	        'div',
 	        { onClick: this.toggleLogin },
@@ -24539,11 +24541,6 @@
 	    return React.createElement(
 	      'div',
 	      null,
-	      React.createElement(
-	        'div',
-	        { onClick: this.toggleLogin },
-	        'Logout'
-	      ),
 	      button
 	    );
 	  }
