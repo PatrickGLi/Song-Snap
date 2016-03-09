@@ -61,8 +61,8 @@
 	);
 
 	$(function () {
-
 	  var content = document.getElementById('content');
+	  console.log("heyyy");
 	  if (content) {
 	    console.log("hey");
 	    ReactDOM.render(React.createElement(
