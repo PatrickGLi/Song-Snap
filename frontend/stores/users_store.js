@@ -11,6 +11,8 @@ UserStore.__onDispatch = function(payload){
     case UserConstants.USERS_RECEIVED:
       resetUsers(payload.users);
       break;
+    case UserConstants.NEW_USER_RECEIVED:
+      addUser(payload.user);
   }
   UserStore.__emitChange();
 };

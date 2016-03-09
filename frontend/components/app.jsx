@@ -1,5 +1,7 @@
 var React = require('react'),
     LinkedStateMixin = require('react-addons-linked-state-mixin'),
+    LandingPage = require('./landing_page/landing_page'),
+    SessionStore = require('../stores/sessions_store'),
     AppActions = require('../actions/app_actions.js');
 
 var App = React.createClass({
@@ -7,9 +9,34 @@ var App = React.createClass({
 
   getInitialState: function(){
     return {
+      currentUser: SessionStore.currentUser(),
       username: '',
       password: '',
     };
+  },
+
+  componentDidMount: function() {
+    this.listener = SessionStore.addListener(this.onChange);
+    AppActions.fetchAllUsers();
+  },
+
+  componentWillUnmount: function() {
+    this.listener.remove();
+  },
+
+  onChange: function(){
+    this.setState({
+      currentUser: SessionStore.currentUser(),
+    });
+  },
+
+  signIn: function(user){
+    var credentials = {
+      username: this.state.username,
+      password: this.state.password
+    };
+
+    AppActions.createSession(credentials);
   },
 
   handleSubmit: function(e){
@@ -25,7 +52,7 @@ var App = React.createClass({
   render: function() {
     return(
       <div>
-        {this.props.children}
+        <LandingPage currentUser={this.state.currentUser}/>
 
 
         <div className="modal fade" id="myModal" tabIndex="-1" role="dialog" aria-labelledby="myModalLabel">
@@ -47,23 +74,21 @@ var App = React.createClass({
                   valueLink={this.linkState('username')}
                   placeholder="Username"/>
               </div>
+              <form onSubmit={this.handleSubmit}>
+                <div className="form-group">
+                  <input
+                    id="password"
+                    className="form-control"
+                    type='password'
+                    valueLink={this.linkState('password')}
+                    placeholder="Password"/>
+                </div>
 
-              <div className="form-group">
                 <input
-                  id="password"
-                  className="form-control"
-                  type='password'
-                  valueLink={this.linkState('password')}
-                  placeholder="Password"/>
-              </div>
-
-              <input
-                type="submit"
-                value="Create Account"
-                className="btn btn-default sign-up-btn"/>
-            </div>
-            <div className="modal-footer">
-              Developed by Patrick Li on Rails and React.
+                  type="submit"
+                  value="Create Account"
+                  className="btn btn-default sign-up-btn"/>
+              </form>
             </div>
           </div>
         </div>

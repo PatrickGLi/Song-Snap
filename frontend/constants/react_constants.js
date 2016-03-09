@@ -3,7 +3,7 @@ var ReactConstants = {
   MICROSOFT_SECONDARY_KEY: window.MICROSOFT_OPTIONS.secondary,
   SOUNDCLOUD_CLIENT_ID: window.SOUNDCLOUD_OPTIONS.clientId,
   SOUNDCLOUD_CLIENT_SECRET: window.SOUNDCLOUD_OPTIONS.clientSecret,
-  CURRENT_USER_ACCESS_TOKEN: window.currentUserAccessToken
+  CURRENT_USER_ID: window.currentUserId
 };
 
 module.exports = ReactConstants;

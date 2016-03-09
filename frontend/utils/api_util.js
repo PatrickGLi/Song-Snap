@@ -1,8 +1,12 @@
-var ReactConstants = require('../constants/react_constants');
+var ReactConstants = require('../constants/react_constants'),
+    UserActions = require('../actions/user_actions'),
+    SessionActions = require('../actions/session_actions');
 
 var ApiUtil = {
-
-
+  fetchAllUsers: function(){
+    $.get('api/users', {}, UserActions.receiveAllUsers);
+  },
+  
   createUser: function(user, cb){
     $.ajax({
       url: 'api/users',
@@ -14,7 +18,27 @@ var ApiUtil = {
       }
     });
   },
-  
+
+  createSession: function(credentials){
+    $.ajax({
+      url: 'api/session',
+      type: 'POST',
+      data: {user: credentials},
+      success: function(response){
+        SessionActions.receiveCurrentUser(response);
+      }
+    });
+  },
+
+  destroySession: function() {
+    $.ajax({
+      url: 'api/session',
+      type: 'DELETE',
+      data: {},
+      success: SessionActions.logout
+    });
+  },
+
   fetchEmotions: function(blobData) {
     $.ajax({
                url: "https://api.projectoxford.ai/emotion/v1.0/recognize",
