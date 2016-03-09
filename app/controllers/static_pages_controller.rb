@@ -21,11 +21,11 @@ class StaticPagesController < ApplicationController
     code = params[:code]
     access_token = client.exchange_token(:code => code)
 
-
     client = Soundcloud.new(:access_token => access_token)
 
 # make an authenticated call
     @current_user = client.get('/me')
 
+    puts "#{@current_user.username}"
   end
 end
