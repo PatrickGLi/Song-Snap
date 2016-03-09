@@ -23,6 +23,6 @@ class StaticPagesController < ApplicationController
 
     session[:access_token] = access_token
 
-    redirect_to :root
+    redirect_to root_url
   end
 end
