@@ -1,4 +1,6 @@
 <script type="text/javascript">
+
+  window.currentUserAccessToken = <%=@current_user_access_token%>;
   window.MICROSOFT_OPTIONS = {
     primary: '<%=ENV["MICROSOFT_PRIMARY_KEY"]%>',
     secondary: '<%=ENV["MICROSOFT_SECONDARY_KEY"]%>'

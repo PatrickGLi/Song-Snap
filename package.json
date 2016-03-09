@@ -24,6 +24,7 @@
     "babel-core": "^6.1.4",
     "babel-loader": "^6.1.0",
     "babel-preset-react": "^6.1.4",
+    "bootstrap": "^3.3.6",
     "flux": "^2.1.1",
     "history": "1.13.x",
     "react": "^0.14.2",

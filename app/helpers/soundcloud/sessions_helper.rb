@@ -1,0 +1,2 @@
+module Soundcloud::SessionsHelper
+end

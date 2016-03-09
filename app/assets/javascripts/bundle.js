@@ -50,8 +50,8 @@
 	    Route = __webpack_require__(159).Route,
 	    IndexRoute = __webpack_require__(159).IndexRoute,
 	    LandingPage = __webpack_require__(210),
-	    App = __webpack_require__(211),
-	    MusicSearch = __webpack_require__(212);
+	    App = __webpack_require__(213),
+	    MusicSearch = __webpack_require__(214);
 
 	var routes = React.createElement(
 	  Route,
@@ -24442,29 +24442,39 @@
 /* 210 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var React = __webpack_require__(1);
+	var React = __webpack_require__(1),
+	    SignIn = __webpack_require__(211),
+	    ReactConstants = __webpack_require__(212);
 
 	var LandingPage = React.createClass({
-	  displayName: "LandingPage",
+	  displayName: 'LandingPage',
 
 
 	  render: function () {
+	    var signIn;
+	    if (ReactConstants.CURRENT_USER_ACCESS_TOKEN) {
+	      signIn = React.createElement(SignIn, null);
+	    } else {
+	      signIn = React.createElement('div', null);
+	    }
+
 	    return React.createElement(
-	      "div",
+	      'div',
 	      null,
 	      React.createElement(
-	        "div",
-	        { className: "song-snap-title" },
+	        'div',
+	        { className: 'song-snap-title' },
 	        React.createElement(
-	          "h1",
+	          'h1',
 	          null,
-	          "songsnap"
+	          'songsnap'
 	        )
 	      ),
+	      signIn,
 	      React.createElement(
-	        "form",
-	        { method: "get", action: "signin" },
-	        React.createElement("input", { className: "sign-out-link", type: "submit", value: "sign out" })
+	        'form',
+	        { method: 'get', action: '/soundcloud/signin' },
+	        React.createElement('input', { className: 'sign-out-link', type: 'submit', value: 'sign out' })
 	      )
 	    );
 	  }
@@ -24479,15 +24489,141 @@
 
 	var React = __webpack_require__(1);
 
+	var SignIn = React.createClass({
+	  displayName: "SignIn",
+
+
+	  render: function () {
+	    return React.createElement(
+	      "div",
+	      null,
+	      React.createElement(
+	        "button",
+	        { "data-toggle": "modal", "data-target": "#myModal" },
+	        "try me"
+	      )
+	    );
+	  }
+	});
+
+	module.exports = SignIn;
+
+/***/ },
+/* 212 */
+/***/ function(module, exports) {
+
+	var ReactConstants = {
+	  MICROSOFT_PRIMARY_KEY: window.MICROSOFT_OPTIONS.primary,
+	  MICROSOFT_SECONDARY_KEY: window.MICROSOFT_OPTIONS.secondary,
+	  SOUNDCLOUD_CLIENT_ID: window.SOUNDCLOUD_OPTIONS.clientId,
+	  SOUNDCLOUD_CLIENT_SECRET: window.SOUNDCLOUD_OPTIONS.clientSecret,
+	  CURRENT_USER_ACCESS_TOKEN: window.currentUserAccessToken
+	};
+
+	module.exports = ReactConstants;
+
+/***/ },
+/* 213 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1),
+	    LinkedStateMixin = __webpack_require__(218),
+	    AppActions = __webpack_require__(222);
+
 	var App = React.createClass({
 	  displayName: 'App',
 
+	  mixins: [LinkedStateMixin],
+
+	  getInitialState: function () {
+	    return {
+	      username: '',
+	      password: ''
+	    };
+	  },
+
+	  handleSubmit: function (e) {
+	    e.preventDefault();
+	    var user = {
+	      username: this.state.username,
+	      password: this.state.password
+	    };
+
+	    AppActions.createUser(user, this.signIn);
+	  },
 
 	  render: function () {
 	    return React.createElement(
 	      'div',
 	      null,
-	      this.props.children
+	      this.props.children,
+	      React.createElement(
+	        'div',
+	        { className: 'modal fade', id: 'myModal', tabIndex: '-1', role: 'dialog', 'aria-labelledby': 'myModalLabel' },
+	        React.createElement(
+	          'div',
+	          { className: 'modal-dialog modal-md', role: 'document' },
+	          React.createElement(
+	            'div',
+	            { className: 'modal-content' },
+	            React.createElement(
+	              'div',
+	              { className: 'modal-header' },
+	              React.createElement(
+	                'button',
+	                { type: 'button', className: 'close', 'data-dismiss': 'modal', 'aria-label': 'Close' },
+	                React.createElement(
+	                  'span',
+	                  { 'aria-hidden': 'true' },
+	                  '×'
+	                )
+	              ),
+	              React.createElement(
+	                'h4',
+	                { className: 'modal-title', id: 'myModalLabel' },
+	                'welcome to songsnap'
+	              )
+	            ),
+	            React.createElement(
+	              'div',
+	              { className: 'modal-body' },
+	              'photograph yourself. get a playlist for your mood.'
+	            ),
+	            React.createElement(
+	              'div',
+	              { className: 'modal-body' },
+	              React.createElement(
+	                'div',
+	                { className: 'form-group' },
+	                React.createElement('input', {
+	                  className: 'form-control',
+	                  type: 'text',
+	                  valueLink: this.linkState('username'),
+	                  placeholder: 'Username' })
+	              ),
+	              React.createElement(
+	                'div',
+	                { className: 'form-group' },
+	                React.createElement('input', {
+	                  id: 'password',
+	                  className: 'form-control',
+	                  type: 'password',
+	                  valueLink: this.linkState('password'),
+	                  placeholder: 'Password' })
+	              ),
+	              React.createElement('input', {
+	                type: 'submit',
+	                value: 'Create Account',
+	                className: 'btn btn-default sign-up-btn' })
+	            ),
+	            React.createElement(
+	              'div',
+	              { className: 'modal-footer' },
+	              'Developed by Patrick Li on Rails and React.'
+	            )
+	          )
+	        )
+	      )
 	    );
 	  }
 	});
@@ -24495,11 +24631,11 @@
 	module.exports = App;
 
 /***/ },
-/* 212 */
+/* 214 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1),
-	    Face = __webpack_require__(213);
+	    Face = __webpack_require__(215);
 
 	var MusicSearch = React.createClass({
 	  displayName: 'MusicSearch',
@@ -24513,11 +24649,11 @@
 	module.exports = MusicSearch;
 
 /***/ },
-/* 213 */
+/* 215 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1),
-	    FaceActions = __webpack_require__(214);
+	    FaceActions = __webpack_require__(216);
 
 	var Face = React.createClass({
 	  displayName: 'Face',
@@ -24582,10 +24718,10 @@
 	module.exports = Face;
 
 /***/ },
-/* 214 */
+/* 216 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var ApiUtil = __webpack_require__(215);
+	var ApiUtil = __webpack_require__(217);
 
 	var FaceActions = {
 	  fetchEmotions: function (data) {
@@ -24596,12 +24732,25 @@
 	module.exports = FaceActions;
 
 /***/ },
-/* 215 */
+/* 217 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var ReactConstants = __webpack_require__(216);
+	var ReactConstants = __webpack_require__(212);
 
 	var ApiUtil = {
+
+	  createUser: function (user, cb) {
+	    $.ajax({
+	      url: 'api/users',
+	      type: 'POST',
+	      data: { user: user },
+	      success: function (response) {
+	        UserActions.receiveNewUser(response);
+	        cb();
+	      }
+	    });
+	  },
+
 	  fetchEmotions: function (blobData) {
 	    $.ajax({
 	      url: "https://api.projectoxford.ai/emotion/v1.0/recognize",
@@ -24624,17 +24773,249 @@
 	module.exports = ApiUtil;
 
 /***/ },
-/* 216 */
-/***/ function(module, exports) {
+/* 218 */
+/***/ function(module, exports, __webpack_require__) {
 
-	var ReactConstants = {
-	  MICROSOFT_PRIMARY_KEY: window.MICROSOFT_OPTIONS.primary,
-	  MICROSOFT_SECONDARY_KEY: window.MICROSOFT_OPTIONS.secondary,
-	  SOUNDCLOUD_CLIENT_ID: window.SOUNDCLOUD_OPTIONS.clientId,
-	  SOUNDCLOUD_CLIENT_SECRET: window.SOUNDCLOUD_OPTIONS.clientSecret
+	module.exports = __webpack_require__(219);
+
+/***/ },
+/* 219 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/**
+	 * Copyright 2013-2015, Facebook, Inc.
+	 * All rights reserved.
+	 *
+	 * This source code is licensed under the BSD-style license found in the
+	 * LICENSE file in the root directory of this source tree. An additional grant
+	 * of patent rights can be found in the PATENTS file in the same directory.
+	 *
+	 * @providesModule LinkedStateMixin
+	 * @typechecks static-only
+	 */
+
+	'use strict';
+
+	var ReactLink = __webpack_require__(220);
+	var ReactStateSetters = __webpack_require__(221);
+
+	/**
+	 * A simple mixin around ReactLink.forState().
+	 */
+	var LinkedStateMixin = {
+	  /**
+	   * Create a ReactLink that's linked to part of this component's state. The
+	   * ReactLink will have the current value of this.state[key] and will call
+	   * setState() when a change is requested.
+	   *
+	   * @param {string} key state key to update. Note: you may want to use keyOf()
+	   * if you're using Google Closure Compiler advanced mode.
+	   * @return {ReactLink} ReactLink instance linking to the state.
+	   */
+	  linkState: function (key) {
+	    return new ReactLink(this.state[key], ReactStateSetters.createStateKeySetter(this, key));
+	  }
 	};
 
-	module.exports = ReactConstants;
+	module.exports = LinkedStateMixin;
+
+/***/ },
+/* 220 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/**
+	 * Copyright 2013-2015, Facebook, Inc.
+	 * All rights reserved.
+	 *
+	 * This source code is licensed under the BSD-style license found in the
+	 * LICENSE file in the root directory of this source tree. An additional grant
+	 * of patent rights can be found in the PATENTS file in the same directory.
+	 *
+	 * @providesModule ReactLink
+	 * @typechecks static-only
+	 */
+
+	'use strict';
+
+	/**
+	 * ReactLink encapsulates a common pattern in which a component wants to modify
+	 * a prop received from its parent. ReactLink allows the parent to pass down a
+	 * value coupled with a callback that, when invoked, expresses an intent to
+	 * modify that value. For example:
+	 *
+	 * React.createClass({
+	 *   getInitialState: function() {
+	 *     return {value: ''};
+	 *   },
+	 *   render: function() {
+	 *     var valueLink = new ReactLink(this.state.value, this._handleValueChange);
+	 *     return <input valueLink={valueLink} />;
+	 *   },
+	 *   _handleValueChange: function(newValue) {
+	 *     this.setState({value: newValue});
+	 *   }
+	 * });
+	 *
+	 * We have provided some sugary mixins to make the creation and
+	 * consumption of ReactLink easier; see LinkedValueUtils and LinkedStateMixin.
+	 */
+
+	var React = __webpack_require__(2);
+
+	/**
+	 * @param {*} value current value of the link
+	 * @param {function} requestChange callback to request a change
+	 */
+	function ReactLink(value, requestChange) {
+	  this.value = value;
+	  this.requestChange = requestChange;
+	}
+
+	/**
+	 * Creates a PropType that enforces the ReactLink API and optionally checks the
+	 * type of the value being passed inside the link. Example:
+	 *
+	 * MyComponent.propTypes = {
+	 *   tabIndexLink: ReactLink.PropTypes.link(React.PropTypes.number)
+	 * }
+	 */
+	function createLinkTypeChecker(linkType) {
+	  var shapes = {
+	    value: typeof linkType === 'undefined' ? React.PropTypes.any.isRequired : linkType.isRequired,
+	    requestChange: React.PropTypes.func.isRequired
+	  };
+	  return React.PropTypes.shape(shapes);
+	}
+
+	ReactLink.PropTypes = {
+	  link: createLinkTypeChecker
+	};
+
+	module.exports = ReactLink;
+
+/***/ },
+/* 221 */
+/***/ function(module, exports) {
+
+	/**
+	 * Copyright 2013-2015, Facebook, Inc.
+	 * All rights reserved.
+	 *
+	 * This source code is licensed under the BSD-style license found in the
+	 * LICENSE file in the root directory of this source tree. An additional grant
+	 * of patent rights can be found in the PATENTS file in the same directory.
+	 *
+	 * @providesModule ReactStateSetters
+	 */
+
+	'use strict';
+
+	var ReactStateSetters = {
+	  /**
+	   * Returns a function that calls the provided function, and uses the result
+	   * of that to set the component's state.
+	   *
+	   * @param {ReactCompositeComponent} component
+	   * @param {function} funcReturningState Returned callback uses this to
+	   *                                      determine how to update state.
+	   * @return {function} callback that when invoked uses funcReturningState to
+	   *                    determined the object literal to setState.
+	   */
+	  createStateSetter: function (component, funcReturningState) {
+	    return function (a, b, c, d, e, f) {
+	      var partialState = funcReturningState.call(component, a, b, c, d, e, f);
+	      if (partialState) {
+	        component.setState(partialState);
+	      }
+	    };
+	  },
+
+	  /**
+	   * Returns a single-argument callback that can be used to update a single
+	   * key in the component's state.
+	   *
+	   * Note: this is memoized function, which makes it inexpensive to call.
+	   *
+	   * @param {ReactCompositeComponent} component
+	   * @param {string} key The key in the state that you should update.
+	   * @return {function} callback of 1 argument which calls setState() with
+	   *                    the provided keyName and callback argument.
+	   */
+	  createStateKeySetter: function (component, key) {
+	    // Memoize the setters.
+	    var cache = component.__keySetters || (component.__keySetters = {});
+	    return cache[key] || (cache[key] = createStateKeySetter(component, key));
+	  }
+	};
+
+	function createStateKeySetter(component, key) {
+	  // Partial state is allocated outside of the function closure so it can be
+	  // reused with every call, avoiding memory allocation when this function
+	  // is called.
+	  var partialState = {};
+	  return function stateKeySetter(value) {
+	    partialState[key] = value;
+	    component.setState(partialState);
+	  };
+	}
+
+	ReactStateSetters.Mixin = {
+	  /**
+	   * Returns a function that calls the provided function, and uses the result
+	   * of that to set the component's state.
+	   *
+	   * For example, these statements are equivalent:
+	   *
+	   *   this.setState({x: 1});
+	   *   this.createStateSetter(function(xValue) {
+	   *     return {x: xValue};
+	   *   })(1);
+	   *
+	   * @param {function} funcReturningState Returned callback uses this to
+	   *                                      determine how to update state.
+	   * @return {function} callback that when invoked uses funcReturningState to
+	   *                    determined the object literal to setState.
+	   */
+	  createStateSetter: function (funcReturningState) {
+	    return ReactStateSetters.createStateSetter(this, funcReturningState);
+	  },
+
+	  /**
+	   * Returns a single-argument callback that can be used to update a single
+	   * key in the component's state.
+	   *
+	   * For example, these statements are equivalent:
+	   *
+	   *   this.setState({x: 1});
+	   *   this.createStateKeySetter('x')(1);
+	   *
+	   * Note: this is memoized function, which makes it inexpensive to call.
+	   *
+	   * @param {string} key The key in the state that you should update.
+	   * @return {function} callback of 1 argument which calls setState() with
+	   *                    the provided keyName and callback argument.
+	   */
+	  createStateKeySetter: function (key) {
+	    return ReactStateSetters.createStateKeySetter(this, key);
+	  }
+	};
+
+	module.exports = ReactStateSetters;
+
+/***/ },
+/* 222 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var ApiUtil = __webpack_require__(217);
+
+	var AppActions = {
+	  createUser: function (user, cb) {
+	    ApiUtil.createUser(user, cb);
+	  }
+
+	};
+
+	module.exports = AppActions;
 
 /***/ }
 /******/ ]);
