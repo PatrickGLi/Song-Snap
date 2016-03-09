@@ -17,9 +17,6 @@ class StaticPagesController < ApplicationController
                         :client_secret => ENV["SOUNDCLOUD_CLIENT_SECRET"],
                         :redirect_uri => 'https://song-snap.herokuapp.com/callback')
 
-# exchange authorization code for access token
-    code = params[:code]
-    access_token = client.exchange_token(:code => code)
     @current_user = client.get('/me')
 
   end
