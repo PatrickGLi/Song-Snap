@@ -16,7 +16,12 @@ var SignIn = React.createClass({
     if (this.props.currentUser !== "") {
       button = <div onClick={this.toggleLogin}>Logout</div>
     } else {
-      button = <button data-toggle="modal" data-target="#myModal">try me</button>
+      button = (
+        <div>
+          <div className="signup-button" data-toggle="modal" data-target="#myModal">try me</div>
+          <div className="signin-button" data-toggle="modal" data-target="#myModal2">sign back in</div>
+        </div>
+      );
     }
 
     return(

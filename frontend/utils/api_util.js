@@ -3,10 +3,12 @@ var ReactConstants = require('../constants/react_constants'),
     SessionActions = require('../actions/session_actions');
 
 var ApiUtil = {
-  fetchAllUsers: function(){
-    $.get('api/users', {}, UserActions.receiveAllUsers);
+  fetchCurrentUser: function(id){
+    $.get('api/users/'+ id, {}, function(data) {
+      UserActions.receiveUser(data);
+    });
   },
-  
+
   createUser: function(user, cb){
     $.ajax({
       url: 'api/users',

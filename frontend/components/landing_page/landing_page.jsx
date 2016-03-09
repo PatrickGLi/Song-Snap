@@ -19,6 +19,7 @@ var LandingPage = React.createClass({
 
   onChange: function() {
     var user = UserStore.find(this.props.currentUser);
+
     if (user) {
       this.setState({ user: user.username });
     } else {
@@ -30,14 +31,14 @@ var LandingPage = React.createClass({
     return(
       <div>
         <div className="song-snap-title">
-          <h1>songsnap</h1>
+          songsnap
+          <SignIn currentUser={this.state.user}/>
         </div>
-        <SignIn currentUser={this.state.user}/>
 
-      <h1>{this.state.user}</h1>
+        <h1>{this.state.user}</h1>
         <form method="get" action="/soundcloud/signin">
-              <input className="sign-out-link" type="submit" value="sign out"></input>
-            </form>
+          <input className="sign-out-link" type="submit" value="sign out"></input>
+        </form>
       </div>
     );
   }

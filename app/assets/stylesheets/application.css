@@ -32,7 +32,8 @@
 
 body{
   font-family: 'Raleway', 'sans-serif';
-  font-weight: lighter;
+  font-weight: 300;
+  color: white;
 
   background: linear-gradient(156deg, #ff00f5, #ffc40d);
   background-size: 400% 400%;
@@ -61,10 +62,42 @@ body{
 .song-snap-title {
   position: absolute;
   width: 500px;
-  font-size: 20px;
+  font-size: 75px;
   color: white;
-  letter-spacing: 8px;
   top: 100px;
   text-align: center;
   margin: 0 auto;
+}
+
+.signin-button {
+  font-size: 40px;
+
+  width: 220px;
+  text-align: center;
+  transition: transform 1.2s, color 1.2s;
+  position: relative;
+  right: -100px;
+}
+
+.signin-button:hover {
+  cursor: pointer;
+  transform: perspective(50em) rotateY(40deg);
+  color: grey;
+}
+
+.signup-button {
+  font-size: 35px;
+  width: 160px;
+  text-align: center;
+  transition: transform 1.2s, color 1.2s;
+}
+
+.signup-button:hover {
+  cursor: pointer;
+  transform: perspective(50em) rotateY(40deg);
+  color: grey;
+}
+
+.boxes {
+  color: grey;
 }

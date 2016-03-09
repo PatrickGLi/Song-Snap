@@ -8,8 +8,8 @@ var UserStore = new Store(AppDispatcher);
 
 UserStore.__onDispatch = function(payload){
   switch(payload.actionType) {
-    case UserConstants.USERS_RECEIVED:
-      resetUsers(payload.users);
+    case UserConstants.USER_RECEIVED:
+      userUpdate(payload.user);
       break;
     case UserConstants.NEW_USER_RECEIVED:
       addUser(payload.user);

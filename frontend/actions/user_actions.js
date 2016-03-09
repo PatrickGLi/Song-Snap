@@ -2,10 +2,10 @@ var AppDispatcher = require('../dispatcher/dispatcher'),
     UserConstants = require('../constants/user_constants');
 
 var UserActions = {
-  receiveAllUsers: function(users) {
+  receiveUser: function(user) {
     AppDispatcher.dispatch({
-      actionType: UserConstants.USERS_RECEIVED,
-      users: users
+      actionType: UserConstants.USER_RECEIVED,
+      user: user
     });
   },
 

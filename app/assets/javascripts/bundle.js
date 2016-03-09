@@ -24465,6 +24465,7 @@
 
 	  onChange: function () {
 	    var user = UserStore.find(this.props.currentUser);
+
 	    if (user) {
 	      this.setState({ user: user.username });
 	    } else {
@@ -24479,13 +24480,9 @@
 	      React.createElement(
 	        'div',
 	        { className: 'song-snap-title' },
-	        React.createElement(
-	          'h1',
-	          null,
-	          'songsnap'
-	        )
+	        'songsnap',
+	        React.createElement(SignIn, { currentUser: this.state.user })
 	      ),
-	      React.createElement(SignIn, { currentUser: this.state.user }),
 	      React.createElement(
 	        'h1',
 	        null,
@@ -24532,9 +24529,18 @@
 	      );
 	    } else {
 	      button = React.createElement(
-	        'button',
-	        { 'data-toggle': 'modal', 'data-target': '#myModal' },
-	        'try me'
+	        'div',
+	        null,
+	        React.createElement(
+	          'div',
+	          { className: 'signup-button', 'data-toggle': 'modal', 'data-target': '#myModal' },
+	          'try me'
+	        ),
+	        React.createElement(
+	          'div',
+	          { className: 'signin-button', 'data-toggle': 'modal', 'data-target': '#myModal2' },
+	          'sign back in'
+	        )
 	      );
 	    }
 
@@ -24570,7 +24576,9 @@
 	    LinkedStateMixin = __webpack_require__(218),
 	    LandingPage = __webpack_require__(210),
 	    SessionStore = __webpack_require__(250),
-	    AppActions = __webpack_require__(222);
+	    AppActions = __webpack_require__(222),
+	    SigninModal = __webpack_require__(251),
+	    SignupModal = __webpack_require__(252);
 
 	var App = React.createClass({
 	  displayName: 'App',
@@ -24580,14 +24588,18 @@
 	  getInitialState: function () {
 	    return {
 	      currentUser: SessionStore.currentUser(),
-	      username: '',
-	      password: ''
+	      signupUsername: '',
+	      signupPassword: '',
+	      signinUsername: '',
+	      signinPassword: ''
 	    };
 	  },
 
 	  componentDidMount: function () {
 	    this.listener = SessionStore.addListener(this.onChange);
-	    AppActions.fetchAllUsers();
+	    if (SessionStore.currentUser() !== -1) {
+	      AppActions.fetchCurrentUser(SessionStore.currentUser());
+	    }
 	  },
 
 	  componentWillUnmount: function () {
@@ -24600,96 +24612,13 @@
 	    });
 	  },
 
-	  signIn: function (user) {
-	    var credentials = {
-	      username: this.state.username,
-	      password: this.state.password
-	    };
-
-	    AppActions.createSession(credentials);
-	  },
-
-	  handleSubmit: function (e) {
-	    e.preventDefault();
-	    var user = {
-	      username: this.state.username,
-	      password: this.state.password
-	    };
-
-	    AppActions.createUser(user, this.signIn);
-	  },
-
 	  render: function () {
 	    return React.createElement(
 	      'div',
 	      null,
 	      React.createElement(LandingPage, { currentUser: this.state.currentUser }),
-	      React.createElement(
-	        'div',
-	        { className: 'modal fade', id: 'myModal', tabIndex: '-1', role: 'dialog', 'aria-labelledby': 'myModalLabel' },
-	        React.createElement(
-	          'div',
-	          { className: 'modal-dialog modal-md', role: 'document' },
-	          React.createElement(
-	            'div',
-	            { className: 'modal-content' },
-	            React.createElement(
-	              'div',
-	              { className: 'modal-header' },
-	              React.createElement(
-	                'button',
-	                { type: 'button', className: 'close', 'data-dismiss': 'modal', 'aria-label': 'Close' },
-	                React.createElement(
-	                  'span',
-	                  { 'aria-hidden': 'true' },
-	                  '×'
-	                )
-	              ),
-	              React.createElement(
-	                'h4',
-	                { className: 'modal-title', id: 'myModalLabel' },
-	                'welcome to songsnap'
-	              )
-	            ),
-	            React.createElement(
-	              'div',
-	              { className: 'modal-body' },
-	              'photograph yourself. get a playlist for your mood.'
-	            ),
-	            React.createElement(
-	              'div',
-	              { className: 'modal-body' },
-	              React.createElement(
-	                'div',
-	                { className: 'form-group' },
-	                React.createElement('input', {
-	                  className: 'form-control',
-	                  type: 'text',
-	                  valueLink: this.linkState('username'),
-	                  placeholder: 'Username' })
-	              ),
-	              React.createElement(
-	                'form',
-	                { onSubmit: this.handleSubmit },
-	                React.createElement(
-	                  'div',
-	                  { className: 'form-group' },
-	                  React.createElement('input', {
-	                    id: 'password',
-	                    className: 'form-control',
-	                    type: 'password',
-	                    valueLink: this.linkState('password'),
-	                    placeholder: 'Password' })
-	                ),
-	                React.createElement('input', {
-	                  type: 'submit',
-	                  value: 'Create Account',
-	                  className: 'btn btn-default sign-up-btn' })
-	              )
-	            )
-	          )
-	        )
-	      )
+	      React.createElement(SignupModal, null),
+	      React.createElement(SigninModal, null)
 	    );
 	  }
 	});
@@ -24806,8 +24735,10 @@
 	    SessionActions = __webpack_require__(248);
 
 	var ApiUtil = {
-	  fetchAllUsers: function () {
-	    $.get('api/users', {}, UserActions.receiveAllUsers);
+	  fetchCurrentUser: function (id) {
+	    $.get('api/users/' + id, {}, function (data) {
+	      UserActions.receiveUser(data);
+	    });
 	  },
 
 	  createUser: function (user, cb) {
@@ -25100,8 +25031,8 @@
 	var ApiUtil = __webpack_require__(217);
 
 	var AppActions = {
-	  fetchAllUsers: function () {
-	    ApiUtil.fetchAllUsers();
+	  fetchCurrentUser: function (id) {
+	    ApiUtil.fetchCurrentUser(id);
 	  },
 
 	  createUser: function (user, cb) {
@@ -25124,10 +25055,10 @@
 	    UserConstants = __webpack_require__(228);
 
 	var UserActions = {
-	  receiveAllUsers: function (users) {
+	  receiveUser: function (user) {
 	    AppDispatcher.dispatch({
-	      actionType: UserConstants.USERS_RECEIVED,
-	      users: users
+	      actionType: UserConstants.USER_RECEIVED,
+	      user: user
 	    });
 	  },
 
@@ -25461,7 +25392,7 @@
 /***/ function(module, exports) {
 
 	var UserConstants = {
-	  USERS_RECEIVED: 'USERS_RECEIVED',
+	  USER_RECEIVED: 'USER_RECEIVED',
 	  NEW_USER_RECEIVED: 'NEW_USER_RECEIVED'
 	};
 
@@ -25481,8 +25412,8 @@
 
 	UserStore.__onDispatch = function (payload) {
 	  switch (payload.actionType) {
-	    case UserConstants.USERS_RECEIVED:
-	      resetUsers(payload.users);
+	    case UserConstants.USER_RECEIVED:
+	      userUpdate(payload.user);
 	      break;
 	    case UserConstants.NEW_USER_RECEIVED:
 	      addUser(payload.user);
@@ -32060,6 +31991,279 @@
 	};
 
 	module.exports = SessionStore;
+
+/***/ },
+/* 251 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1),
+	    LinkedStateMixin = __webpack_require__(218),
+	    AppActions = __webpack_require__(222),
+	    SessionStore = __webpack_require__(250);
+	UserStore = __webpack_require__(229);
+
+	var SigninModal = React.createClass({
+	  displayName: 'SigninModal',
+
+	  mixins: [LinkedStateMixin],
+
+	  getInitialState: function () {
+	    return {
+	      signinUsername: '',
+	      signinPassword: '',
+	      errors: []
+	    };
+	  },
+
+	  componentDidMount: function () {
+	    this.listener = SessionStore.addListener(this.onChange);
+	    this.listener2 = UserStore.addListener(this.onUserChange);
+	  },
+
+	  componentWillUnmount: function () {
+	    this.listener.remove();
+	    this.listener2.remove();
+	  },
+
+	  onChange: function () {
+	    this.setState({ errors: SessionStore.errors() });
+	  },
+
+	  onUserChange: function () {
+	    if (this.state.errors.length === 0) {
+	      $('#myModal2').modal('hide');
+	    }
+	  },
+
+	  handleSigninSubmit: function (e) {
+	    e.preventDefault();
+	    var credentials = {
+	      username: this.state.signinUsername,
+	      password: this.state.signinPassword
+	    };
+
+	    AppActions.createSession(credentials);
+	  },
+
+	  render: function () {
+
+	    return React.createElement(
+	      'div',
+	      { className: 'boxes' },
+	      React.createElement(
+	        'div',
+	        { className: 'modal fade', id: 'myModal2', tabIndex: '-1', role: 'dialog', 'aria-labelledby': 'myModalLabel' },
+	        React.createElement(
+	          'div',
+	          { className: 'modal-dialog modal-sm', role: 'document' },
+	          React.createElement(
+	            'div',
+	            { className: 'modal-content' },
+	            React.createElement(
+	              'div',
+	              { className: 'modal-header' },
+	              React.createElement(
+	                'button',
+	                { type: 'button', className: 'close', 'data-dismiss': 'modal', 'aria-label': 'Close' },
+	                React.createElement(
+	                  'span',
+	                  { 'aria-hidden': 'true' },
+	                  '×'
+	                )
+	              ),
+	              React.createElement(
+	                'h4',
+	                { className: 'modal-title', id: 'myModalLabel' },
+	                'welcome back!'
+	              )
+	            ),
+	            React.createElement(
+	              'div',
+	              { className: 'modal-body' },
+	              React.createElement(
+	                'form',
+	                { onSubmit: this.handleSigninSubmit },
+	                React.createElement(
+	                  'div',
+	                  { className: 'form-group' },
+	                  React.createElement('input', {
+	                    className: 'form-control',
+	                    type: 'text',
+	                    valueLink: this.linkState('signinUsername'),
+	                    placeholder: 'Username' })
+	                ),
+	                React.createElement(
+	                  'div',
+	                  { className: 'form-group' },
+	                  React.createElement('input', {
+	                    className: 'form-control',
+	                    type: 'password',
+	                    valueLink: this.linkState('signinPassword'),
+	                    placeholder: 'Password' })
+	                ),
+	                React.createElement('input', {
+	                  type: 'submit',
+	                  value: 'sign in',
+	                  className: 'btn btn-default sign-up-btn' })
+	              ),
+	              React.createElement(
+	                'div',
+	                null,
+	                this.state.errors
+	              )
+	            )
+	          )
+	        )
+	      )
+	    );
+	  }
+
+	});
+
+	module.exports = SigninModal;
+
+/***/ },
+/* 252 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1),
+	    LinkedStateMixin = __webpack_require__(218),
+	    AppActions = __webpack_require__(222),
+	    SessionStore = __webpack_require__(250);
+
+	var SignupModal = React.createClass({
+	  displayName: 'SignupModal',
+
+	  mixins: [LinkedStateMixin],
+
+	  getInitialState: function () {
+	    return {
+	      signupUsername: '',
+	      signupPassword: '',
+	      errors: []
+	    };
+	  },
+
+	  componentDidMount: function () {
+	    this.listener = SessionStore.addListener(this.onChange);
+	    this.listener2 = UserStore.addListener(this.onUserChange);
+	  },
+
+	  componentWillUnmount: function () {
+	    this.listener.remove();
+	    this.listener2.remove();
+	  },
+
+	  onChange: function () {
+	    this.setState({ errors: SessionStore.errors() });
+	  },
+
+	  onUserChange: function () {
+	    if (this.state.errors.length === 0) {
+	      $('#myModal2').modal('hide');
+	    }
+	  },
+
+	  signIn: function () {
+	    var credentials = {
+	      username: this.state.signupUsername,
+	      password: this.state.signupPassword
+	    };
+
+	    AppActions.createSession(credentials);
+	  },
+
+	  handleSignupSubmit: function (e) {
+	    e.preventDefault();
+	    var user = {
+	      username: this.state.signupUsername,
+	      password: this.state.signupPassword
+	    };
+
+	    AppActions.createUser(user, this.signIn);
+	  },
+
+	  render: function () {
+
+	    return React.createElement(
+	      'div',
+	      { className: 'boxes' },
+	      React.createElement(
+	        'div',
+	        { className: 'modal fade', id: 'myModal', tabIndex: '-1', role: 'dialog', 'aria-labelledby': 'myModalLabel' },
+	        React.createElement(
+	          'div',
+	          { className: 'modal-dialog modal-md', role: 'document' },
+	          React.createElement(
+	            'div',
+	            { className: 'modal-content' },
+	            React.createElement(
+	              'div',
+	              { className: 'modal-header' },
+	              React.createElement(
+	                'button',
+	                { type: 'button', className: 'close', 'data-dismiss': 'modal', 'aria-label': 'Close' },
+	                React.createElement(
+	                  'span',
+	                  { 'aria-hidden': 'true' },
+	                  '×'
+	                )
+	              ),
+	              React.createElement(
+	                'h4',
+	                { className: 'modal-title', id: 'myModalLabel' },
+	                'welcome to songsnap'
+	              )
+	            ),
+	            React.createElement(
+	              'div',
+	              { className: 'modal-body' },
+	              'photograph yourself. get a playlist for your mood.'
+	            ),
+	            React.createElement(
+	              'div',
+	              { className: 'modal-body' },
+	              React.createElement(
+	                'form',
+	                { onSubmit: this.handleSignupSubmit },
+	                React.createElement(
+	                  'div',
+	                  { className: 'form-group' },
+	                  React.createElement('input', {
+	                    className: 'form-control',
+	                    type: 'text',
+	                    valueLink: this.linkState('signupUsername'),
+	                    placeholder: 'Username' })
+	                ),
+	                React.createElement(
+	                  'div',
+	                  { className: 'form-group' },
+	                  React.createElement('input', {
+	                    className: 'form-control',
+	                    type: 'password',
+	                    valueLink: this.linkState('signupPassword'),
+	                    placeholder: 'Password' })
+	                ),
+	                React.createElement('input', {
+	                  type: 'submit',
+	                  value: 'Create Account',
+	                  className: 'btn btn-default sign-up-btn' })
+	              ),
+	              React.createElement(
+	                'div',
+	                null,
+	                this.state.errors
+	              )
+	            )
+	          )
+	        )
+	      )
+	    );
+	  }
+
+	});
+
+	module.exports = SignupModal;
 
 /***/ }
 /******/ ]);

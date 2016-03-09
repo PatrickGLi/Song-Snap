@@ -1,8 +1,8 @@
 var ApiUtil = require('../utils/api_util');
 
 var AppActions = {
-  fetchAllUsers: function() {
-    ApiUtil.fetchAllUsers();
+  fetchCurrentUser: function(id) {
+    ApiUtil.fetchCurrentUser(id);
   },
 
   createUser: function(user, cb) {
