@@ -16,9 +16,7 @@ var routes = (
 
 $(function() {
   var content = document.getElementById('content');
-    console.log("heyyy")
   if (content) {
-      console.log("hey")
     ReactDOM.render(<Router>{ routes }</Router> , content);
   }
 });
