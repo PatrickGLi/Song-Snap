@@ -17,19 +17,17 @@ var SigninModal = React.createClass({
 
   componentDidMount: function() {
     this.listener = SessionStore.addListener(this.onChange);
-    this.listener2 = UserStore.addListener(this.onUserChange);
+    $('#myModal2').on('hidden.bs.modal', function () {
+      this.setState({ errors: [] });
+    }.bind(this));
   },
 
   componentWillUnmount: function() {
     this.listener.remove();
-    this.listener2.remove();
   },
 
   onChange: function() {
     this.setState({ errors: SessionStore.errors() });
-  },
-
-  onUserChange: function() {
     if (this.state.errors.length === 0) {
       $('#myModal2').modal('hide');
     }

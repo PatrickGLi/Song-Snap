@@ -12,15 +12,14 @@ SessionStore.__onDispatch = function(payload) {
     case SessionConstants.RECEIVED_CURRENT_USER:
       if(payload.user.errors) {
         _errors = payload.user.errors;
+        SessionStore.__emitChange();
       } else {
         setSessionStorage(payload.user.id);
       }
       break;
     case SessionConstants.LOGOUT:
       removeSessionStorage();
-      break;
   }
-  SessionStore.__emitChange();
 };
 
 SessionStore.currentUser = function(){
@@ -34,10 +33,12 @@ SessionStore.errors = function(){
 var setSessionStorage = function(userId){
   _userId = userId;
   _errors = [];
+  SessionStore.__emitChange();
 };
 
 var removeSessionStorage = function(){
   _userId = null;
+  SessionStore.__emitChange();
 };
 
 module.exports = SessionStore;

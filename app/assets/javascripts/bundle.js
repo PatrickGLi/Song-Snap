@@ -24463,10 +24463,11 @@
 	    this.listener.remove();
 	  },
 
-	  componentWillReceiveProps: function () {
-	    debugger;
-	    if (UserStore.all().length !== 0 && this.props.currentUser !== -1) {
-	      this.setState({ user: UserStore.find(this.props.currentUser).username });
+	  componentWillReceiveProps: function (nextProps) {
+	    if (UserStore.all().length !== 0 && nextProps.currentUser !== -1 && nextProps.currentUser !== null) {
+	      this.setState({ user: UserStore.find(nextProps.currentUser).username });
+	    } else {
+	      this.setState({ user: "" });
 	    }
 	  },
 
@@ -24481,6 +24482,13 @@
 	  },
 
 	  render: function () {
+	    var user;
+	    if (this.state.user !== "") {
+	      user = "Hi " + this.state.user;
+	    } else {
+	      user = "";
+	    }
+
 	    return React.createElement(
 	      'div',
 	      null,
@@ -24491,9 +24499,9 @@
 	        React.createElement(SignIn, { currentUser: this.state.user })
 	      ),
 	      React.createElement(
-	        'h1',
-	        null,
-	        this.state.user
+	        'div',
+	        { className: 'username' },
+	        user
 	      ),
 	      React.createElement(
 	        'form',
@@ -24531,8 +24539,8 @@
 	    if (this.props.currentUser !== "") {
 	      button = React.createElement(
 	        'div',
-	        { onClick: this.toggleLogin },
-	        'Logout'
+	        { className: 'logout', onClick: this.toggleLogin },
+	        'log off'
 	      );
 	    } else {
 	      button = React.createElement(
@@ -24757,7 +24765,9 @@
 	      data: { user: user },
 	      success: function (response) {
 	        UserActions.receiveNewUser(response);
-	        cb();
+	        if (!response.errors) {
+	          cb();
+	        }
 	      }
 	    });
 	  },
@@ -25417,6 +25427,7 @@
 	var UserConstants = __webpack_require__(228);
 
 	var _users = {};
+	var _errors = [];
 
 	var UserStore = new Store(AppDispatcher);
 
@@ -25426,13 +25437,23 @@
 	      userUpdate(payload.user);
 	      break;
 	    case UserConstants.NEW_USER_RECEIVED:
-	      addUser(payload.user);
+	      if (payload.user.errors) {
+	        _errors = payload.user.errors;
+	        UserStore.__emitChange();
+	      } else {
+	        addUser(payload.user);
+	      }
 	  }
-	  UserStore.__emitChange();
 	};
 
 	var addUser = function (user) {
 	  _users[user.id] = user;
+	  _errors = [];
+	  UserStore.__emitChange();
+	};
+
+	UserStore.errors = function () {
+	  return _errors.slice(0);
 	};
 
 	var resetUsers = function (users) {
@@ -25443,6 +25464,8 @@
 
 	var userUpdate = function (user) {
 	  _users[user.id] = user;
+	  _errors = [];
+	  UserStore.__emitChange();
 	};
 
 	UserStore.all = function () {
@@ -31972,15 +31995,14 @@
 	    case SessionConstants.RECEIVED_CURRENT_USER:
 	      if (payload.user.errors) {
 	        _errors = payload.user.errors;
+	        SessionStore.__emitChange();
 	      } else {
 	        setSessionStorage(payload.user.id);
 	      }
 	      break;
 	    case SessionConstants.LOGOUT:
 	      removeSessionStorage();
-	      break;
 	  }
-	  SessionStore.__emitChange();
 	};
 
 	SessionStore.currentUser = function () {
@@ -31994,10 +32016,12 @@
 	var setSessionStorage = function (userId) {
 	  _userId = userId;
 	  _errors = [];
+	  SessionStore.__emitChange();
 	};
 
 	var removeSessionStorage = function () {
 	  _userId = null;
+	  SessionStore.__emitChange();
 	};
 
 	module.exports = SessionStore;
@@ -32027,19 +32051,17 @@
 
 	  componentDidMount: function () {
 	    this.listener = SessionStore.addListener(this.onChange);
-	    this.listener2 = UserStore.addListener(this.onUserChange);
+	    $('#myModal2').on('hidden.bs.modal', function () {
+	      this.setState({ errors: [] });
+	    }.bind(this));
 	  },
 
 	  componentWillUnmount: function () {
 	    this.listener.remove();
-	    this.listener2.remove();
 	  },
 
 	  onChange: function () {
 	    this.setState({ errors: SessionStore.errors() });
-	  },
-
-	  onUserChange: function () {
 	    if (this.state.errors.length === 0) {
 	      $('#myModal2').modal('hide');
 	    }
@@ -32155,22 +32177,24 @@
 	  },
 
 	  componentDidMount: function () {
-	    this.listener = SessionStore.addListener(this.onChange);
-	    this.listener2 = UserStore.addListener(this.onUserChange);
+	    this.listener = UserStore.addListener(this.onUserChange);
+	    // this.listener2 = SessionStore.addListener(this.onChange);
+	    $('#myModal').on('hidden.bs.modal', function () {
+	      this.setState({ errors: [] });
+	    }.bind(this));
 	  },
 
 	  componentWillUnmount: function () {
 	    this.listener.remove();
-	    this.listener2.remove();
+	    // this.listener2.remove();
 	  },
 
-	  onChange: function () {
-	    this.setState({ errors: SessionStore.errors() });
-	  },
+	  onChange: function () {},
 
 	  onUserChange: function () {
+	    this.setState({ errors: UserStore.errors() });
 	    if (this.state.errors.length === 0) {
-	      $('#myModal2').modal('hide');
+	      $('#myModal').modal('hide');
 	    }
 	  },
 

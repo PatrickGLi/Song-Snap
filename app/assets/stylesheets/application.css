@@ -71,7 +71,8 @@ body{
 
 .signin-button {
   font-size: 40px;
-
+  position: relative;
+  left: 220px;
   width: 220px;
   text-align: center;
   transition: transform 1.2s, color 1.2s;
@@ -88,6 +89,8 @@ body{
 .signup-button {
   font-size: 35px;
   width: 160px;
+  position: relative;
+  left: 120px;
   text-align: center;
   transition: transform 1.2s, color 1.2s;
 }
@@ -100,4 +103,26 @@ body{
 
 .boxes {
   color: grey;
+}
+
+.logout {
+  width: 160px;
+  position: relative;
+  left: 150px;
+  font-size: 35px;
+  transition: transform 1.2s, color 1.2s;
+}
+
+.logout:hover {
+  cursor: pointer;
+  transform: perspective(50em) rotateY(40deg);
+  color: grey;
+}
+
+.username {
+  font-size: 20vw;
+  opacity: .6;
+  position: absolute;
+  bottom: 10px;
+  right: 30px;
 }

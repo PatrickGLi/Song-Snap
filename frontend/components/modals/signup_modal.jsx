@@ -15,22 +15,26 @@ var SignupModal = React.createClass({
   },
 
   componentDidMount: function() {
-    this.listener = SessionStore.addListener(this.onChange);
-    this.listener2 = UserStore.addListener(this.onUserChange);
+    this.listener = UserStore.addListener(this.onUserChange);
+    // this.listener2 = SessionStore.addListener(this.onChange);
+    $('#myModal').on('hidden.bs.modal', function () {
+      this.setState({ errors: [] });
+    }.bind(this));
   },
 
   componentWillUnmount: function() {
     this.listener.remove();
-    this.listener2.remove();
+    // this.listener2.remove();
   },
 
   onChange: function() {
-    this.setState({ errors: SessionStore.errors() });
+
   },
 
   onUserChange: function() {
+    this.setState({ errors: UserStore.errors() });
     if (this.state.errors.length === 0) {
-      $('#myModal2').modal('hide');
+      $('#myModal').modal('hide');
     }
   },
 

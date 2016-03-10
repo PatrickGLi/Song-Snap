@@ -14,7 +14,7 @@ var SignIn = React.createClass({
   render: function() {
     var button;
     if (this.props.currentUser !== "") {
-      button = <div onClick={this.toggleLogin}>Logout</div>
+      button = <div className="logout" onClick={this.toggleLogin}>log off</div>
     } else {
       button = (
         <div>

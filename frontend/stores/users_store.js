@@ -3,6 +3,7 @@ var AppDispatcher = require('../dispatcher/dispatcher.js');
 var UserConstants = require('../constants/user_constants.js');
 
 var _users = {};
+var _errors = [];
 
 var UserStore = new Store(AppDispatcher);
 
@@ -12,13 +13,23 @@ UserStore.__onDispatch = function(payload){
       userUpdate(payload.user);
       break;
     case UserConstants.NEW_USER_RECEIVED:
+    if(payload.user.errors) {
+      _errors = payload.user.errors;
+      UserStore.__emitChange();
+    } else {
       addUser(payload.user);
+    }
   }
-  UserStore.__emitChange();
 };
 
 var addUser = function(user){
   _users[user.id] = user;
+  _errors = [];
+  UserStore.__emitChange();
+};
+
+UserStore.errors = function(){
+  return _errors.slice(0);
 };
 
 var resetUsers = function(users){
@@ -29,6 +40,8 @@ var resetUsers = function(users){
 
 var userUpdate = function(user){
   _users[user.id] = user;
+  _errors = [];
+  UserStore.__emitChange();
 };
 
 UserStore.all = function() {

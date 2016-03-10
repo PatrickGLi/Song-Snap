@@ -17,10 +17,13 @@ var LandingPage = React.createClass({
     this.listener.remove();
   },
 
-  componentWillReceiveProps: function() {
-    debugger
-    if (UserStore.all().length !== 0 && this.props.currentUser !== -1) {
-      this.setState({ user: UserStore.find(this.props.currentUser).username });
+  componentWillReceiveProps: function(nextProps) {
+    if (UserStore.all().length !== 0 &&
+        nextProps.currentUser !== -1 &&
+        nextProps.currentUser !== null) {
+      this.setState({ user: UserStore.find(nextProps.currentUser).username });
+    } else {
+      this.setState({ user: "" });
     }
   },
 
@@ -35,6 +38,13 @@ var LandingPage = React.createClass({
   },
 
   render: function() {
+    var user;
+    if (this.state.user !== "") {
+      user = "Hi " + this.state.user
+    } else {
+      user = ""
+    }
+
     return(
       <div>
         <div className="song-snap-title">
@@ -42,7 +52,7 @@ var LandingPage = React.createClass({
           <SignIn currentUser={this.state.user}/>
         </div>
 
-        <h1>{this.state.user}</h1>
+        <div className="username">{user}</div>
         <form method="get" action="/soundcloud/signin">
           <input className="sign-out-link" type="submit" value="sign out"></input>
         </form>

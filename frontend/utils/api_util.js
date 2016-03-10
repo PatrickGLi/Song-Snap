@@ -16,7 +16,9 @@ var ApiUtil = {
       data: {user: user},
       success: function(response) {
         UserActions.receiveNewUser(response);
-        cb();
+        if (!response.errors) {
+          cb();
+        }
       }
     });
   },
