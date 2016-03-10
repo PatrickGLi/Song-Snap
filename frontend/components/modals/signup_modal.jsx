@@ -82,7 +82,7 @@ var SignupModal = React.createClass({
                     className="form-control"
                     type='password'
                     valueLink={this.linkState('signupPassword')}
-                    placeholder="Password"/>
+                    placeholder="Password ( > 6 characters )"/>
                 </div>
 
                 <input

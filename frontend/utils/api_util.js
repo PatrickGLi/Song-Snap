@@ -27,6 +27,7 @@ var ApiUtil = {
       type: 'POST',
       data: {user: credentials},
       success: function(response){
+        UserActions.receiveUser(response);
         SessionActions.receiveCurrentUser(response);
       }
     });

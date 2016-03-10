@@ -17,6 +17,13 @@ var LandingPage = React.createClass({
     this.listener.remove();
   },
 
+  componentWillReceiveProps: function() {
+    debugger
+    if (UserStore.all().length !== 0 && this.props.currentUser !== -1) {
+      this.setState({ user: UserStore.find(this.props.currentUser).username });
+    }
+  },
+
   onChange: function() {
     var user = UserStore.find(this.props.currentUser);
 

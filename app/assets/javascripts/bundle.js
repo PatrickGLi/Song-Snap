@@ -24463,6 +24463,13 @@
 	    this.listener.remove();
 	  },
 
+	  componentWillReceiveProps: function () {
+	    debugger;
+	    if (UserStore.all().length !== 0 && this.props.currentUser !== -1) {
+	      this.setState({ user: UserStore.find(this.props.currentUser).username });
+	    }
+	  },
+
 	  onChange: function () {
 	    var user = UserStore.find(this.props.currentUser);
 
@@ -24597,8 +24604,9 @@
 
 	  componentDidMount: function () {
 	    this.listener = SessionStore.addListener(this.onChange);
-	    if (SessionStore.currentUser() !== -1) {
-	      AppActions.fetchCurrentUser(SessionStore.currentUser());
+	    var currentUser = SessionStore.currentUser();
+	    if (currentUser !== -1) {
+	      AppActions.fetchCurrentUser(currentUser);
 	    }
 	  },
 
@@ -24607,8 +24615,9 @@
 	  },
 
 	  onChange: function () {
+	    var currentUser = SessionStore.currentUser();
 	    this.setState({
-	      currentUser: SessionStore.currentUser()
+	      currentUser: currentUser
 	    });
 	  },
 
@@ -24759,6 +24768,7 @@
 	      type: 'POST',
 	      data: { user: credentials },
 	      success: function (response) {
+	        UserActions.receiveUser(response);
 	        SessionActions.receiveCurrentUser(response);
 	      }
 	    });
@@ -32242,7 +32252,7 @@
 	                    className: 'form-control',
 	                    type: 'password',
 	                    valueLink: this.linkState('signupPassword'),
-	                    placeholder: 'Password' })
+	                    placeholder: 'Password ( > 6 characters )' })
 	                ),
 	                React.createElement('input', {
 	                  type: 'submit',

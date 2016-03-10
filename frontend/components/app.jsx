@@ -21,8 +21,9 @@ var App = React.createClass({
 
   componentDidMount: function() {
     this.listener = SessionStore.addListener(this.onChange);
-    if (SessionStore.currentUser() !== -1) {
-      AppActions.fetchCurrentUser(SessionStore.currentUser());
+    var currentUser = SessionStore.currentUser()
+    if (currentUser !== -1) {
+      AppActions.fetchCurrentUser(currentUser);
     }
   },
 
@@ -31,8 +32,9 @@ var App = React.createClass({
   },
 
   onChange: function(){
+    var currentUser = SessionStore.currentUser();
     this.setState({
-      currentUser: SessionStore.currentUser(),
+      currentUser: currentUser,
     });
   },
 
