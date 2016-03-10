@@ -37,6 +37,21 @@ var LandingPage = React.createClass({
     }
   },
 
+  changeBackground: function() {
+    console.log("hey");
+    // debugger
+
+$('body').css({
+background: "grey",
+transition: "background 7s"
+});
+
+
+    },
+
+
+  // background: linear-gradient(156deg, #ff00f5, #ffc40d);
+
   render: function() {
     var user;
     if (this.state.user !== "") {
@@ -54,8 +69,10 @@ var LandingPage = React.createClass({
 
         <div className="username">{user}</div>
         <form method="get" action="/soundcloud/signin">
-          <input className="sign-out-link" type="submit" value="sign out"></input>
+          <input className="connect-soundcloud pulse" type="submit" value="get started"></input>
         </form>
+
+        <div className="test" onClick={this.changeBackground}>Hi</div>
       </div>
     );
   }

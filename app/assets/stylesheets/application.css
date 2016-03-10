@@ -59,6 +59,23 @@ body{
       100%{background-position:99% 0%}
   }
 
+  @-webkit-keyframes pulse {
+    0% { -webkit-transform: scale(1); }
+    50% { -webkit-transform: scale(1.1); }
+    100% { -webkit-transform: scale(1); }
+  }
+
+  @keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+    100% { transform: scale(1); }
+  }
+
+  .pulse {
+    -webkit-animation-name: pulse;
+    animation-name: pulse;
+  }
+
 .song-snap-title {
   position: absolute;
   width: 500px;
@@ -121,8 +138,34 @@ body{
 
 .username {
   font-size: 20vw;
-  opacity: .6;
+  opacity: .3;
   position: absolute;
   bottom: 10px;
   right: 30px;
 }
+
+.connect-soundcloud {
+    border: none;
+    background: none;
+    font-size: 80px;
+    -webkit-animation: pulse 3s ease infinite;
+    -moz-animation: pulse 3s ease infinite;
+    animation: pulse 3s ease infinite;
+}
+
+.connect-soundcloud:hover {
+  -webkit-animation: none;
+  -moz-animation: none;
+  animation: none;
+  color: grey;
+}
+
+input:focus {
+    outline:none !important;
+}
+
+/*.test {
+  height: 500px;
+  width: 500px;
+  border: 1px solid black;
+}*/

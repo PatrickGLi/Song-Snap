@@ -1,26 +1,28 @@
 class Soundcloud::SessionsController < ApplicationController
   def signin
-    client = Soundcloud.new(:client_id => ENV["SOUNDCLOUD_CLIENT_ID"],
-                        :client_secret => ENV["SOUNDCLOUD_CLIENT_SECRET"],
-                        :redirect_uri => 'http://localhost:3000/soundcloud/connected')
-    # redirect user to authorize URL
-    redirect_to client.authorize_url()
+    redirect_to soundcloud_client.authorize_url()
   end
 
   def connected
-    # create client object with app credentials
-    client = Soundcloud.new(:client_id => ENV["SOUNDCLOUD_CLIENT_ID"],
-                        :client_secret => ENV["SOUNDCLOUD_CLIENT_SECRET"],
-                        :redirect_uri => 'http://localhost:3000/soundcloud/connected')
+   if params[:error].nil?
+     soundcloud_client.exchange_token(:code => params[:code])
+     me = soundcloud_client.get("/me")
 
-# exchange authorization code for access token
-    code = params[:code]
-    access_token = client.exchange_token(:code => code)
-    @current_user = client.get('/me')
+     current_user.update_attributes!({
+       :access_token  => soundcloud_client.access_token,
+       :refresh_token => soundcloud_client.refresh_token,
+       :expires_in    => soundcloud_client.expires_at,
+     })
+   end
+ end
 
-    session[:access_token] = access_token
+  private
+  def soundcloud_connected_url
+    "http://localhost:3000/soundcloud/connected"
+  end
 
-    debugger
-    redirect_to root_url
+  def soundcloud_client
+    return @soundcloud_client if @soundcloud_client
+    @soundcloud_client = User.soundcloud_client(:redirect_uri  => soundcloud_connected_url)
   end
 end
