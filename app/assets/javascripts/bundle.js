@@ -24443,43 +24443,44 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1),
-	    SignIn = __webpack_require__(251),
 	    ReactConstants = __webpack_require__(241),
 	    SessionStore = __webpack_require__(216),
 	    UserStore = __webpack_require__(246),
-	    TrackStore = __webpack_require__(254);
-	Face = __webpack_require__(249);
+	    TrackStore = __webpack_require__(254),
+	    Face = __webpack_require__(249);
 
 	var LandingPage = React.createClass({
 	  displayName: 'LandingPage',
 
 	  getInitialState: function () {
 	    return {
-	      user: ""
+	      user: false
 	    };
 	  },
 
 	  componentDidMount: function () {
-	    this.listener = UserStore.addListener(this.onChange);
-	    debugger;
-	    if (SessionStore.currentAccessToken() !== -1) {
-	      this.props.history.pushState(null, "music");
-	    }
+	    this.listener = SessionStore.addListener(this.onSessionChange);
+	    this.listener2 = UserStore.addListener(this.onUserChange);
 	  },
 
 	  componentWillUnmount: function () {
 	    this.listener.remove();
+	    this.listener2.remove();
 	  },
 
-	  onChange: function () {
-	    this.setState({ user: UserStore.currentUser() });
-	  },
-
-	  componentWillReceiveProps: function (nextProps) {
-	    if (UserStore.currentUser() && nextProps.currentUser !== -1 && nextProps.currentUser !== null) {
-	      this.setState({ user: UserStore.currentUser().username });
+	  onSessionChange: function () {
+	    if (SessionStore.currentUserId() !== null && SessionStore.errors().length <= 0) {
+	      this.setState({ user: true });
 	    } else {
-	      this.setState({ user: "" });
+	      this.setState({ user: false });
+	    }
+	  },
+
+	  onUserChange: function () {
+	    if (UserStore.currentUser() && UserStore.errors().length <= 0) {
+	      this.props.history.pushState(null, "music");
+	    } else {
+	      this.setState({ user: false });
 	    }
 	  },
 
@@ -24496,15 +24497,30 @@
 	  // background: linear-gradient(156deg, #ff00f5, #ffc40d);
 
 	  render: function () {
+	    var button;
+	    if (!this.state.user) {
+	      var button = React.createElement(
+	        'div',
+	        null,
+	        React.createElement(
+	          'div',
+	          { className: 'signup-button', 'data-toggle': 'modal', 'data-target': '#myModal' },
+	          'try me'
+	        ),
+	        React.createElement(
+	          'div',
+	          { className: 'signin-button', 'data-toggle': 'modal', 'data-target': '#myModal2' },
+	          'sign back in'
+	        )
+	      );
+	    } else {
+	      button = React.createElement('div', null);
+	    }
+
 	    return React.createElement(
 	      'div',
 	      null,
-	      React.createElement(SignIn, { currentUser: this.state.user }),
-	      React.createElement(
-	        'form',
-	        { method: 'get', action: '/soundcloud/signin' },
-	        React.createElement('input', { className: 'connect-soundcloud pulse', type: 'submit', value: 'get started' })
-	      ),
+	      button,
 	      React.createElement('div', { className: 'test', onClick: this.changeBackground })
 	    );
 	  }
@@ -24520,6 +24536,7 @@
 	var React = __webpack_require__(1),
 	    LinkedStateMixin = __webpack_require__(212),
 	    LandingPage = __webpack_require__(210),
+	    UserStore = __webpack_require__(246),
 	    SessionStore = __webpack_require__(216),
 	    AppActions = __webpack_require__(239),
 	    SigninModal = __webpack_require__(245),
@@ -24532,17 +24549,17 @@
 
 	  getInitialState: function () {
 	    return {
-	      currentUser: SessionStore.currentUser(),
+	      currentUserId: SessionStore.currentUserId(),
 	      user: ""
 	    };
 	  },
 
 	  componentDidMount: function () {
-	    this.listener = SessionStore.addListener(this.onChange);
+	    this.listener = SessionStore.addListener(this.onSessionChange);
 	    this.listener2 = UserStore.addListener(this.onUserChange);
-	    var currentUser = SessionStore.currentUser();
-	    if (currentUser !== -1) {
-	      AppActions.fetchCurrentUser(currentUser);
+	    var currentUserId = SessionStore.currentUserId();
+	    if (currentUserId !== -1) {
+	      AppActions.fetchCurrentUser(currentUserId);
 	    }
 	  },
 
@@ -24554,31 +24571,52 @@
 	  onUserChange: function () {
 	    var user = UserStore.currentUser();
 
-	    if (user) {
+	    if (user && UserStore.errors().length <= 0) {
 	      this.setState({ user: user.username });
 	    } else {
 	      this.setState({ user: "" });
 	    }
 	  },
 
-	  onChange: function () {
-	    var currentUser = SessionStore.currentUser();
+	  onSessionChange: function () {
+	    var currentUser;
+	    var currentUserId = SessionStore.currentUserId();
+
+	    if (currentUserId !== null) {
+	      currentUser = SessionStore.currentUser().username;
+	    } else {
+	      currentUser = "";
+	    }
 	    this.setState({
-	      currentUser: currentUser
+	      currentUserId: currentUserId,
+	      user: currentUser
 	    });
 	  },
 
+	  toggleLogin: function () {
+	    AppActions.destroySession();
+	    this.props.history.pushState(null, "/");
+	  },
+
 	  render: function () {
-	    var user;
+	    var user, logout;
+	    // debugger
 	    if (this.state.user !== "") {
+	      logout = React.createElement(
+	        'div',
+	        { className: 'logout', onClick: this.toggleLogin },
+	        'log out'
+	      );
 	      user = "Hi " + this.state.user;
 	    } else {
 	      user = "";
+	      logout = React.createElement('div', null);
 	    }
 
 	    return React.createElement(
 	      'div',
 	      null,
+	      logout,
 	      React.createElement(
 	        'div',
 	        { className: 'song-snap-title' },
@@ -24834,10 +24872,12 @@
 
 	var Store = __webpack_require__(217).Store,
 	    AppDispatcher = __webpack_require__(235),
-	    SessionConstants = __webpack_require__(238);
+	    SessionConstants = __webpack_require__(238),
+	    ReactConstants = __webpack_require__(241);
 
-	var _userId = window.currentUserId;
-	var _accessToken = -1;
+	var _userId = ReactConstants.CURRENT_USER_ID;
+	var _user = null;
+	var _accessToken = ReactConstants.CURRENT_ACCESS_TOKEN;
 	var _errors = [];
 
 	var SessionStore = new Store(AppDispatcher);
@@ -24857,8 +24897,12 @@
 	  }
 	};
 
-	SessionStore.currentUser = function () {
+	SessionStore.currentUserId = function () {
 	  return _userId;
+	};
+
+	SessionStore.currentUser = function () {
+	  return _user;
 	};
 
 	SessionStore.currentAccessToken = function () {
@@ -24871,13 +24915,16 @@
 
 	var setSessionStorage = function (user) {
 	  _userId = user.id;
+	  _user = user;
 	  _accessToken = user.access_token;
 	  _errors = [];
+	  debugger;
 	  SessionStore.__emitChange();
 	};
 
 	var removeSessionStorage = function () {
 	  _userId = null;
+	  _userr = null;
 	  _accessToken = null;
 	  SessionStore.__emitChange();
 	};
@@ -31671,8 +31718,12 @@
 	    ApiUtil.createUser(user, cb);
 	  },
 
-	  createSession: function (credentials) {
-	    ApiUtil.createSession(credentials);
+	  createSession: function (credentials, cb) {
+	    ApiUtil.createSession(credentials, cb);
+	  },
+
+	  destroySession: function () {
+	    ApiUtil.destroySession();
 	  }
 
 	};
@@ -31709,7 +31760,7 @@
 	    });
 	  },
 
-	  createSession: function (credentials) {
+	  createSession: function (credentials, cb) {
 	    $.ajax({
 	      url: 'api/session',
 	      type: 'POST',
@@ -31717,6 +31768,9 @@
 	      success: function (response) {
 	        UserActions.receiveUser(response);
 	        SessionActions.receiveCurrentUser(response);
+	        if (!response.errors) {
+	          cb();
+	        }
 	      }
 	    });
 	  },
@@ -31844,13 +31898,14 @@
 	var React = __webpack_require__(1),
 	    LinkedStateMixin = __webpack_require__(212),
 	    AppActions = __webpack_require__(239),
-	    SessionStore = __webpack_require__(216);
-	UserStore = __webpack_require__(246);
+	    SessionStore = __webpack_require__(216),
+	    UserStore = __webpack_require__(246),
+	    History = __webpack_require__(159).History;
 
 	var SigninModal = React.createClass({
 	  displayName: 'SigninModal',
 
-	  mixins: [LinkedStateMixin],
+	  mixins: [LinkedStateMixin, History],
 
 	  getInitialState: function () {
 	    return {
@@ -31878,6 +31933,10 @@
 	    }
 	  },
 
+	  goToMusic: function () {
+	    this.history.pushState(null, "music");
+	  },
+
 	  handleSigninSubmit: function (e) {
 	    e.preventDefault();
 	    var credentials = {
@@ -31885,7 +31944,7 @@
 	      password: this.state.signinPassword
 	    };
 
-	    AppActions.createSession(credentials);
+	    AppActions.createSession(credentials, this.goToMusic);
 	  },
 
 	  render: function () {
@@ -32016,12 +32075,14 @@
 	var React = __webpack_require__(1),
 	    LinkedStateMixin = __webpack_require__(212),
 	    AppActions = __webpack_require__(239),
-	    SessionStore = __webpack_require__(216);
+	    UserStore = __webpack_require__(246),
+	    SessionStore = __webpack_require__(216),
+	    History = __webpack_require__(159).History;
 
 	var SignupModal = React.createClass({
 	  displayName: 'SignupModal',
 
-	  mixins: [LinkedStateMixin],
+	  mixins: [LinkedStateMixin, History],
 
 	  getInitialState: function () {
 	    return {
@@ -32044,13 +32105,15 @@
 	    // this.listener2.remove();
 	  },
 
-	  onChange: function () {},
-
 	  onUserChange: function () {
 	    this.setState({ errors: UserStore.errors() });
 	    if (this.state.errors.length === 0) {
 	      $('#myModal').modal('hide');
 	    }
+	  },
+
+	  goToMusic: function () {
+	    this.history.pushState(null, "music");
 	  },
 
 	  signIn: function () {
@@ -32059,7 +32122,7 @@
 	      password: this.state.signupPassword
 	    };
 
-	    AppActions.createSession(credentials);
+	    AppActions.createSession(credentials, this.goToMusic);
 	  },
 
 	  handleSignupSubmit: function (e) {
@@ -32159,20 +32222,26 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1),
+	    SessionStore = __webpack_require__(216),
 	    Face = __webpack_require__(249);
 
 	var MusicSearch = React.createClass({
 	  displayName: 'MusicSearch',
 
 
+	  componentDidMount: function () {
+	    console.log(SessionStore.currentAccessToken());
+	    debugger;
+	  },
+
 	  render: function () {
 	    return React.createElement(
 	      'div',
 	      null,
 	      React.createElement(
-	        'h1',
-	        null,
-	        'Hey'
+	        'form',
+	        { method: 'get', action: '/soundcloud/signin' },
+	        React.createElement('input', { className: 'connect-soundcloud pulse', type: 'submit', value: 'get started' })
 	      )
 	    );
 	  }
@@ -32270,74 +32339,8 @@
 	module.exports = FaceActions;
 
 /***/ },
-/* 251 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var React = __webpack_require__(1),
-	    ReactConstants = __webpack_require__(241),
-	    SignInActions = __webpack_require__(252),
-	    History = __webpack_require__(159).History;
-
-	var SignIn = React.createClass({
-	  displayName: 'SignIn',
-
-	  mixins: [History],
-
-	  toggleLogin: function () {
-	    SignInActions.destroySession();
-	    this.history.pushState(null, "/");
-	  },
-
-	  render: function () {
-	    var button;
-	    if (this.props.currentUser !== "") {
-	      button = React.createElement(
-	        'div',
-	        { className: 'logout', onClick: this.toggleLogin },
-	        'log off'
-	      );
-	    } else {
-	      button = React.createElement(
-	        'div',
-	        null,
-	        React.createElement(
-	          'div',
-	          { className: 'signup-button', 'data-toggle': 'modal', 'data-target': '#myModal' },
-	          'try me'
-	        ),
-	        React.createElement(
-	          'div',
-	          { className: 'signin-button', 'data-toggle': 'modal', 'data-target': '#myModal2' },
-	          'sign back in'
-	        )
-	      );
-	    }
-
-	    return React.createElement(
-	      'div',
-	      null,
-	      button
-	    );
-	  }
-	});
-
-	module.exports = SignIn;
-
-/***/ },
-/* 252 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var ApiUtil = __webpack_require__(240);
-
-	var SignInActions = {
-	  destroySession: function () {
-	    ApiUtil.destroySession();
-	  }
-	};
-
-	module.exports = SignInActions;
-
-/***/ },
+/* 251 */,
+/* 252 */,
 /* 253 */
 /***/ function(module, exports, __webpack_require__) {
 

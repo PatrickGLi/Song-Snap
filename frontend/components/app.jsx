@@ -1,6 +1,7 @@
 var React = require('react'),
     LinkedStateMixin = require('react-addons-linked-state-mixin'),
     LandingPage = require('./landing_page/landing_page'),
+    UserStore = require('../stores/users_store'),
     SessionStore = require('../stores/sessions_store'),
     AppActions = require('../actions/app_actions.js'),
     SigninModal = require('./modals/signin_modal'),
@@ -11,17 +12,17 @@ var App = React.createClass({
 
   getInitialState: function(){
     return {
-      currentUser: SessionStore.currentUser(),
+      currentUserId: SessionStore.currentUserId(),
       user: ""
     };
   },
 
   componentDidMount: function() {
-    this.listener = SessionStore.addListener(this.onChange);
+    this.listener = SessionStore.addListener(this.onSessionChange);
     this.listener2 = UserStore.addListener(this.onUserChange);
-    var currentUser = SessionStore.currentUser()
-    if (currentUser !== -1) {
-      AppActions.fetchCurrentUser(currentUser);
+    var currentUserId = SessionStore.currentUserId()
+    if (currentUserId !== -1) {
+      AppActions.fetchCurrentUser(currentUserId);
     }
   },
 
@@ -33,30 +34,47 @@ var App = React.createClass({
   onUserChange: function() {
     var user = UserStore.currentUser();
 
-    if (user) {
+    if (user && UserStore.errors().length <= 0) {
       this.setState({ user: user.username });
     } else {
       this.setState({ user: "" });
     }
   },
 
-  onChange: function(){
-    var currentUser = SessionStore.currentUser();
+  onSessionChange: function(){
+    var currentUser;
+    var currentUserId = SessionStore.currentUserId();
+
+    if (currentUserId !== null) {
+      currentUser = SessionStore.currentUser().username;
+    } else {
+      currentUser = "";
+    }
     this.setState({
-      currentUser: currentUser,
+      currentUserId: currentUserId,
+      user: currentUser
     });
   },
 
+  toggleLogin: function() {
+    AppActions.destroySession();
+    this.props.history.pushState(null, "/");
+  },
+
   render: function() {
-    var user;
+    var user, logout;
+    // debugger
     if (this.state.user !== "") {
+      logout = <div className="logout" onClick={this.toggleLogin}>log out</div>
       user = "Hi " + this.state.user;
     } else {
       user = "";
+      logout = <div></div>
     }
 
     return(
       <div>
+        {logout}
         <div className="song-snap-title">
           songsnap
         </div>

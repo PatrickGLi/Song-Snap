@@ -1,10 +1,12 @@
 var React = require('react'),
     LinkedStateMixin = require('react-addons-linked-state-mixin'),
     AppActions = require('../../actions/app_actions.js'),
-    SessionStore = require('../../stores/sessions_store');
+    UserStore = require('../../stores/users_store'),
+    SessionStore = require('../../stores/sessions_store'),
+    History = require('react-router').History;
 
 var SignupModal = React.createClass({
-  mixins: [LinkedStateMixin],
+  mixins: [LinkedStateMixin, History],
 
   getInitialState: function(){
     return {
@@ -27,15 +29,15 @@ var SignupModal = React.createClass({
     // this.listener2.remove();
   },
 
-  onChange: function() {
-
-  },
-
   onUserChange: function() {
     this.setState({ errors: UserStore.errors() });
     if (this.state.errors.length === 0) {
       $('#myModal').modal('hide');
     }
+  },
+
+  goToMusic: function() {
+    this.history.pushState(null, "music");
   },
 
   signIn: function(){
@@ -44,7 +46,7 @@ var SignupModal = React.createClass({
       password: this.state.signupPassword
     };
 
-    AppActions.createSession(credentials);
+    AppActions.createSession(credentials, this.goToMusic);
   },
 
   handleSignupSubmit: function(e){

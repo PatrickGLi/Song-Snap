@@ -147,6 +147,9 @@ body{
 .connect-soundcloud {
     border: none;
     background: none;
+    position: absolute;
+    top: 10px;
+    right: 20px;
     font-size: 80px;
     -webkit-animation: pulse 3s ease infinite;
     -moz-animation: pulse 3s ease infinite;

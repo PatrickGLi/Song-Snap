@@ -9,8 +9,12 @@ var AppActions = {
     ApiUtil.createUser(user, cb);
   },
 
-  createSession: function(credentials) {
-    ApiUtil.createSession(credentials);
+  createSession: function(credentials, cb) {
+    ApiUtil.createSession(credentials, cb);
+  },
+
+  destroySession: function() {
+    ApiUtil.destroySession();
   }
 
 };

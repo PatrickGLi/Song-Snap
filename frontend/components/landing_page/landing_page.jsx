@@ -1,41 +1,40 @@
 var React = require('react'),
-    SignIn = require('./sign_in'),
     ReactConstants = require('../../constants/react_constants'),
     SessionStore = require('../../stores/sessions_store'),
     UserStore = require('../../stores/users_store'),
-    TrackStore = require('../../stores/tracks_store');
+    TrackStore = require('../../stores/tracks_store'),
     Face = require('../music_search/face');
 
 var LandingPage = React.createClass({
   getInitialState: function() {
     return({
-      user: ""
+      user: false
     });
   },
 
   componentDidMount: function() {
-    this.listener = UserStore.addListener(this.onChange);
-    debugger
-    if (SessionStore.currentAccessToken() !== -1) {
-      this.props.history.pushState(null, "music");
-    }
+    this.listener = SessionStore.addListener(this.onSessionChange);
+    this.listener2 = UserStore.addListener(this.onUserChange);
   },
 
   componentWillUnmount: function() {
     this.listener.remove();
+    this.listener2.remove();
   },
 
-  onChange: function() {
-    this.setState({ user: UserStore.currentUser() });
-  },
-
-  componentWillReceiveProps: function(nextProps) {
-    if (UserStore.currentUser() &&
-        nextProps.currentUser !== -1 &&
-        nextProps.currentUser !== null) {
-      this.setState({ user: UserStore.currentUser().username });
+  onSessionChange: function() {
+    if (SessionStore.currentUserId() !== null && SessionStore.errors().length <= 0) {
+      this.setState({ user: true });
     } else {
-      this.setState({ user: "" });
+      this.setState({ user: false });
+    }
+  },
+
+  onUserChange: function() {
+    if (UserStore.currentUser() && UserStore.errors().length <= 0) {
+      this.props.history.pushState(null, "music");
+    } else {
+      this.setState({ user: false });
     }
   },
 
@@ -52,16 +51,25 @@ transition: "background 7s"
     },
 
 
+
   // background: linear-gradient(156deg, #ff00f5, #ffc40d);
 
   render: function() {
+    var button;
+    if (!this.state.user) {
+      var button = (
+        <div>
+          <div className="signup-button" data-toggle="modal" data-target="#myModal">try me</div>
+          <div className="signin-button" data-toggle="modal" data-target="#myModal2">sign back in</div>
+        </div>
+      );
+    } else {
+      button = <div></div>
+    }
+
     return(
       <div>
-        <SignIn currentUser={this.state.user}/>
-
-        <form method="get" action="/soundcloud/signin">
-          <input className="connect-soundcloud pulse" type="submit" value="get started"></input>
-        </form>
+        {button}
         <div className="test" onClick={this.changeBackground}></div>
       </div>
     );

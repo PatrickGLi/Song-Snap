@@ -24,7 +24,7 @@ var ApiUtil = {
     });
   },
 
-  createSession: function(credentials){
+  createSession: function(credentials, cb){
     $.ajax({
       url: 'api/session',
       type: 'POST',
@@ -32,6 +32,9 @@ var ApiUtil = {
       success: function(response){
         UserActions.receiveUser(response);
         SessionActions.receiveCurrentUser(response);
+        if (!response.errors) {
+          cb();
+        }
       }
     });
   },
