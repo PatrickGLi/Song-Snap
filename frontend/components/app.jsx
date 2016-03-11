@@ -12,15 +12,13 @@ var App = React.createClass({
   getInitialState: function(){
     return {
       currentUser: SessionStore.currentUser(),
-      signupUsername: '',
-      signupPassword: '',
-      signinUsername: '',
-      signinPassword: ''
+      user: ""
     };
   },
 
   componentDidMount: function() {
     this.listener = SessionStore.addListener(this.onChange);
+    this.listener2 = UserStore.addListener(this.onUserChange);
     var currentUser = SessionStore.currentUser()
     if (currentUser !== -1) {
       AppActions.fetchCurrentUser(currentUser);
@@ -29,6 +27,17 @@ var App = React.createClass({
 
   componentWillUnmount: function() {
     this.listener.remove();
+    this.listener2.remove();
+  },
+
+  onUserChange: function() {
+    var user = UserStore.currentUser();
+
+    if (user) {
+      this.setState({ user: user.username });
+    } else {
+      this.setState({ user: "" });
+    }
   },
 
   onChange: function(){
@@ -39,11 +48,22 @@ var App = React.createClass({
   },
 
   render: function() {
+    var user;
+    if (this.state.user !== "") {
+      user = "Hi " + this.state.user;
+    } else {
+      user = "";
+    }
+
     return(
       <div>
-        <LandingPage currentUser={this.state.currentUser}/>
+        <div className="song-snap-title">
+          songsnap
+        </div>
+        {this.props.children}
         <SignupModal/>
         <SigninModal/>
+        <div className="username">{user}</div>
       </div>
     );
   }

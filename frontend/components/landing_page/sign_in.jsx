@@ -8,7 +8,7 @@ var SignIn = React.createClass({
 
   toggleLogin: function() {
     SignInActions.destroySession();
-    // this.history.pushState(null, "/");
+    this.history.pushState(null, "/");
   },
 
   render: function() {

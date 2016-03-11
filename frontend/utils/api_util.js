@@ -1,6 +1,7 @@
 var ReactConstants = require('../constants/react_constants'),
     UserActions = require('../actions/user_actions'),
-    SessionActions = require('../actions/session_actions');
+    SessionActions = require('../actions/session_actions'),
+    ApiActions = require('../actions/api_actions');
 
 var ApiUtil = {
   fetchCurrentUser: function(id){
@@ -57,9 +58,20 @@ var ApiUtil = {
                // Request body
                data: blobData,
                success: function(data) {
-                 console.log(data);
+                 ApiActions.getTracks(data);
                }
            });
+  },
+
+  fetchTracks: function(faceData) {
+    $.ajax({
+      url: 'api/tracks',
+      type: 'GET',
+      data: {faceData},
+      success: function(data) {
+        TrackActions.receiveTracks(data);
+      }
+    });
   }
 };
 

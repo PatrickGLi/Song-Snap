@@ -3,6 +3,7 @@ var Store = require('flux/utils').Store,
     SessionConstants = require('../constants/session_constants');
 
 var _userId = window.currentUserId;
+var _accessToken = -1;
 var _errors = [];
 
 var SessionStore = new Store(AppDispatcher);
@@ -14,7 +15,7 @@ SessionStore.__onDispatch = function(payload) {
         _errors = payload.user.errors;
         SessionStore.__emitChange();
       } else {
-        setSessionStorage(payload.user.id);
+        setSessionStorage(payload.user);
       }
       break;
     case SessionConstants.LOGOUT:
@@ -26,18 +27,24 @@ SessionStore.currentUser = function(){
   return _userId;
 };
 
+SessionStore.currentAccessToken = function() {
+  return _accessToken;
+};
+
 SessionStore.errors = function(){
   return _errors.slice(0);
 };
 
-var setSessionStorage = function(userId){
-  _userId = userId;
+var setSessionStorage = function(user){
+  _userId = user.id;
+  _accessToken = user.access_token;
   _errors = [];
   SessionStore.__emitChange();
 };
 
 var removeSessionStorage = function(){
   _userId = null;
+  _accessToken = null;
   SessionStore.__emitChange();
 };
 

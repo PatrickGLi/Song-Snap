@@ -1,6 +1,6 @@
 <script type="text/javascript">
-
-  window.currentUserId = <%=@current_user_id%>;
+  window.currentUserId = <%= @current_user_id %>;
+  window.currentAccessToken = '<%=@current_access_token%>';
   window.MICROSOFT_OPTIONS = {
     primary: '<%=ENV["MICROSOFT_PRIMARY_KEY"]%>',
     secondary: '<%=ENV["MICROSOFT_SECONDARY_KEY"]%>'
@@ -9,6 +9,7 @@
     clientId: '<%=ENV["SOUNDCLOUD_CLIENT_ID"]%>',
     clientSecret: '<%=ENV["SOUNDCLOUD_CLIENT_SECRET"]%>'
   };
+
 </script>
 
 <div id="content"></div>

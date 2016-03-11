@@ -2,7 +2,7 @@ var Store = require('flux/utils').Store;
 var AppDispatcher = require('../dispatcher/dispatcher.js');
 var UserConstants = require('../constants/user_constants.js');
 
-var _users = {};
+var _user = null;
 var _errors = [];
 
 var UserStore = new Store(AppDispatcher);
@@ -17,44 +17,23 @@ UserStore.__onDispatch = function(payload){
       _errors = payload.user.errors;
       UserStore.__emitChange();
     } else {
-      addUser(payload.user);
+      userUpdate(payload.user);
     }
   }
-};
-
-var addUser = function(user){
-  _users[user.id] = user;
-  _errors = [];
-  UserStore.__emitChange();
 };
 
 UserStore.errors = function(){
   return _errors.slice(0);
 };
 
-var resetUsers = function(users){
-  users.forEach(function(user){
-    _users[user.id] = user;
-  });
-};
-
 var userUpdate = function(user){
-  _users[user.id] = user;
+  _user = user;
   _errors = [];
   UserStore.__emitChange();
 };
 
-UserStore.all = function() {
-  var users = [];
-  Object.keys(_users).forEach(function(key){
-    users.push(_users[key]);
-  });
-  return users;
+UserStore.currentUser = function() {
+  return _user;
 };
-
-UserStore.find = function(id){
-  return _users[id];
-};
-
 
 module.exports = UserStore;

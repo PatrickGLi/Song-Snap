@@ -24446,36 +24446,38 @@
 	    SignIn = __webpack_require__(251),
 	    ReactConstants = __webpack_require__(241),
 	    SessionStore = __webpack_require__(216),
-	    UserStore = __webpack_require__(246);
+	    UserStore = __webpack_require__(246),
+	    TrackStore = __webpack_require__(254);
+	Face = __webpack_require__(249);
 
 	var LandingPage = React.createClass({
 	  displayName: 'LandingPage',
 
 	  getInitialState: function () {
-	    return { user: "" };
+	    return {
+	      user: ""
+	    };
 	  },
 
 	  componentDidMount: function () {
 	    this.listener = UserStore.addListener(this.onChange);
+	    debugger;
+	    if (SessionStore.currentAccessToken() !== -1) {
+	      this.props.history.pushState(null, "music");
+	    }
 	  },
 
 	  componentWillUnmount: function () {
 	    this.listener.remove();
 	  },
 
-	  componentWillReceiveProps: function (nextProps) {
-	    if (UserStore.all().length !== 0 && nextProps.currentUser !== -1 && nextProps.currentUser !== null) {
-	      this.setState({ user: UserStore.find(nextProps.currentUser).username });
-	    } else {
-	      this.setState({ user: "" });
-	    }
+	  onChange: function () {
+	    this.setState({ user: UserStore.currentUser() });
 	  },
 
-	  onChange: function () {
-	    var user = UserStore.find(this.props.currentUser);
-
-	    if (user) {
-	      this.setState({ user: user.username });
+	  componentWillReceiveProps: function (nextProps) {
+	    if (UserStore.currentUser() && nextProps.currentUser !== -1 && nextProps.currentUser !== null) {
+	      this.setState({ user: UserStore.currentUser().username });
 	    } else {
 	      this.setState({ user: "" });
 	    }
@@ -24494,37 +24496,16 @@
 	  // background: linear-gradient(156deg, #ff00f5, #ffc40d);
 
 	  render: function () {
-	    var user;
-	    if (this.state.user !== "") {
-	      user = "Hi " + this.state.user;
-	    } else {
-	      user = "";
-	    }
-
 	    return React.createElement(
 	      'div',
 	      null,
-	      React.createElement(
-	        'div',
-	        { className: 'song-snap-title' },
-	        'songsnap',
-	        React.createElement(SignIn, { currentUser: this.state.user })
-	      ),
-	      React.createElement(
-	        'div',
-	        { className: 'username' },
-	        user
-	      ),
+	      React.createElement(SignIn, { currentUser: this.state.user }),
 	      React.createElement(
 	        'form',
 	        { method: 'get', action: '/soundcloud/signin' },
 	        React.createElement('input', { className: 'connect-soundcloud pulse', type: 'submit', value: 'get started' })
 	      ),
-	      React.createElement(
-	        'div',
-	        { className: 'test', onClick: this.changeBackground },
-	        'Hi'
-	      )
+	      React.createElement('div', { className: 'test', onClick: this.changeBackground })
 	    );
 	  }
 
@@ -24552,15 +24533,13 @@
 	  getInitialState: function () {
 	    return {
 	      currentUser: SessionStore.currentUser(),
-	      signupUsername: '',
-	      signupPassword: '',
-	      signinUsername: '',
-	      signinPassword: ''
+	      user: ""
 	    };
 	  },
 
 	  componentDidMount: function () {
 	    this.listener = SessionStore.addListener(this.onChange);
+	    this.listener2 = UserStore.addListener(this.onUserChange);
 	    var currentUser = SessionStore.currentUser();
 	    if (currentUser !== -1) {
 	      AppActions.fetchCurrentUser(currentUser);
@@ -24569,6 +24548,17 @@
 
 	  componentWillUnmount: function () {
 	    this.listener.remove();
+	    this.listener2.remove();
+	  },
+
+	  onUserChange: function () {
+	    var user = UserStore.currentUser();
+
+	    if (user) {
+	      this.setState({ user: user.username });
+	    } else {
+	      this.setState({ user: "" });
+	    }
 	  },
 
 	  onChange: function () {
@@ -24579,12 +24569,29 @@
 	  },
 
 	  render: function () {
+	    var user;
+	    if (this.state.user !== "") {
+	      user = "Hi " + this.state.user;
+	    } else {
+	      user = "";
+	    }
+
 	    return React.createElement(
 	      'div',
 	      null,
-	      React.createElement(LandingPage, { currentUser: this.state.currentUser }),
+	      React.createElement(
+	        'div',
+	        { className: 'song-snap-title' },
+	        'songsnap'
+	      ),
+	      this.props.children,
 	      React.createElement(SignupModal, null),
-	      React.createElement(SigninModal, null)
+	      React.createElement(SigninModal, null),
+	      React.createElement(
+	        'div',
+	        { className: 'username' },
+	        user
+	      )
 	    );
 	  }
 	});
@@ -24830,6 +24837,7 @@
 	    SessionConstants = __webpack_require__(238);
 
 	var _userId = window.currentUserId;
+	var _accessToken = -1;
 	var _errors = [];
 
 	var SessionStore = new Store(AppDispatcher);
@@ -24841,7 +24849,7 @@
 	        _errors = payload.user.errors;
 	        SessionStore.__emitChange();
 	      } else {
-	        setSessionStorage(payload.user.id);
+	        setSessionStorage(payload.user);
 	      }
 	      break;
 	    case SessionConstants.LOGOUT:
@@ -24853,18 +24861,24 @@
 	  return _userId;
 	};
 
+	SessionStore.currentAccessToken = function () {
+	  return _accessToken;
+	};
+
 	SessionStore.errors = function () {
 	  return _errors.slice(0);
 	};
 
-	var setSessionStorage = function (userId) {
-	  _userId = userId;
+	var setSessionStorage = function (user) {
+	  _userId = user.id;
+	  _accessToken = user.access_token;
 	  _errors = [];
 	  SessionStore.__emitChange();
 	};
 
 	var removeSessionStorage = function () {
 	  _userId = null;
+	  _accessToken = null;
 	  SessionStore.__emitChange();
 	};
 
@@ -31671,7 +31685,8 @@
 
 	var ReactConstants = __webpack_require__(241),
 	    UserActions = __webpack_require__(242),
-	    SessionActions = __webpack_require__(244);
+	    SessionActions = __webpack_require__(244),
+	    ApiActions = __webpack_require__(253);
 
 	var ApiUtil = {
 	  fetchCurrentUser: function (id) {
@@ -31728,7 +31743,18 @@
 	      // Request body
 	      data: blobData,
 	      success: function (data) {
-	        console.log(data);
+	        ApiActions.getTracks(data);
+	      }
+	    });
+	  },
+
+	  fetchTracks: function (faceData) {
+	    $.ajax({
+	      url: 'api/tracks',
+	      type: 'GET',
+	      data: { faceData },
+	      success: function (data) {
+	        TrackActions.receiveTracks(data);
 	      }
 	    });
 	  }
@@ -31745,7 +31771,8 @@
 	  MICROSOFT_SECONDARY_KEY: window.MICROSOFT_OPTIONS.secondary,
 	  SOUNDCLOUD_CLIENT_ID: window.SOUNDCLOUD_OPTIONS.clientId,
 	  SOUNDCLOUD_CLIENT_SECRET: window.SOUNDCLOUD_OPTIONS.clientSecret,
-	  CURRENT_USER_ID: window.currentUserId
+	  CURRENT_USER_ID: window.currentUserId,
+	  CURRENT_ACCESS_TOKEN: window.currentAccessToken
 	};
 
 	module.exports = ReactConstants;
@@ -31946,7 +31973,7 @@
 	var AppDispatcher = __webpack_require__(235);
 	var UserConstants = __webpack_require__(243);
 
-	var _users = {};
+	var _user = null;
 	var _errors = [];
 
 	var UserStore = new Store(AppDispatcher);
@@ -31961,43 +31988,23 @@
 	        _errors = payload.user.errors;
 	        UserStore.__emitChange();
 	      } else {
-	        addUser(payload.user);
+	        userUpdate(payload.user);
 	      }
 	  }
-	};
-
-	var addUser = function (user) {
-	  _users[user.id] = user;
-	  _errors = [];
-	  UserStore.__emitChange();
 	};
 
 	UserStore.errors = function () {
 	  return _errors.slice(0);
 	};
 
-	var resetUsers = function (users) {
-	  users.forEach(function (user) {
-	    _users[user.id] = user;
-	  });
-	};
-
 	var userUpdate = function (user) {
-	  _users[user.id] = user;
+	  _user = user;
 	  _errors = [];
 	  UserStore.__emitChange();
 	};
 
-	UserStore.all = function () {
-	  var users = [];
-	  Object.keys(_users).forEach(function (key) {
-	    users.push(_users[key]);
-	  });
-	  return users;
-	};
-
-	UserStore.find = function (id) {
-	  return _users[id];
+	UserStore.currentUser = function () {
+	  return _user;
 	};
 
 	module.exports = UserStore;
@@ -32159,7 +32166,15 @@
 
 
 	  render: function () {
-	    return React.createElement(Face, null);
+	    return React.createElement(
+	      'div',
+	      null,
+	      React.createElement(
+	        'h1',
+	        null,
+	        'Hey'
+	      )
+	    );
 	  }
 	});
 
@@ -32186,13 +32201,15 @@
 	  },
 
 	  getPhoto: function () {
-	    var canvas = document.getElementById('canvas');
-	    canvas.width = this.video.videoWidth;
-	    canvas.height = this.video.videoHeight;
-	    canvas.getContext('2d').drawImage(this.video, 0, 0);
-	    var dataURI = canvas.toDataURL('image/jpg');
-	    var blob = this.dataURItoBlob(dataURI);
-	    FaceActions.fetchEmotions(blob);
+	    setTimeout(function () {
+	      var canvas = document.getElementById('canvas');
+	      canvas.width = this.video.videoWidth;
+	      canvas.height = this.video.videoHeight;
+	      canvas.getContext('2d').drawImage(this.video, 0, 0);
+	      var dataURI = canvas.toDataURL('image/jpg');
+	      var blob = this.dataURItoBlob(dataURI);
+	      FaceActions.fetchEmotions(blob);
+	    }.bind(this), 500);
 	  },
 
 	  dataURItoBlob: function (dataURI) {
@@ -32212,7 +32229,7 @@
 	    this.video = document.querySelector('video');
 
 	    if (navigator.getUserMedia) {
-	      navigator.getUserMedia({ audio: true, video: true }, function (stream) {
+	      navigator.getUserMedia({ video: true }, function (stream) {
 	        this.video.src = window.URL.createObjectURL(stream);
 	      }.bind(this), function (err) {
 	        console.log("There was this error: " + err);
@@ -32225,7 +32242,11 @@
 	      'div',
 	      null,
 	      React.createElement('video', { autoPlay: true }),
-	      React.createElement('button', { id: 'take-photo', value: 'Take Picture' }),
+	      React.createElement(
+	        'div',
+	        { id: 'take-photo' },
+	        'Take a photo'
+	      ),
 	      React.createElement('canvas', { id: 'canvas', style: { display: "none" } })
 	    );
 	  }
@@ -32264,7 +32285,7 @@
 
 	  toggleLogin: function () {
 	    SignInActions.destroySession();
-	    // this.history.pushState(null, "/");
+	    this.history.pushState(null, "/");
 	  },
 
 	  render: function () {
@@ -32315,6 +32336,69 @@
 	};
 
 	module.exports = SignInActions;
+
+/***/ },
+/* 253 */
+/***/ function(module, exports, __webpack_require__) {
+
+	setTimeout(function () {
+	  ApiUtil = __webpack_require__(240);
+	}, 0);
+
+	var ApiActions = {
+	  getTracks: function (faceData) {
+	    ApiUtil.fetchTracks(faceData);
+	  }
+	};
+
+	module.exports = ApiActions;
+
+/***/ },
+/* 254 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var AppDispatcher = __webpack_require__(235),
+	    Store = __webpack_require__(217).Store;
+	TrackConstants = __webpack_require__(255);
+	var _tracks = {};
+
+	var TrackStore = new Store(AppDispatcher);
+
+	TrackStore.__onDispatch = function (payload) {
+	  switch (payload.actionType) {
+	    case TrackConstants.TRACKS_RECEIVED:
+	      resetTracks(payload.tracks);
+	      break;
+	  }
+	};
+
+	TrackStore.all = function () {
+	  var tracks = [];
+	  Object.keys(_tracks).forEach(function (key) {
+	    tracks.push(_tracks[key]);
+	  });
+	  return tracks;
+	};
+
+	function resetTracks(tracks) {
+	  tracks.forEach(function (track) {
+	    _tracks[track.id] = track;
+	  });
+
+	  TrackStore.__emitChange();
+	}
+
+	module.exports = TrackStore;
+
+/***/ },
+/* 255 */
+/***/ function(module, exports) {
+
+	var TrackConstants = {
+	  TRACKS_RECEIVED: "TRACKS_RECEIVED"
+	};
+
+	module.exports = TrackConstants;
 
 /***/ }
 /******/ ]);

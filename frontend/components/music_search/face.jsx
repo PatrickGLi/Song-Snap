@@ -13,13 +13,15 @@ var Face = React.createClass({
   },
 
   getPhoto:function() {
-    var canvas = document.getElementById('canvas');
-    canvas.width = this.video.videoWidth;
-    canvas.height = this.video.videoHeight;
-    canvas.getContext('2d').drawImage(this.video, 0, 0);
-    var dataURI = canvas.toDataURL('image/jpg');
-    var blob = this.dataURItoBlob(dataURI);
-    FaceActions.fetchEmotions(blob);
+    setTimeout(function(){
+      var canvas = document.getElementById('canvas');
+      canvas.width = this.video.videoWidth;
+      canvas.height = this.video.videoHeight;
+      canvas.getContext('2d').drawImage(this.video, 0, 0);
+      var dataURI = canvas.toDataURL('image/jpg');
+      var blob = this.dataURItoBlob(dataURI);
+      FaceActions.fetchEmotions(blob);
+    }.bind(this), 500);
   },
 
   dataURItoBlob: function(dataURI) {
@@ -45,7 +47,7 @@ var Face = React.createClass({
     this.video = document.querySelector('video');
 
     if (navigator.getUserMedia) {
-      navigator.getUserMedia({audio: true, video: true}, function(stream) {
+      navigator.getUserMedia({video: true}, function(stream) {
         this.video.src = window.URL.createObjectURL(stream);
       }.bind(this), function(err) { console.log("There was this error: " + err)});
     }
@@ -55,7 +57,7 @@ var Face = React.createClass({
     return (
       <div>
         <video autoPlay></video>
-        <button id="take-photo" value="Take Picture"></button>
+        <div id="take-photo">Take a photo</div>
           <canvas id="canvas" style={{ display: "none" }}></canvas>
       </div>
     );

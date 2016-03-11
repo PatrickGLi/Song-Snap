@@ -4,7 +4,11 @@ var React = require('react'),
 var MusicSearch = React.createClass({
 
   render: function(){
-    return(<Face></Face>);
+    return (
+      <div>
+        <h1>Hey</h1>
+      </div>
+    );
   }
 });
 
