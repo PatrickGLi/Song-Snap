@@ -37,7 +37,6 @@ function calculateMood(emotions) {
     }
   }
 
-  debugger
   return mood;
 }
 

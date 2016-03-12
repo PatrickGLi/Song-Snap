@@ -32542,7 +32542,6 @@
 	    }
 	  }
 
-	  debugger;
 	  return mood;
 	}
 
