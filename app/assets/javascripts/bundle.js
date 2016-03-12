@@ -31635,6 +31635,7 @@
 	      data: blobData,
 	      success: function (data) {
 	        console.log("emotion acquired", data);
+	        ApiActions.emotionReceived(data);
 	        ApiActions.getTracks(data);
 	      }
 	    });
@@ -31725,6 +31726,8 @@
 /* 245 */
 /***/ function(module, exports, __webpack_require__) {
 
+	var EmotionActions = __webpack_require__(255);
+
 	setTimeout(function () {
 	  ApiUtil = __webpack_require__(241);
 	}, 0);
@@ -31732,6 +31735,10 @@
 	var ApiActions = {
 	  getTracks: function (faceData) {
 	    ApiUtil.fetchTracks(faceData);
+	  },
+
+	  emotionReceived: function (emotions) {
+	    EmotionActions.receiveEmotions(emotions);
 	  }
 	};
 
@@ -32389,6 +32396,7 @@
 	var React = __webpack_require__(1),
 	    SessionStore = __webpack_require__(212),
 	    TrackStore = __webpack_require__(237),
+	    EmotionStore = __webpack_require__(257),
 	    ReactConstants = __webpack_require__(211),
 	    Face = __webpack_require__(239);
 
@@ -32397,20 +32405,27 @@
 
 	  getInitialState: function () {
 	    return {
-	      track: null
+	      track: null,
+	      emotion: null
 	    };
 	  },
 
 	  componentDidMount: function () {
 	    this.listener = TrackStore.addListener(this.onGetTrack);
+	    this.listener2 = EmotionStore.addListener(this.onGetEmotion);
 	  },
 
 	  componentWillUnmount: function () {
 	    this.listener.remove();
+	    this.listener2.remove();
 	  },
 
 	  onGetTrack: function () {
 	    this.setState({ track: TrackStore.currentTrack() });
+	  },
+
+	  onGetEmotion: function () {
+	    this.setState({ emotion: EmotionStore.currentEmotion() });
 	  },
 
 	  render: function () {
@@ -32433,16 +32448,105 @@
 	      result = React.createElement('div', null);
 	    }
 
+	    var emotion;
+	    if (this.state.emotion === null) {
+	      emotion = React.createElement('div', null);
+	    } else {
+	      emotion = React.createElement(
+	        'div',
+	        { className: 'emotion' },
+	        this.state.emotion
+	      );
+	    }
+
 	    return React.createElement(
 	      'div',
 	      null,
 	      result,
+	      emotion,
 	      cam
 	    );
 	  }
 	});
 
 	module.exports = MusicSearch;
+
+/***/ },
+/* 255 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var AppDispatcher = __webpack_require__(231),
+	    EmotionConstants = __webpack_require__(256);
+
+	var EmotionActions = {
+	  receiveEmotions: function (emotions) {
+	    AppDispatcher.dispatch({
+	      actionType: EmotionConstants.EMOTION_RECEIVED,
+	      emotions: emotions
+	    });
+	  }
+	};
+
+	module.exports = EmotionActions;
+
+/***/ },
+/* 256 */
+/***/ function(module, exports) {
+
+	var SessionConstants = {
+	  EMOTION_RECEIVED: "EMOTION_RECEIVED"
+	};
+
+	module.exports = SessionConstants;
+
+/***/ },
+/* 257 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var AppDispatcher = __webpack_require__(231),
+	    Store = __webpack_require__(213).Store;
+	EmotionConstants = __webpack_require__(256);
+
+	var _emotion = null;
+
+	var EmotionStore = new Store(AppDispatcher);
+
+	EmotionStore.__onDispatch = function (payload) {
+	  switch (payload.actionType) {
+	    case EmotionConstants.EMOTION_RECEIVED:
+	      resetEmotion(payload.emotions);
+	      break;
+	  }
+	};
+
+	EmotionStore.currentEmotion = function () {
+	  return _emotion;
+	};
+
+	function resetEmotion(emotions) {
+	  _emotion = calculateMood(emotions);
+
+	  EmotionStore.__emitChange();
+	}
+
+	function calculateMood(emotions) {
+	  var highest = 0;
+	  var mood = "";
+
+	  for (var k in emotions[0].scores) {
+	    var convertedValue = parseFloat(emotions[0].scores[k]);
+
+	    if (convertedValue > highest) {
+	      highest = convertedValue;
+	      mood = k;
+	    }
+	  }
+
+	  debugger;
+	  return mood;
+	}
+
+	module.exports = EmotionStore;
 
 /***/ }
 /******/ ]);

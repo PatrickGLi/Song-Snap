@@ -176,6 +176,10 @@ video {
   color: grey;
 }
 
+.emotion {
+  font-size: 100px;
+}
+
 /*.test {
   height: 500px;
   width: 500px;
