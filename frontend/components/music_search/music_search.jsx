@@ -68,7 +68,7 @@ var MusicSearch = React.createClass({
           });
           break;
         case "happiness":
-          var response = "feeling happy : )";
+          var response = "feeling happy or upbeat";
           $('body').css({
           background: "#ffa5d2",
           transition: "background 7s"

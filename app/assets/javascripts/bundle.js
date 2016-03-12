@@ -31731,7 +31731,47 @@
 	    return React.createElement(
 	      'div',
 	      null,
+	      React.createElement(
+	        'div',
+	        { className: 'modal fade', id: 'myModal3', tabIndex: '-1', role: 'dialog', 'aria-labelledby': 'myModalLabel' },
+	        React.createElement(
+	          'div',
+	          { className: 'modal-dialog modal-sm', role: 'document' },
+	          React.createElement(
+	            'div',
+	            { className: 'modal-content' },
+	            React.createElement(
+	              'div',
+	              { className: 'modal-header' },
+	              React.createElement(
+	                'button',
+	                { type: 'button', className: 'close', 'data-dismiss': 'modal', 'aria-label': 'Close' },
+	                React.createElement(
+	                  'span',
+	                  { 'aria-hidden': 'true' },
+	                  '×'
+	                )
+	              ),
+	              React.createElement(
+	                'h4',
+	                { className: 'modal-title', id: 'myModalLabel' },
+	                'about songsnap'
+	              )
+	            ),
+	            React.createElement(
+	              'div',
+	              { className: 'modal-body' },
+	              'Hey, this is a fun project by pat li. Photograph yourself and get a track that matches your expression. You can try happy, sad, angry, disgusted, contemptful, surprised, and neutral faces. Oh, and you need a Soundcloud account because it will grab one of your favorited or playlisted tracks. Have fun!'
+	            )
+	          )
+	        )
+	      ),
 	      logout,
+	      React.createElement(
+	        'div',
+	        { className: 'about-button', 'data-toggle': 'modal', 'data-target': '#myModal3' },
+	        'about songsnap'
+	      ),
 	      React.createElement(
 	        'div',
 	        { className: 'song-snap-title' },
@@ -32362,7 +32402,7 @@
 	        });
 	        break;
 	      case "happiness":
-	        var response = "feeling happy : )";
+	        var response = "feeling happy or upbeat";
 	        $('body').css({
 	          background: "#ffa5d2",
 	          transition: "background 7s"

@@ -20,8 +20,8 @@ class Api::TracksController < ApplicationController
           track.genre =~ /Rap|rap|trap|Trap|deep|Deep|heavy|Heavy|filthy|Filthy|electro(?!nic)|Electro(?!nic)|techno|Techno|dirty|Dirty/ ||
           track.tag_list =~ /Rap|rap|trap|Trap|deep|Deep|heavy|Heavy|filthy|Filthy|electro(?!nic)|Electro(?!nic)|techno|Techno|dirty|Dirty/
         when "contempt"
-          track.genre =~ /Rap|rap|trap|Trap|deep|Deep|heavy|Heavy|filthy|Filthy|electro(?!nic)|Electro(?!nic)|techno|Techno|dirty|Dirty|hip hop|Hip Hop|Hip hop|Hop|hop/ ||
-          track.tag_list =~ /Rap|rap|trap|Trap|deep|Deep|heavy|Heavy|filthy|Filthy|electro(?!nic)|Electro(?!nic)|techno|Techno|dirty|Dirty|hip hop|Hip Hop|Hip hop|Hop|hop/
+          track.genre =~ /Rap|rap|trap|Trap|deep|Deep|heavy|Heavy|filthy|Filthy|electro(?!nic)|Electro(?!nic)|techno|Techno|dirty|Dirty/ ||
+          track.tag_list =~ /Rap|rap|trap|Trap|deep|Deep|heavy|Heavy|filthy|Filthy|electro(?!nic)|Electro(?!nic)|techno|Techno|dirty|Dirty/
         when "disgust"
           track.genre =~ /Rap|rap|trap|Trap|deep|Deep|heavy|Heavy|filthy|Filthy|electro|Electro|techno|Techno|dirty|Dirty/ ||
           track.tag_list =~ /Rap|rap|trap|Trap|deep|Deep|heavy|Heavy|filthy|Filthy|electro|Electro|techno|Techno|dirty|Dirty/

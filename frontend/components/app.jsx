@@ -71,7 +71,22 @@ var App = React.createClass({
 
     return(
       <div>
+        <div className="modal fade" id="myModal3" tabIndex="-1" role="dialog" aria-labelledby="myModalLabel">
+          <div className="modal-dialog modal-sm" role="document">
+            <div className="modal-content">
+              <div className="modal-header">
+                <button type="button" className="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 className="modal-title" id="myModalLabel">about songsnap</h4>
+              </div>
+              <div className="modal-body">
+                Hey, this is a fun project by pat li. Photograph yourself and get a track that matches your expression. You can try happy, sad, angry, disgusted, contemptful, surprised, and neutral faces. Oh, and you need a Soundcloud account because it will grab one of your favorited or playlisted tracks. Have fun!
+              </div>
+            </div>
+          </div>
+        </div>
+
         {logout}
+        <div className="about-button" data-toggle="modal" data-target="#myModal3">about songsnap</div>
         <div className="song-snap-title">
           <img className="music-note" src="/assets/music_note.png"></img>
           songsnap
