@@ -78,7 +78,7 @@ var ApiUtil = {
         TrackActions.receiveTracks(data);
       }
     });
-  }
+  },
 };
 
 

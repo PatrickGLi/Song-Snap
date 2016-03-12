@@ -5,6 +5,11 @@ class Api::TracksController < ApplicationController
       mood = calculate_mood(mood_scores)
 
       tracks = current_user.soundcloud_client.get("/me/favorites")
+      playlists = current_user.soundcloud_client.get("/me/playlists")
+
+      playlists.each do |playlist|
+        tracks.concat(playlist.tracks)
+      end
 
       @filtered_tracks = tracks.select do |track|
         case mood

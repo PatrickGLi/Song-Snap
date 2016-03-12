@@ -2,6 +2,8 @@ var React = require('react'),
     SessionStore = require('../../stores/sessions_store'),
     TrackStore = require('../../stores/tracks_store'),
     EmotionStore = require('../../stores/emotions_store'),
+    UserStore = require('../../stores/users_store'),
+    MusicSearchActions = require('../../actions/music_search_actions'),
     ReactConstants = require('../../constants/react_constants'),
     Face = require('./face');
 
@@ -92,8 +94,9 @@ var MusicSearch = React.createClass({
 
   render: function(){
     var cam;
-    debugger
-    if (SessionStore.currentAccessToken() !== null && SessionStore.currentAccessToken() !== "-1") {
+    if (SessionStore.currentAccessToken() !== null &&
+        SessionStore.currentAccessToken() !== "-1" &&
+        SessionStore.currentAccessToken() !== "") {
       cam = (
         <Face tracks={this.state.track}/>
       );

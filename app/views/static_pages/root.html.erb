@@ -1,6 +1,7 @@
 <script type="text/javascript">
   window.currentUserId = <%= @current_user_id %>;
   window.currentAccessToken = '<%=@current_access_token%>';
+  window.currentUser = '<%=@current_username%>';
   window.MICROSOFT_OPTIONS = {
     primary: '<%=ENV["MICROSOFT_PRIMARY_KEY"]%>',
     secondary: '<%=ENV["MICROSOFT_SECONDARY_KEY"]%>'

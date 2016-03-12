@@ -20,7 +20,7 @@ var App = React.createClass({
   componentDidMount: function() {
     this.listener = SessionStore.addListener(this.onSessionChange);
     this.listener2 = UserStore.addListener(this.onUserChange);
-    var currentUserId = SessionStore.currentUserId()
+    var currentUserId = SessionStore.currentUserId();
     if (currentUserId !== -1) {
       AppActions.fetchCurrentUser(currentUserId);
     }
