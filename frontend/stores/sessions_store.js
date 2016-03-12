@@ -46,7 +46,6 @@ var setSessionStorage = function(user){
   _user = user;
   _accessToken = user.access_token;
   _errors = [];
-  debugger
   SessionStore.__emitChange();
 };
 

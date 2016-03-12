@@ -36,8 +36,9 @@ class Api::TracksController < ApplicationController
         end
       end
 
+      @embed_single_track = current_user.soundcloud_client.get('/oembed', :url => @filtered_tracks.sample.permalink_url, autoplay: true)
 
-    @me = current_user.soundcloud_client.get("/me")
+      @me = current_user.soundcloud_client.get("/me")
     else
       debugger
     end

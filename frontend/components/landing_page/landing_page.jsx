@@ -42,10 +42,10 @@ var LandingPage = React.createClass({
     console.log("hey");
     // debugger
 
-$('body').css({
-background: "grey",
-transition: "background 7s"
-});
+      $('body').css({
+      background: "grey",
+      transition: "background 7s"
+      });
 
 
     },

@@ -63,7 +63,6 @@ var App = React.createClass({
 
   render: function() {
     var user, logout;
-    // debugger
     if (this.state.user !== "") {
       logout = <div className="logout" onClick={this.toggleLogin}>log out</div>
       user = "Hi " + this.state.user;

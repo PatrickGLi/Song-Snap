@@ -24600,7 +24600,6 @@
 
 	  render: function () {
 	    var user, logout;
-	    // debugger
 	    if (this.state.user !== "") {
 	      logout = React.createElement(
 	        'div',
@@ -24918,7 +24917,6 @@
 	  _user = user;
 	  _accessToken = user.access_token;
 	  _errors = [];
-	  debugger;
 	  SessionStore.__emitChange();
 	};
 
@@ -31737,6 +31735,7 @@
 	var ReactConstants = __webpack_require__(241),
 	    UserActions = __webpack_require__(242),
 	    SessionActions = __webpack_require__(244),
+	    TrackActions = __webpack_require__(256),
 	    ApiActions = __webpack_require__(253);
 
 	var ApiUtil = {
@@ -31797,6 +31796,7 @@
 	      // Request body
 	      data: blobData,
 	      success: function (data) {
+	        console.log("emotion acquired", data);
 	        ApiActions.getTracks(data);
 	      }
 	    });
@@ -32223,26 +32223,56 @@
 
 	var React = __webpack_require__(1),
 	    SessionStore = __webpack_require__(216),
+	    TrackStore = __webpack_require__(254),
+	    ReactConstants = __webpack_require__(241),
 	    Face = __webpack_require__(249);
 
 	var MusicSearch = React.createClass({
 	  displayName: 'MusicSearch',
 
+	  getInitialState: function () {
+	    return {
+	      track: null
+	    };
+	  },
 
 	  componentDidMount: function () {
-	    console.log(SessionStore.currentAccessToken());
-	    debugger;
+	    this.listener = TrackStore.addListener(this.onGetTrack);
+	  },
+
+	  componentWillUnmount: function () {
+	    this.listener.remove();
+	  },
+
+	  onGetTrack: function () {
+	    this.setState({ track: TrackStore.currentTrack() });
 	  },
 
 	  render: function () {
-	    return React.createElement(
-	      'div',
-	      null,
-	      React.createElement(
+	    var cam;
+	    if (SessionStore.currentAccessToken() !== null && SessionStore.currentAccessToken() !== "-1") {
+	      cam = React.createElement(Face, null);
+	    } else {
+	      cam = React.createElement(
 	        'form',
 	        { method: 'get', action: '/soundcloud/signin' },
 	        React.createElement('input', { className: 'connect-soundcloud pulse', type: 'submit', value: 'get started' })
-	      )
+	      );
+	    }
+
+	    var result;
+	    if (this.state.track !== null) {
+	      trackString = this.state.track['html'];
+	      result = React.createElement('div', { dangerouslySetInnerHTML: { __html: trackString } });
+	    } else {
+	      result = React.createElement('div', null);
+	    }
+
+	    return React.createElement(
+	      'div',
+	      null,
+	      result,
+	      cam
 	    );
 	  }
 	});
@@ -32364,29 +32394,24 @@
 	    Store = __webpack_require__(217).Store;
 	TrackConstants = __webpack_require__(255);
 	var _tracks = {};
+	var _embedded_track = null;
 
 	var TrackStore = new Store(AppDispatcher);
 
 	TrackStore.__onDispatch = function (payload) {
 	  switch (payload.actionType) {
 	    case TrackConstants.TRACKS_RECEIVED:
-	      resetTracks(payload.tracks);
+	      resetTrack(payload.tracks);
 	      break;
 	  }
 	};
 
-	TrackStore.all = function () {
-	  var tracks = [];
-	  Object.keys(_tracks).forEach(function (key) {
-	    tracks.push(_tracks[key]);
-	  });
-	  return tracks;
+	TrackStore.currentTrack = function () {
+	  return _embedded_track;
 	};
 
-	function resetTracks(tracks) {
-	  tracks.forEach(function (track) {
-	    _tracks[track.id] = track;
-	  });
+	function resetTrack(tracks) {
+	  _embedded_track = tracks.embedded_track;
 
 	  TrackStore.__emitChange();
 	}
@@ -32402,6 +32427,24 @@
 	};
 
 	module.exports = TrackConstants;
+
+/***/ },
+/* 256 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var AppDispatcher = __webpack_require__(235),
+	    UserConstants = __webpack_require__(243);
+
+	var TrackActions = {
+	  receiveTracks: function (tracks) {
+	    AppDispatcher.dispatch({
+	      actionType: TrackConstants.TRACKS_RECEIVED,
+	      tracks: tracks
+	    });
+	  }
+	};
+
+	module.exports = TrackActions;
 
 /***/ }
 /******/ ]);

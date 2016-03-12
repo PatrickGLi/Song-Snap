@@ -15,21 +15,6 @@
  *= require_self
  */
 
- /*video {
-  width: 307px;
-  height: 250px;
-  background: rgba(255,255,255,0.5);
-}
-.grayscale {
-   -webkit-filter: grayscale(90%);
-}
-.sepia {
-  -webkit-filter: sepia(100%);
-}
-.blur {
-  -webkit-filter: blur(3px);
-}*/
-
 body{
   font-family: 'Raleway', 'sans-serif';
   font-weight: 300;
@@ -165,6 +150,30 @@ body{
 
 input:focus {
     outline:none !important;
+}
+
+video {
+  width: 350px;
+  height: 100%;
+  position: relative;
+  left: 75px;
+  top: 150px;
+  z-index: 100;
+  border: 5px solid white;
+}
+
+#take-photo {
+  font-size: 30px;
+  position:relative;
+  top: 150px;
+}
+
+#take-photo:hover {
+  cursor: pointer;
+}
+
+#take-photo:active {
+  color: grey;
 }
 
 /*.test {

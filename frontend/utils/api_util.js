@@ -1,6 +1,7 @@
 var ReactConstants = require('../constants/react_constants'),
     UserActions = require('../actions/user_actions'),
     SessionActions = require('../actions/session_actions'),
+    TrackActions = require('../actions/track_actions'),
     ApiActions = require('../actions/api_actions');
 
 var ApiUtil = {
@@ -61,6 +62,7 @@ var ApiUtil = {
                // Request body
                data: blobData,
                success: function(data) {
+                 console.log("emotion acquired", data);
                  ApiActions.getTracks(data);
                }
            });
