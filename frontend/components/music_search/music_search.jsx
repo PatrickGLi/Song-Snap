@@ -57,13 +57,13 @@ var MusicSearch = React.createClass({
     if (this.state.emotion === null) {
       emotion = <div></div>
     } else {
-      emotion = <div className="emotion">{this.state.emotion}</div>
+      emotion = <div className="emotion">Current emotion: {this.state.emotion}</div>
     }
 
     return (
       <div>
         {result}
-        {emotion}
+        <div className="emotion">Current emotion: (change later){this.state.emotion}</div>
         {cam}
       </div>
     );

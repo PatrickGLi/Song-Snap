@@ -32455,6 +32455,7 @@
 	      emotion = React.createElement(
 	        'div',
 	        { className: 'emotion' },
+	        'Current emotion: ',
 	        this.state.emotion
 	      );
 	    }
@@ -32463,7 +32464,12 @@
 	      'div',
 	      null,
 	      result,
-	      emotion,
+	      React.createElement(
+	        'div',
+	        { className: 'emotion' },
+	        'Current emotion: (change later)',
+	        this.state.emotion
+	      ),
 	      cam
 	    );
 	  }
