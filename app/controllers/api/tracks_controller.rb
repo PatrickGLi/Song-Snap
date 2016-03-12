@@ -14,20 +14,20 @@ class Api::TracksController < ApplicationController
       @filtered_tracks = tracks.select do |track|
         case mood
         when "neutral"
-          track.genre =~ /Indie|indie|rb|RB|R&B|r&b|relax|Relax|vibes|Vibes|future|Future|jazz|Jazz|classical|Classical|alternative|Alternative|school|School|sex|Sex/ ||
-          track.tag_list =~ /Indie|indie|rb|RB|R&B|r&b|relax|Relax|vibes|Vibes|future|Future|jazz|Jazz|classical|Classical|alternative|Alternative|school|School|sex|Sex/
+          track.genre =~ /Indie|indie|relax|Relax|hip hop|Hip Hop|Hip hop|Hop|hop|vibes|Vibes|future|Future|jazz|Jazz|classical|Classical|alternative|Alternative|school|School|sex|Sex/ ||
+          track.tag_list =~ /Indie|indie|relax|Relax|vibes|Vibes|hip hop|Hip Hop|Hip hop|Hop|hop|future|Future|jazz|Jazz|classical|Classical|alternative|Alternative|school|School|sex|Sex/
         when "anger"
-          track.genre =~ /Rap|rap|trap|Trap|deep|Deep|heavy|Heavy|filthy|Filthy|electro|Electro|techno|Techno|dirty|Dirty|hip hop|Hip Hop|Hip hop|Hop|hop/ ||
-          track.tag_list =~ /Rap|rap|trap|Trap|deep|Deep|heavy|Heavy|filthy|Filthy|electro|Electro|techno|Techno|dirty|Dirty|hip hop|Hip Hop|Hip hop|Hop|hop/
+          track.genre =~ /Rap|rap|trap|Trap|deep|Deep|heavy|Heavy|filthy|Filthy|electro(?!nic)|Electro(?!nic)|techno|Techno|dirty|Dirty/ ||
+          track.tag_list =~ /Rap|rap|trap|Trap|deep|Deep|heavy|Heavy|filthy|Filthy|electro(?!nic)|Electro(?!nic)|techno|Techno|dirty|Dirty/
         when "contempt"
-          track.genre =~ /Rap|rap|trap|Trap|deep|Deep|heavy|Heavy|filthy|Filthy|electro|Electro|techno|Techno|dirty|Dirty|hip hop|Hip Hop|Hip hop|Hop|hop/ ||
-          track.tag_list =~ /Rap|rap|trap|Trap|deep|Deep|heavy|Heavy|filthy|Filthy|electro|Electro|techno|Techno|dirty|Dirty|hip hop|Hip Hop|Hip hop|Hop|hop/
+          track.genre =~ /Rap|rap|trap|Trap|deep|Deep|heavy|Heavy|filthy|Filthy|electro(?!nic)|Electro(?!nic)|techno|Techno|dirty|Dirty|hip hop|Hip Hop|Hip hop|Hop|hop/ ||
+          track.tag_list =~ /Rap|rap|trap|Trap|deep|Deep|heavy|Heavy|filthy|Filthy|electro(?!nic)|Electro(?!nic)|techno|Techno|dirty|Dirty|hip hop|Hip Hop|Hip hop|Hop|hop/
         when "disgust"
-          track.genre =~ /Rap|rap|trap|Trap|deep|Deep|heavy|Heavy|filthy|Filthy|electro|Electro|techno|Techno|dirty|Dirty|hip hop|Hip Hop|Hip hop|Hop|hop/ ||
-          track.tag_list =~ /Rap|rap|trap|Trap|deep|Deep|heavy|Heavy|filthy|Filthy|electro|Electro|techno|Techno|dirty|Dirty|hip hop|Hip Hop|Hip hop|Hop|hop/
+          track.genre =~ /Rap|rap|trap|Trap|deep|Deep|heavy|Heavy|filthy|Filthy|electro|Electro|techno|Techno|dirty|Dirty/ ||
+          track.tag_list =~ /Rap|rap|trap|Trap|deep|Deep|heavy|Heavy|filthy|Filthy|electro|Electro|techno|Techno|dirty|Dirty/
         when "fear"
-          track.genre =~ /Rap|rap|trap|Trap|deep|Deep|heavy|Heavy|filthy|Filthy|electro|Electro|techno|Techno|dirty|Dirty|hip hop|Hip Hop|Hip hop|Hop|hop/ ||
-          track.tag_list =~ /Rap|rap|trap|Trap|deep|Deep|heavy|Heavy|filthy|Filthy|electro|Electro|techno|Techno|dirty|Dirty|hip hop|Hip Hop|Hip hop|Hop|hop/
+          track.genre =~ /Rap|rap|trap|Trap|deep|Deep|heavy|Heavy|filthy|Filthy|electro|Electro|techno|Techno|dirty|Dirty/ ||
+          track.tag_list =~ /Rap|rap|trap|Trap|deep|Deep|heavy|Heavy|filthy|Filthy|electro|Electro|techno|Techno|dirty|Dirty/
         when "happiness"
           track.genre =~ /(?!eep) house|(?!ass) house|(?!eep) House|(?!ass) House|dance|Dance|pop|Pop|club|Club|summer|Summer|tropical|Tropical|festival|Festival|funk|Funk|groov|Groov|edm|EDM|Edm/ ||
           track.title =~ /love|Love/ ||
