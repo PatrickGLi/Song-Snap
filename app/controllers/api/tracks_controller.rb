@@ -40,7 +40,6 @@ class Api::TracksController < ApplicationController
 
       @me = current_user.soundcloud_client.get("/me")
     else
-      debugger
     end
   end
 
