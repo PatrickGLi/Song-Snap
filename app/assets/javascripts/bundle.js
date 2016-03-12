@@ -50,8 +50,8 @@
 	    Route = __webpack_require__(159).Route,
 	    IndexRoute = __webpack_require__(159).IndexRoute,
 	    LandingPage = __webpack_require__(210),
-	    App = __webpack_require__(246),
-	    MusicSearch = __webpack_require__(254);
+	    App = __webpack_require__(248),
+	    MusicSearch = __webpack_require__(256);
 
 	var routes = React.createElement(
 	  Route,
@@ -24484,18 +24484,6 @@
 	    }
 	  },
 
-	  changeBackground: function () {
-	    console.log("hey");
-	    // debugger
-
-	    $('body').css({
-	      background: "grey",
-	      transition: "background 7s"
-	    });
-	  },
-
-	  // background: linear-gradient(156deg, #ff00f5, #ffc40d);
-
 	  render: function () {
 	    var button;
 	    if (!this.state.user) {
@@ -24520,8 +24508,7 @@
 	    return React.createElement(
 	      'div',
 	      null,
-	      button,
-	      React.createElement('div', { className: 'test', onClick: this.changeBackground })
+	      button
 	    );
 	  }
 
@@ -31493,8 +31480,14 @@
 	  },
 
 	  addPictureListener: function () {
-	    var cameraButton = document.getElementById('take-photo');
-	    cameraButton.addEventListener('click', this.getPhoto);
+	    this.cameraButton = document.getElementById('take-photo');
+	    this.cameraButton.addEventListener('click', this.getPhoto);
+	  },
+
+	  componentWillReceiveProps: function (nextProps) {
+	    if (nextProps.tracks !== null) {
+	      this.cameraButton.addEventListener('click', this.getPhoto);
+	    }
 	  },
 
 	  getPhoto: function () {
@@ -31507,6 +31500,8 @@
 	      var blob = this.dataURItoBlob(dataURI);
 	      FaceActions.fetchEmotions(blob);
 	    }.bind(this), 500);
+
+	    this.cameraButton.removeEventListener('click', this.getPhoto, false);
 	  },
 
 	  dataURItoBlob: function (dataURI) {
@@ -31722,7 +31717,7 @@
 /* 245 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var EmotionActions = __webpack_require__(255);
+	var EmotionActions = __webpack_require__(246);
 
 	setTimeout(function () {
 	  ApiUtil = __webpack_require__(241);
@@ -31744,14 +31739,42 @@
 /* 246 */
 /***/ function(module, exports, __webpack_require__) {
 
+	var AppDispatcher = __webpack_require__(231),
+	    EmotionConstants = __webpack_require__(247);
+
+	var EmotionActions = {
+	  receiveEmotions: function (emotions) {
+	    AppDispatcher.dispatch({
+	      actionType: EmotionConstants.EMOTION_RECEIVED,
+	      emotions: emotions
+	    });
+	  }
+	};
+
+	module.exports = EmotionActions;
+
+/***/ },
+/* 247 */
+/***/ function(module, exports) {
+
+	var SessionConstants = {
+	  EMOTION_RECEIVED: "EMOTION_RECEIVED"
+	};
+
+	module.exports = SessionConstants;
+
+/***/ },
+/* 248 */
+/***/ function(module, exports, __webpack_require__) {
+
 	var React = __webpack_require__(1),
-	    LinkedStateMixin = __webpack_require__(247),
+	    LinkedStateMixin = __webpack_require__(249),
 	    LandingPage = __webpack_require__(210),
 	    UserStore = __webpack_require__(235),
 	    SessionStore = __webpack_require__(212),
-	    AppActions = __webpack_require__(251),
-	    SigninModal = __webpack_require__(252),
-	    SignupModal = __webpack_require__(253);
+	    AppActions = __webpack_require__(253),
+	    SigninModal = __webpack_require__(254),
+	    SignupModal = __webpack_require__(255);
 
 	var App = React.createClass({
 	  displayName: 'App',
@@ -31842,13 +31865,13 @@
 	module.exports = App;
 
 /***/ },
-/* 247 */
+/* 249 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = __webpack_require__(248);
+	module.exports = __webpack_require__(250);
 
 /***/ },
-/* 248 */
+/* 250 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -31865,8 +31888,8 @@
 
 	'use strict';
 
-	var ReactLink = __webpack_require__(249);
-	var ReactStateSetters = __webpack_require__(250);
+	var ReactLink = __webpack_require__(251);
+	var ReactStateSetters = __webpack_require__(252);
 
 	/**
 	 * A simple mixin around ReactLink.forState().
@@ -31889,7 +31912,7 @@
 	module.exports = LinkedStateMixin;
 
 /***/ },
-/* 249 */
+/* 251 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -31963,7 +31986,7 @@
 	module.exports = ReactLink;
 
 /***/ },
-/* 250 */
+/* 252 */
 /***/ function(module, exports) {
 
 	/**
@@ -32072,7 +32095,7 @@
 	module.exports = ReactStateSetters;
 
 /***/ },
-/* 251 */
+/* 253 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var ApiUtil = __webpack_require__(241);
@@ -32099,12 +32122,12 @@
 	module.exports = AppActions;
 
 /***/ },
-/* 252 */
+/* 254 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1),
-	    LinkedStateMixin = __webpack_require__(247),
-	    AppActions = __webpack_require__(251),
+	    LinkedStateMixin = __webpack_require__(249),
+	    AppActions = __webpack_require__(253),
 	    SessionStore = __webpack_require__(212),
 	    UserStore = __webpack_require__(235),
 	    History = __webpack_require__(159).History;
@@ -32232,12 +32255,12 @@
 	module.exports = SigninModal;
 
 /***/ },
-/* 253 */
+/* 255 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1),
-	    LinkedStateMixin = __webpack_require__(247),
-	    AppActions = __webpack_require__(251),
+	    LinkedStateMixin = __webpack_require__(249),
+	    AppActions = __webpack_require__(253),
 	    UserStore = __webpack_require__(235),
 	    SessionStore = __webpack_require__(212),
 	    History = __webpack_require__(159).History;
@@ -32381,7 +32404,7 @@
 	module.exports = SignupModal;
 
 /***/ },
-/* 254 */
+/* 256 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1),
@@ -32417,14 +32440,72 @@
 
 	  onGetEmotion: function () {
 	    var currentEmotion = EmotionStore.currentEmotion();
-	    // this.changeBackground(currentEmotion);
-	    this.setState({ emotion: EmotionStore.currentEmotion() });
+	    switch (currentEmotion) {
+	      case "neutral":
+	        var response = "chill sounds and my usual vibe.";
+	        $('body').css({
+	          background: "#595959",
+	          transition: "background 7s"
+	        });
+	        break;
+	      case "anger":
+	        var response = "feeling a little Angry?";
+	        $('body').css({
+	          background: "#190000",
+	          transition: "background 7s"
+	        });
+	        break;
+	      case "contempt":
+	        var response = "feeling some contempt, hmph..";
+	        $('body').css({
+	          background: "#ff8f66",
+	          transition: "background 7s"
+	        });
+	        break;
+	      case "disgust":
+	        var response = "looking for something nasty.";
+	        $('body').css({
+	          background: "#001900",
+	          transition: "background 7s"
+	        });
+	        break;
+	      case "fear":
+	        var response = "don't be scared.";
+	        $('body').css({
+	          background: "#990000",
+	          transition: "background 7s"
+	        });
+	        break;
+	      case "happiness":
+	        var response = "feeling happy : )";
+	        $('body').css({
+	          background: "#ffa5d2",
+	          transition: "background 7s"
+	        });
+	        break;
+	      case "sadness":
+	        var response = "feeling sad.";
+	        $('body').css({
+	          background: "#b5dbe8",
+	          transition: "background 7s"
+	        });
+	        break;
+	      case "surprise":
+	        var response = "surprise!";
+	        $('body').css({
+	          background: "#885ead",
+	          transition: "background 7s"
+	        });
+	    }
+
+	    this.setState({ emotion: response });
 	  },
 
 	  render: function () {
 	    var cam;
+	    debugger;
 	    if (SessionStore.currentAccessToken() !== null && SessionStore.currentAccessToken() !== "-1") {
-	      cam = React.createElement(Face, null);
+	      cam = React.createElement(Face, { tracks: this.state.track });
 	    } else {
 	      cam = React.createElement(
 	        'form',
@@ -32465,40 +32546,12 @@
 	module.exports = MusicSearch;
 
 /***/ },
-/* 255 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var AppDispatcher = __webpack_require__(231),
-	    EmotionConstants = __webpack_require__(256);
-
-	var EmotionActions = {
-	  receiveEmotions: function (emotions) {
-	    AppDispatcher.dispatch({
-	      actionType: EmotionConstants.EMOTION_RECEIVED,
-	      emotions: emotions
-	    });
-	  }
-	};
-
-	module.exports = EmotionActions;
-
-/***/ },
-/* 256 */
-/***/ function(module, exports) {
-
-	var SessionConstants = {
-	  EMOTION_RECEIVED: "EMOTION_RECEIVED"
-	};
-
-	module.exports = SessionConstants;
-
-/***/ },
 /* 257 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var AppDispatcher = __webpack_require__(231),
 	    Store = __webpack_require__(213).Store;
-	EmotionConstants = __webpack_require__(256);
+	EmotionConstants = __webpack_require__(247);
 
 	var _emotion = null;
 

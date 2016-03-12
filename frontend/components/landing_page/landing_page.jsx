@@ -38,21 +38,6 @@ var LandingPage = React.createClass({
     }
   },
 
-  changeBackground: function() {
-    console.log("hey");
-    // debugger
-
-      $('body').css({
-      background: "grey",
-      transition: "background 7s"
-      });
-
-
-    },
-
-
-
-  // background: linear-gradient(156deg, #ff00f5, #ffc40d);
 
   render: function() {
     var button;
@@ -70,7 +55,6 @@ var LandingPage = React.createClass({
     return(
       <div>
         {button}
-        <div className="test" onClick={this.changeBackground}></div>
       </div>
     );
   }

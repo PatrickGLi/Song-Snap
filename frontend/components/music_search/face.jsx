@@ -8,8 +8,14 @@ var Face = React.createClass({
   },
 
   addPictureListener: function() {
-    var cameraButton = document.getElementById('take-photo');
-    cameraButton.addEventListener('click', this.getPhoto);
+    this.cameraButton = document.getElementById('take-photo');
+    this.cameraButton.addEventListener('click', this.getPhoto);
+  },
+
+  componentWillReceiveProps: function(nextProps) {
+    if (nextProps.tracks !== null) {
+      this.cameraButton.addEventListener('click', this.getPhoto);
+    }
   },
 
   getPhoto:function() {
@@ -22,6 +28,8 @@ var Face = React.createClass({
       var blob = this.dataURItoBlob(dataURI);
       FaceActions.fetchEmotions(blob);
     }.bind(this), 500);
+
+    this.cameraButton.removeEventListener('click', this.getPhoto, false);
   },
 
   dataURItoBlob: function(dataURI) {
