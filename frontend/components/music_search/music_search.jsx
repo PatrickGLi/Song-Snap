@@ -28,6 +28,8 @@ var MusicSearch = React.createClass({
   },
 
   onGetEmotion: function() {
+    var currentEmotion = EmotionStore.currentEmotion();
+    this.changeBackground(currentEmotion);
     this.setState({ emotion: EmotionStore.currentEmotion() })
   },
 
@@ -48,23 +50,24 @@ var MusicSearch = React.createClass({
     var result;
     if (this.state.track !== null) {
       trackString = this.state.track['html']
-      result = <div dangerouslySetInnerHTML={{ __html: trackString }} />
+      result = <div className="filler" dangerouslySetInnerHTML={{ __html: trackString }} />
     } else {
-      result = <div></div>
+      result = <div className="filler">
+      </div>
     }
 
     var emotion;
     if (this.state.emotion === null) {
       emotion = <div></div>
     } else {
-      emotion = <div className="emotion">Current emotion: {this.state.emotion}</div>
+      emotion = <div className="emotion">{this.state.emotion}</div>
     }
 
     return (
       <div>
-        {result}
-        <div className="emotion">Current emotion: (change later){this.state.emotion}</div>
+        {emotion}
         {cam}
+        {result}
       </div>
     );
   }

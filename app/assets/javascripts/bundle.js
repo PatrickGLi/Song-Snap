@@ -24501,7 +24501,7 @@
 	    if (!this.state.user) {
 	      var button = React.createElement(
 	        'div',
-	        null,
+	        { className: 'start-buttons' },
 	        React.createElement(
 	          'div',
 	          { className: 'signup-button', 'data-toggle': 'modal', 'data-target': '#myModal' },
@@ -31539,11 +31539,7 @@
 	      'div',
 	      null,
 	      React.createElement('video', { autoPlay: true }),
-	      React.createElement(
-	        'div',
-	        { id: 'take-photo' },
-	        'Take a photo'
-	      ),
+	      React.createElement('img', { id: 'take-photo', src: '/assets/camera-icon.png' }),
 	      React.createElement('canvas', { id: 'canvas', style: { display: "none" } })
 	    );
 	  }
@@ -31814,16 +31810,15 @@
 	  },
 
 	  render: function () {
-	    var user, logout;
+	    var logout;
 	    if (this.state.user !== "") {
 	      logout = React.createElement(
 	        'div',
 	        { className: 'logout', onClick: this.toggleLogin },
-	        'log out'
+	        'log out, ',
+	        this.state.user
 	      );
-	      user = "Hi " + this.state.user;
 	    } else {
-	      user = "";
 	      logout = React.createElement('div', null);
 	    }
 
@@ -31834,16 +31829,12 @@
 	      React.createElement(
 	        'div',
 	        { className: 'song-snap-title' },
+	        React.createElement('img', { className: 'music-note', src: '/assets/music_note.png' }),
 	        'songsnap'
 	      ),
 	      this.props.children,
 	      React.createElement(SignupModal, null),
-	      React.createElement(SigninModal, null),
-	      React.createElement(
-	        'div',
-	        { className: 'username' },
-	        user
-	      )
+	      React.createElement(SigninModal, null)
 	    );
 	  }
 	});
@@ -32425,6 +32416,8 @@
 	  },
 
 	  onGetEmotion: function () {
+	    var currentEmotion = EmotionStore.currentEmotion();
+	    this.changeBackground(currentEmotion);
 	    this.setState({ emotion: EmotionStore.currentEmotion() });
 	  },
 
@@ -32443,9 +32436,9 @@
 	    var result;
 	    if (this.state.track !== null) {
 	      trackString = this.state.track['html'];
-	      result = React.createElement('div', { dangerouslySetInnerHTML: { __html: trackString } });
+	      result = React.createElement('div', { className: 'filler', dangerouslySetInnerHTML: { __html: trackString } });
 	    } else {
-	      result = React.createElement('div', null);
+	      result = React.createElement('div', { className: 'filler' });
 	    }
 
 	    var emotion;
@@ -32455,7 +32448,6 @@
 	      emotion = React.createElement(
 	        'div',
 	        { className: 'emotion' },
-	        'Current emotion: ',
 	        this.state.emotion
 	      );
 	    }
@@ -32463,14 +32455,9 @@
 	    return React.createElement(
 	      'div',
 	      null,
-	      result,
-	      React.createElement(
-	        'div',
-	        { className: 'emotion' },
-	        'Current emotion: (change later)',
-	        this.state.emotion
-	      ),
-	      cam
+	      emotion,
+	      cam,
+	      result
 	    );
 	  }
 	});

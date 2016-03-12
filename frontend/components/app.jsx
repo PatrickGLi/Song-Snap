@@ -62,12 +62,10 @@ var App = React.createClass({
   },
 
   render: function() {
-    var user, logout;
+    var logout;
     if (this.state.user !== "") {
-      logout = <div className="logout" onClick={this.toggleLogin}>log out</div>
-      user = "Hi " + this.state.user;
+      logout = <div className="logout" onClick={this.toggleLogin}>log out, {this.state.user}</div>
     } else {
-      user = "";
       logout = <div></div>
     }
 
@@ -75,12 +73,12 @@ var App = React.createClass({
       <div>
         {logout}
         <div className="song-snap-title">
+          <img className="music-note" src="/assets/music_note.png"></img>
           songsnap
         </div>
         {this.props.children}
         <SignupModal/>
         <SigninModal/>
-        <div className="username">{user}</div>
       </div>
     );
   }

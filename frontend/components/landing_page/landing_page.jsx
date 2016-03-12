@@ -58,7 +58,7 @@ var LandingPage = React.createClass({
     var button;
     if (!this.state.user) {
       var button = (
-        <div>
+        <div className="start-buttons">
           <div className="signup-button" data-toggle="modal" data-target="#myModal">try me</div>
           <div className="signin-button" data-toggle="modal" data-target="#myModal2">sign back in</div>
         </div>

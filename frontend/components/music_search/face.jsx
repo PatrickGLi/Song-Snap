@@ -57,7 +57,7 @@ var Face = React.createClass({
     return (
       <div>
         <video autoPlay></video>
-        <div id="take-photo">Take a photo</div>
+        <img id="take-photo" src="/assets/camera-icon.png"></img>
           <canvas id="canvas" style={{ display: "none" }}></canvas>
       </div>
     );
