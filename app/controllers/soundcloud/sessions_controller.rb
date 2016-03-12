@@ -18,7 +18,7 @@ class Soundcloud::SessionsController < ApplicationController
 
   private
   def soundcloud_connected_url
-    "http://localhost:3000/soundcloud/connected"
+    "https://song-snap.herokuapp.com/soundcloud/connected"
   end
 
   def soundcloud_client
