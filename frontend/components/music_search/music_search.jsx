@@ -29,7 +29,7 @@ var MusicSearch = React.createClass({
 
   onGetEmotion: function() {
     var currentEmotion = EmotionStore.currentEmotion();
-    this.changeBackground(currentEmotion);
+    // this.changeBackground(currentEmotion);
     this.setState({ emotion: EmotionStore.currentEmotion() })
   },
 

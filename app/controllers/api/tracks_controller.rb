@@ -25,6 +25,7 @@ class Api::TracksController < ApplicationController
           track.tag_list =~ /Rap|rap|trap|Trap|deep|Deep|heavy|Heavy|filthy|Filthy|electro|Electro|techno|Techno|dirty|Dirty|hip hop|Hip Hop|Hip hop|Hop|hop/
         when "happiness"
           track.genre =~ /(?!eep) house|(?!ass) house|(?!eep) House|(?!ass) House|dance|Dance|pop|Pop|club|Club|summer|Summer|tropical|Tropical|festival|Festival|funk|Funk|groov|Groov|edm|EDM|Edm/ ||
+          track.title =~ /love|Love/ ||
           track.tag_list =~ /(?!eep) house|(?!ass) house|(?!eep) House|(?!ass) House|dance|Dance|pop|Pop|club|Club|summer|Summer|tropical|Tropical|festival|Festival|funk|Funk|groov|Groov|edm|EDM|Edm/
         when "sadness"
           track.genre =~ /chill|Chill|rb|RB|r&b|R&B|mood|Mood|sad|Sad|soul|Soul/ ||
