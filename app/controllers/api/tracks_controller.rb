@@ -16,9 +16,11 @@ class Api::TracksController < ApplicationController
         when "neutral"
           track.genre =~ /Indie|indie|relax|Relax|hip hop|Hip Hop|Hip hop|Hop|hop|vibes|Vibes|future|Future|jazz|Jazz|classical|Classical|alternative|Alternative|school|School|sex|Sex/ ||
           track.tag_list =~ /Indie|indie|relax|Relax|vibes|Vibes|hip hop|Hip Hop|Hip hop|Hop|hop|future|Future|jazz|Jazz|classical|Classical|alternative|Alternative|school|School|sex|Sex/
+
         when "anger"
           track.genre =~ /Rap|rap|trap|Trap|deep|Deep|heavy|Heavy|filthy|Filthy|electro(?!nic)|Electro(?!nic)|techno|Techno|dirty|Dirty/ ||
-          track.tag_list =~ /Rap|rap|trap|Trap|deep|Deep|heavy|Heavy|filthy|Filthy|electro(?!nic)|Electro(?!nic)|techno|Techno|dirty|Dirty/
+          track.tag_list =~ /Rap|rap|trap|Trap|deep|Deep|heavy|Heavy|filthy|Filthy|electro(?!nic)|Electro(?!nic)|techno|Techno|dirty|Dirty/ &&
+          track.tag_list !=~ /chill|Chill|Pop|pop|R&B|r&b|RB|rb/
         when "contempt"
           track.genre =~ /Rap|rap|trap|Trap|deep|Deep|heavy|Heavy|filthy|Filthy|electro(?!nic)|Electro(?!nic)|techno|Techno|dirty|Dirty/ ||
           track.tag_list =~ /Rap|rap|trap|Trap|deep|Deep|heavy|Heavy|filthy|Filthy|electro(?!nic)|Electro(?!nic)|techno|Techno|dirty|Dirty/
