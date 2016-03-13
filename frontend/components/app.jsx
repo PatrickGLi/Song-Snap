@@ -45,7 +45,7 @@ var App = React.createClass({
     var currentUser;
     var currentUserId = SessionStore.currentUserId();
 
-    if (currentUserId !== null) {
+    if (currentUserId !== null && currentUserId !== -1) {
       currentUser = SessionStore.currentUser().username;
     } else {
       currentUser = "";

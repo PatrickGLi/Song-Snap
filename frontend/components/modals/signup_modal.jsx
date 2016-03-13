@@ -60,6 +60,15 @@ var SignupModal = React.createClass({
   },
 
   render: function() {
+    var errors;
+
+    if (this.state.errors.length > 0){
+      errors = this.state.errors.map(function(error, index) {
+        return <div key={index}>{error}</div>;
+      });
+    } else {
+      errors = <div></div>;
+    }
 
     return(
       <div className="boxes">
@@ -71,7 +80,7 @@ var SignupModal = React.createClass({
             <h4 className="modal-title" id="myModalLabel">welcome to songsnap</h4>
           </div>
           <div className="modal-body">
-            photograph yourself. get a playlist for your mood.
+            photograph yourself. get a track for your mood.
           </div>
           <div className="modal-body">
             <form onSubmit={this.handleSignupSubmit}>
@@ -97,8 +106,8 @@ var SignupModal = React.createClass({
                   className="btn btn-default sign-up-btn"/>
               </form>
 
-              <div>
-                {this.state.errors}
+              <div className="errors">
+                {errors}
               </div>
           </div>
         </div>

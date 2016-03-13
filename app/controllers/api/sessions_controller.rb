@@ -9,7 +9,7 @@ class Api::SessionsController < ApplicationController
        login!(@user)
        render :create
      else
-       render json: { errors: ["try again"] }
+       render json: { errors: ["Try again"] }
      end
    end
 

@@ -83,8 +83,10 @@ var SigninModal = React.createClass({
                   className="btn btn-default sign-up-btn"/>
               </form>
 
-              <div>
-                {this.state.errors}
+              <div className="errors">
+                <div>
+                  {this.state.errors}
+                </div>
               </div>
           </div>
         </div>
