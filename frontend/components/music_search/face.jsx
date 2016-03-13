@@ -2,6 +2,7 @@ var React = require('react'),
     FaceActions = require('../../actions/face_actions');
 
 var Face = React.createClass({
+
   componentDidMount: function() {
     this.getUserMedia();
     this.addPictureListener();
@@ -28,7 +29,6 @@ var Face = React.createClass({
       var blob = this.dataURItoBlob(dataURI);
       FaceActions.fetchEmotions(blob);
     }.bind(this), 500);
-
     this.cameraButton.removeEventListener('click', this.getPhoto, false);
   },
 

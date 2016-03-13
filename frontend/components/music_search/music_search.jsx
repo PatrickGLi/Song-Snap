@@ -11,7 +11,8 @@ var MusicSearch = React.createClass({
   getInitialState: function() {
     return ({
       track: null,
-      emotion: null
+      emotion: null,
+      loading: false
     });
   },
 
@@ -30,7 +31,8 @@ var MusicSearch = React.createClass({
   },
 
   onGetTrack: function() {
-    this.setState({ track: TrackStore.currentTrack() });
+    this.setState({ track: TrackStore.currentTrack(),
+                    loading: false });
   },
 
   onGetEmotion: function() {
@@ -93,10 +95,21 @@ var MusicSearch = React.createClass({
           });
       }
 
-    this.setState({ emotion: response })
+    this.setState({ emotion: response,
+                    loading: true });
   },
 
   render: function(){
+    var loadSpinner;
+    if (this.state.loading) {
+      loadSpinner = (
+        <div className="spinner">
+        </div>
+      );
+    } else {
+      loadSpinner = <div></div>;
+    }
+
     var cam;
     if (SessionStore.currentAccessToken() !== null &&
         SessionStore.currentAccessToken() !== "-1" &&
@@ -130,6 +143,7 @@ var MusicSearch = React.createClass({
 
     return (
       <div>
+        {loadSpinner}
         {emotion}
         {cam}
         {result}
