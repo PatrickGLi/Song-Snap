@@ -20,7 +20,7 @@ class Api::TracksController < ApplicationController
         when "anger"
           track.genre =~ /Rap|rap|trap|Trap|deep|Deep|heavy|Heavy|filthy|Filthy|electro(?!nic)|Electro(?!nic)|techno|Techno|dirty|Dirty/ ||
           track.tag_list =~ /Rap|rap|trap|Trap|deep|Deep|heavy|Heavy|filthy|Filthy|electro(?!nic)|Electro(?!nic)|techno|Techno|dirty|Dirty/ &&
-          track.tag_list !=~ /chill|Chill|Pop|pop|R&B|r&b|RB|rb/
+          track.tag_list !=~ /chill|Chill|Pop|pop|R&B|r&b|RB|rb|vibes|Vibes|club|Club/
         when "contempt"
           track.genre =~ /Rap|rap|trap|Trap|deep|Deep|heavy|Heavy|filthy|Filthy|electro(?!nic)|Electro(?!nic)|techno|Techno|dirty|Dirty/ ||
           track.tag_list =~ /Rap|rap|trap|Trap|deep|Deep|heavy|Heavy|filthy|Filthy|electro(?!nic)|Electro(?!nic)|techno|Techno|dirty|Dirty/
