@@ -129,7 +129,7 @@ var MusicSearch = React.createClass({
     }
 
     var result;
-    if (this.state.track !== null) {
+    if (this.state.track !== null && this.state.track !== -1) {
       trackString = this.state.track['html']
       result = <div className="filler" dangerouslySetInnerHTML={{ __html: trackString }} />
     } else {

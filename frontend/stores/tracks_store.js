@@ -19,7 +19,11 @@ TrackStore.currentTrack = function() {
 };
 
 function resetTrack(tracks) {
-  _embedded_track = tracks.embedded_track
+  if (tracks !== -1) {
+    _embedded_track = tracks.embedded_track
+  } else {
+    _embedded_track = -1;
+  }
 
   TrackStore.__emitChange();
 }
