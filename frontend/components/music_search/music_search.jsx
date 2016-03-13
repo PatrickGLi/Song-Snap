@@ -16,6 +16,10 @@ var MusicSearch = React.createClass({
   },
 
   componentDidMount: function() {
+    // if (SessionStore.currentUser() === -1 ||
+    //     SessionStore.currentUser() === null) {
+    //       this.props.history.pushState('null', '/');
+    //     }
     this.listener = TrackStore.addListener(this.onGetTrack);
     this.listener2 = EmotionStore.addListener(this.onGetEmotion);
   },

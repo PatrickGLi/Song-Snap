@@ -1,4 +1,5 @@
 <script type="text/javascript">
+console.log("back in root");
   window.currentUserId = <%= @current_user_id %>;
   window.currentAccessToken = '<%=@current_access_token%>';
   window.MICROSOFT_OPTIONS = {
@@ -9,6 +10,7 @@
     clientId: '<%=ENV["SOUNDCLOUD_CLIENT_ID"]%>',
     clientSecret: '<%=ENV["SOUNDCLOUD_CLIENT_SECRET"]%>'
   };
+
 </script>
 
 <div id="content"></div>

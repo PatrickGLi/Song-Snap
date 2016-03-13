@@ -111,6 +111,22 @@ body{
   color: grey;
 }
 
+.about-button {
+  z-index: 100;
+  position: absolute;
+  width: 150px;
+  left: 130px;
+  top: 200px;
+  font-size: 20px;
+  transition: transform 1.2s, color 1.2s;
+}
+
+.about-button:hover {
+  cursor: pointer;
+  transform: perspective(50em) rotateY(40deg);
+  color: grey;
+}
+
 .boxes {
   color: grey;
 }
