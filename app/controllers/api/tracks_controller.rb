@@ -16,31 +16,39 @@ class Api::TracksController < ApplicationController
         when "neutral"
           track.genre =~ /Indie|indie|relax|Relax|hip hop|Hip Hop|Hip hop|Hop|hop|vibes|Vibes|future|Future|jazz|Jazz|classical|Classical|alternative|Alternative|school|School|sex|Sex/ ||
           track.tag_list =~ /Indie|indie|relax|Relax|vibes|Vibes|hip hop|Hip Hop|Hip hop|Hop|hop|future|Future|jazz|Jazz|classical|Classical|alternative|Alternative|school|School|sex|Sex/
-
+          break;
         when "anger"
           track.genre =~ /Rap|rap|trap|Trap|deep|Deep|heavy|Heavy|filthy|Filthy|electro(?!nic)|Electro(?!nic)|techno|Techno|dirty|Dirty/ ||
           track.tag_list =~ /Rap|rap|trap|Trap|deep|Deep|heavy|Heavy|filthy|Filthy|electro(?!nic)|Electro(?!nic)|techno|Techno|dirty|Dirty/ &&
-          track.tag_list !=~ /chill|Chill|Pop|pop|R&B|r&b|RB|rb|vibes|Vibes|club|Club/
+          track.tag_list =~ /(?!chill)|(?!Chill)|(?!Pop)|(?!pop)|(?!R&B)|(?!r&b)|(?!RB)|(?!rb)|(?!vibes)|(?!Vibes)|(?!club)|(?!Club)/
+          break;
         when "contempt"
           track.genre =~ /Rap|rap|trap|Trap|deep|Deep|heavy|Heavy|filthy|Filthy|electro(?!nic)|Electro(?!nic)|techno|Techno|dirty|Dirty/ ||
           track.tag_list =~ /Rap|rap|trap|Trap|deep|Deep|heavy|Heavy|filthy|Filthy|electro(?!nic)|Electro(?!nic)|techno|Techno|dirty|Dirty/
+          break;
         when "disgust"
           track.genre =~ /Rap|rap|trap|Trap|deep|Deep|heavy|Heavy|filthy|Filthy|electro|Electro|techno|Techno|dirty|Dirty/ ||
           track.tag_list =~ /Rap|rap|trap|Trap|deep|Deep|heavy|Heavy|filthy|Filthy|electro|Electro|techno|Techno|dirty|Dirty/
+          break;
         when "fear"
           track.genre =~ /Rap|rap|trap|Trap|deep|Deep|heavy|Heavy|filthy|Filthy|electro|Electro|techno|Techno|dirty|Dirty/ ||
           track.tag_list =~ /Rap|rap|trap|Trap|deep|Deep|heavy|Heavy|filthy|Filthy|electro|Electro|techno|Techno|dirty|Dirty/
+          break;
         when "happiness"
           track.genre =~ /(?!eep) house|(?!ass) house|(?!eep) House|(?!ass) House|dance|Dance|pop|Pop|club|Club|summer|Summer|tropical|Tropical|festival|Festival|funk|Funk|groov|Groov|edm|EDM|Edm/ ||
           track.title =~ /love|Love/ ||
-          track.tag_list =~ /(?!eep) house|(?!ass) house|(?!eep) House|(?!ass) House|dance|Dance|pop|Pop|club|Club|summer|Summer|tropical|Tropical|festival|Festival|funk|Funk|groov|Groov|edm|EDM|Edm/
+          track.tag_list =~ /(?!eep) house|(?!ass) house|(?!eep) House|(?!ass) House|dance|Dance|pop|Pop|club|Club|summer|Summer|tropical|Tropical|festival|Festival|funk|Funk|groov|Groov|edm|EDM|Edm/ &&
+          track.tag_list =~ /(?!Bass)|(?!filthy)|(?!Filthy)|(?!Heavy)|(?!bass)|(?!heavy)/
+          break;
         when "sadness"
           track.genre =~ /chill|Chill|rb|RB|r&b|R&B|mood|Mood|sad|Sad|soul|Soul/ ||
           track.title =~ /sad|Sad/ ||
           track.tag_list =~ /chill|Chill|rb|RB|r&b|R&B|mood|Mood|sad|Sad|soul|Soul/
+          break;
         when "surprise"
           track.genre =~ /(?!eep) house|(?!ass) house|(?!eep) House|(?!ass) House|dance|Dance|pop|Pop|club|Club|summer|Summer|tropical|Tropical|festival|Festival|funk|Funk|groov|Groov|edm|EDM|Edm/ ||
           track.tag_list =~ /(?!eep) house|(?!ass) house|(?!eep) House|(?!ass) House|dance|Dance|pop|Pop|club|Club|summer|Summer|tropical|Tropical|festival|Festival|funk|Funk|groov|Groov|edm|EDM|Edm/
+          break;
         end
       end
 
