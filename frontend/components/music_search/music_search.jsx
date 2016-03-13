@@ -37,66 +37,69 @@ var MusicSearch = React.createClass({
 
   onGetEmotion: function() {
     var currentEmotion = EmotionStore.currentEmotion();
-    switch (currentEmotion) {
-        case "neutral":
-          var response = "chill sounds and my usual vibe.";
-          $('body').css({
-          background: "#595959",
-          transition: "background 7s"
-          });
-          break;
-        case "anger":
-          var response = "feeling a little Angry?";
-          $('body').css({
-          background: "#190000",
-          transition: "background 7s"
-          });
-          break;
-        case "contempt":
-          var response = "feeling some contempt, hmph..";
-          $('body').css({
-          background: "#ff8f66",
-          transition: "background 7s"
-          });
-          break;
-        case "disgust":
-          var response = "looking for something nasty.";
-          $('body').css({
-          background: "#001900",
-          transition: "background 7s"
-          });
-          break;
-        case "fear":
-          var response = "don't be scared.";
-          $('body').css({
-          background: "#990000",
-          transition: "background 7s"
-          });
-          break;
-        case "happiness":
-          var response = "feeling happy or upbeat";
-          $('body').css({
-          background: "#ffa5d2",
-          transition: "background 7s"
-          });
-          break;
-        case "sadness":
-          var response = "feeling sad.";
-          $('body').css({
-          background: "#b5dbe8",
-          transition: "background 7s"
-          });
-          break;
-        case "surprise":
-          var response = "surprise!";
-          $('body').css({
-          background: "#885ead",
-          transition: "background 7s"
-          });
-      }
 
-    this.setState({ emotion: response,
-                    loading: true });
+    if (currentEmotion !== null) {
+      switch (currentEmotion) {
+          case "neutral":
+            var response = "chill sounds and my usual vibe.";
+            $('body').css({
+            background: "#595959",
+            transition: "background 7s"
+            });
+            break;
+          case "anger":
+            var response = "feeling a little Angry?";
+            $('body').css({
+            background: "#190000",
+            transition: "background 7s"
+            });
+            break;
+          case "contempt":
+            var response = "feeling some contempt, hmph..";
+            $('body').css({
+            background: "#ff8f66",
+            transition: "background 7s"
+            });
+            break;
+          case "disgust":
+            var response = "looking for something nasty.";
+            $('body').css({
+            background: "#001900",
+            transition: "background 7s"
+            });
+            break;
+          case "fear":
+            var response = "don't be scared.";
+            $('body').css({
+            background: "#990000",
+            transition: "background 7s"
+            });
+            break;
+          case "happiness":
+            var response = "feeling happy or upbeat : )";
+            $('body').css({
+            background: "#ffa5d2",
+            transition: "background 7s"
+            });
+            break;
+          case "sadness":
+            var response = "feeling sad.";
+            $('body').css({
+            background: "#b5dbe8",
+            transition: "background 7s"
+            });
+            break;
+          case "surprise":
+            var response = "surprise!";
+            $('body').css({
+            background: "#885ead",
+            transition: "background 7s"
+            });
+        }
+
+      this.setState({ emotion: response,
+                      loading: true });
+    }
   },
 
   render: function(){

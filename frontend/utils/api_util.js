@@ -63,8 +63,12 @@ var ApiUtil = {
                data: blobData,
                success: function(data) {
                  console.log("emotion acquired", data);
+
                  ApiActions.emotionReceived(data);
-                 ApiActions.getTracks(data);
+
+                 if (data.length > 0) {
+                   ApiActions.getTracks(data);
+                 }
                }
            });
   },

@@ -3,6 +3,7 @@ var AppDispatcher = require('../dispatcher/dispatcher'),
     EmotionConstants = require('../constants/emotion_constants');
 
 var _emotion = null;
+var _listener = false;
 
 var EmotionStore = new Store(AppDispatcher);
 
@@ -19,7 +20,11 @@ EmotionStore.currentEmotion = function() {
 };
 
 function resetEmotion(emotions) {
-  _emotion = calculateMood(emotions);
+  if (emotions.length === 0) {
+    _emotion = null;
+  } else {
+    _emotion = calculateMood(emotions);
+  }
 
   EmotionStore.__emitChange();
 }

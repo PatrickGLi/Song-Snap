@@ -1,11 +1,22 @@
 var React = require('react'),
-    FaceActions = require('../../actions/face_actions');
+    FaceActions = require('../../actions/face_actions'),
+    EmotionStore = require('../../stores/emotions_store');
 
 var Face = React.createClass({
 
   componentDidMount: function() {
     this.getUserMedia();
     this.addPictureListener();
+
+    this.listener = EmotionStore.addListener(this.onGetEmotion);
+  },
+
+  componentWillUnmount: function() {
+    this.listener.remove();
+  },
+
+  onGetEmotion: function() {
+    this.cameraButton.addEventListener('click', this.getPhoto);
   },
 
   addPictureListener: function() {

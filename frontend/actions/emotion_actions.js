@@ -7,7 +7,7 @@ var EmotionActions = {
       actionType: EmotionConstants.EMOTION_RECEIVED,
       emotions: emotions
     });
-  },
+  }
 };
 
 module.exports = EmotionActions;
