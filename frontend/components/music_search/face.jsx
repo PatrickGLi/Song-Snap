@@ -16,7 +16,7 @@ var Face = React.createClass({
   },
 
   onGetEmotion: function() {
-    setTime(function(){
+    setTimeout(function(){
       this.cameraButton.addEventListener('click', this.getPhoto)
     }.bind(this),1000);
   },
