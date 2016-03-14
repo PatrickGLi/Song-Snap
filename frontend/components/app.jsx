@@ -56,6 +56,7 @@ var App = React.createClass({
     });
   },
 
+
   toggleLogin: function() {
     AppActions.destroySession();
     this.props.history.pushState(null, "/");
