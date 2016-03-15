@@ -210,6 +210,8 @@ left: 900px;
 
 #take-photo:hover {
   cursor: crosshair;
+  /*width: 100px;*/
+  /*height: 100px;*/
   transform: translateY(-10px);
 }
 

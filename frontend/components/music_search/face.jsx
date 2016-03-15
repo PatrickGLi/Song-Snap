@@ -33,7 +33,9 @@ var Face = React.createClass({
   },
 
   getPhoto:function() {
+    var sound = document.getElementById('sound-effect');
     setTimeout(function(){
+      sound.play();
       var canvas = document.getElementById('canvas');
       canvas.width = this.video.videoWidth;
       canvas.height = this.video.videoHeight;
@@ -79,6 +81,9 @@ var Face = React.createClass({
       <div>
         <video autoPlay></video>
         <img id="take-photo" src="/assets/camera-icon.png"></img>
+          <audio id="sound-effect" >
+            <source src="camera-shutter-click-03.mp3" type="audio/mpeg"></source>
+          </audio>
           <canvas id="canvas" style={{ display: "none" }}></canvas>
       </div>
     );
