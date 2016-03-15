@@ -24502,7 +24502,7 @@
 	        ),
 	        React.createElement(
 	          'a',
-	          { className: 'link', href: 'https://www.youtube.com/watch?v=2i9Yq3IAz3Y&feature=youtu.be' },
+	          { className: 'link', href: 'https://www.youtube.com/watch?v=uPhvtZm60SU&feature=youtu.be' },
 	          'don\'t have a soundcloud account? watch a demo'
 	        )
 	      );
