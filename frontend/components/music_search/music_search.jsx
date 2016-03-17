@@ -17,10 +17,6 @@ var MusicSearch = React.createClass({
   },
 
   componentDidMount: function() {
-    // if (SessionStore.currentUser() === -1 ||
-    //     SessionStore.currentUser() === null) {
-    //       this.props.history.pushState('null', '/');
-    //     }
     this.listener = TrackStore.addListener(this.onGetTrack);
     this.listener2 = EmotionStore.addListener(this.onGetEmotion);
   },
@@ -31,10 +27,8 @@ var MusicSearch = React.createClass({
   },
 
   onGetTrack: function() {
-    this.setState({ track: TrackStore.currentTrack() });
-    setTimeout(function(){
-      this.setState({ trackLoading: false });
-    }.bind(this), 1000);
+    this.setState({ track: TrackStore.currentTrack(),
+                    trackLoading: false });
   },
 
   onGetEmotion: function() {

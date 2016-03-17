@@ -1,5 +1,6 @@
 var React = require('react'),
     FaceActions = require('../../actions/face_actions'),
+    TrackStore = require('../../stores/tracks_store'),
     EmotionStore = require('../../stores/emotions_store');
 
 var Face = React.createClass({
@@ -14,17 +15,30 @@ var Face = React.createClass({
     this.addPictureListener();
 
     this.listener = EmotionStore.addListener(this.onGetEmotion);
+    this.listener2 = TrackStore.addListener(this.onGetTrack);
   },
 
   componentWillUnmount: function() {
     this.listener.remove();
+    this.listener2.remove();
+  },
+
+  onGetTrack: function() {
+    this.setState({ url: false });
   },
 
   onGetEmotion: function() {
-    setTimeout(function(){
-      this.setState({ loading: false });
-      this.cameraButton.addEventListener('click', this.getPhoto)
-    }.bind(this),1000);
+    if (EmotionStore.currentEmotion() === "did not detect") {
+      this.setState({ url: false,
+                      loading: false
+                    });
+      this.cameraButton.addEventListener('click', this.getPhoto);
+    } else {
+      setTimeout(function(){
+        this.setState({ loading: false });
+        this.cameraButton.addEventListener('click', this.getPhoto)
+      }.bind(this),1000);
+    }
   },
 
   addPictureListener: function() {
@@ -48,9 +62,6 @@ var Face = React.createClass({
     canvas.getContext('2d').drawImage(this.video, 0, 0);
     var dataURI = canvas.toDataURL('image/jpg');
     this.setState({ url: dataURI });
-    setTimeout(function() {
-      this.setState({ url: false });
-    }.bind(this), 3000);
     var blob = this.dataURItoBlob(dataURI);
     this.cameraButton.removeEventListener('click', this.getPhoto, false);
     setTimeout(function(){
