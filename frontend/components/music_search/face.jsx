@@ -4,7 +4,9 @@ var React = require('react'),
 
 var Face = React.createClass({
   getInitialState: function() {
-    return ({ loading: false });
+    return ({ loading: false,
+              url: false
+          });
   },
 
   componentDidMount: function() {
@@ -40,16 +42,17 @@ var Face = React.createClass({
     this.setState({ loading: true });
     var sound = document.getElementById('sound-effect');
     sound.play();
-    setTimeout(function(){
-      var canvas = document.getElementById('canvas');
-      canvas.width = this.video.videoWidth;
-      canvas.height = this.video.videoHeight;
-      canvas.getContext('2d').drawImage(this.video, 0, 0);
-      var dataURI = canvas.toDataURL('image/jpg');
-      var blob = this.dataURItoBlob(dataURI);
-      FaceActions.fetchEmotions(blob);
-    }.bind(this), 500);
+    var canvas = document.getElementById('canvas');
+    canvas.width = this.video.videoWidth;
+    canvas.height = this.video.videoHeight;
+    canvas.getContext('2d').drawImage(this.video, 0, 0);
+    var dataURI = canvas.toDataURL('image/jpg');
+    this.setState({ url: dataURI });
+    var blob = this.dataURItoBlob(dataURI);
     this.cameraButton.removeEventListener('click', this.getPhoto, false);
+    setTimeout(function(){
+      FaceActions.fetchEmotions(blob);
+    }, 500);
   },
 
   dataURItoBlob: function(dataURI) {
@@ -92,8 +95,18 @@ var Face = React.createClass({
       loadSpinner = <div></div>;
     }
 
+    var image;
+    if (this.state.url) {
+      image = (
+        <img className="last-picture" src={this.state.url}></img>
+      );
+    } else {
+      image = <div></div>;
+    }
+
     return (
       <div>
+        {image}
         {loadSpinner}
         <video autoPlay></video>
           <div className="overlay"><div id="take-photo"></div></div>
