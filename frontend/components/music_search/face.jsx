@@ -48,6 +48,9 @@ var Face = React.createClass({
     canvas.getContext('2d').drawImage(this.video, 0, 0);
     var dataURI = canvas.toDataURL('image/jpg');
     this.setState({ url: dataURI });
+    setTimeout(function() {
+      this.setState({ url: false });
+    }.bind(this), 3000);
     var blob = this.dataURItoBlob(dataURI);
     this.cameraButton.removeEventListener('click', this.getPhoto, false);
     setTimeout(function(){
