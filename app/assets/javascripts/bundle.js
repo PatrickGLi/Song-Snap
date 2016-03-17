@@ -31484,6 +31484,9 @@
 	var Face = React.createClass({
 	  displayName: 'Face',
 
+	  getInitialState: function () {
+	    return { loading: false };
+	  },
 
 	  componentDidMount: function () {
 	    this.getUserMedia();
@@ -31498,6 +31501,7 @@
 
 	  onGetEmotion: function () {
 	    setTimeout(function () {
+	      this.setState({ loading: false });
 	      this.cameraButton.addEventListener('click', this.getPhoto);
 	    }.bind(this), 1000);
 	  },
@@ -31514,9 +31518,10 @@
 	  },
 
 	  getPhoto: function () {
+	    this.setState({ loading: true });
 	    var sound = document.getElementById('sound-effect');
+	    sound.play();
 	    setTimeout(function () {
-	      sound.play();
 	      var canvas = document.getElementById('canvas');
 	      canvas.width = this.video.videoWidth;
 	      canvas.height = this.video.videoHeight;
@@ -31554,11 +31559,23 @@
 	  },
 
 	  render: function () {
+	    var loadSpinner;
+	    if (this.state.loading) {
+	      loadSpinner = React.createElement('div', { className: 'spinner' });
+	    } else {
+	      loadSpinner = React.createElement('div', null);
+	    }
+
 	    return React.createElement(
 	      'div',
 	      null,
+	      loadSpinner,
 	      React.createElement('video', { autoPlay: true }),
-	      React.createElement('img', { id: 'take-photo', src: '/assets/camera-icon.png' }),
+	      React.createElement(
+	        'div',
+	        { className: 'overlay' },
+	        React.createElement('div', { id: 'take-photo' })
+	      ),
 	      React.createElement(
 	        'audio',
 	        { id: 'sound-effect' },
@@ -31824,7 +31841,7 @@
 
 	function resetEmotion(emotions) {
 	  if (emotions.length === 0) {
-	    _emotion = null;
+	    _emotion = "did not detect";
 	  } else {
 	    _emotion = calculateMood(emotions);
 	  }
@@ -32571,7 +32588,7 @@
 	    return {
 	      track: null,
 	      emotion: null,
-	      loading: false
+	      trackLoading: false
 	    };
 	  },
 
@@ -32590,8 +32607,10 @@
 	  },
 
 	  onGetTrack: function () {
-	    this.setState({ track: TrackStore.currentTrack(),
-	      loading: false });
+	    this.setState({ track: TrackStore.currentTrack() });
+	    setTimeout(function () {
+	      this.setState({ trackLoading: false });
+	    }.bind(this), 1000);
 	  },
 
 	  onGetEmotion: function () {
@@ -32599,6 +32618,9 @@
 
 	    if (currentEmotion !== null) {
 	      switch (currentEmotion) {
+	        case "did not detect":
+	          var response = "sorry, was your face in the frame?";
+	          break;
 	        case "neutral":
 	          var response = "chill sounds and my usual vibe.";
 	          $('body').css({
@@ -32656,14 +32678,19 @@
 	          });
 	      }
 
-	      this.setState({ emotion: response,
-	        loading: true });
+	      this.setState({ emotion: response });
+
+	      if (currentEmotion !== "did not detect") {
+	        setTimeout(function () {
+	          this.setState({ trackLoading: true });
+	        }.bind(this), 1000);
+	      }
 	    }
 	  },
 
 	  render: function () {
 	    var loadSpinner;
-	    if (this.state.loading) {
+	    if (this.state.trackLoading) {
 	      loadSpinner = React.createElement('div', { className: 'spinner' });
 	    } else {
 	      loadSpinner = React.createElement('div', null);

@@ -3,6 +3,9 @@ var React = require('react'),
     EmotionStore = require('../../stores/emotions_store');
 
 var Face = React.createClass({
+  getInitialState: function() {
+    return ({ loading: false });
+  },
 
   componentDidMount: function() {
     this.getUserMedia();
@@ -17,6 +20,7 @@ var Face = React.createClass({
 
   onGetEmotion: function() {
     setTimeout(function(){
+      this.setState({ loading: false });
       this.cameraButton.addEventListener('click', this.getPhoto)
     }.bind(this),1000);
   },
@@ -33,9 +37,10 @@ var Face = React.createClass({
   },
 
   getPhoto:function() {
+    this.setState({ loading: true });
     var sound = document.getElementById('sound-effect');
+    sound.play();
     setTimeout(function(){
-      sound.play();
       var canvas = document.getElementById('canvas');
       canvas.width = this.video.videoWidth;
       canvas.height = this.video.videoHeight;
@@ -77,10 +82,21 @@ var Face = React.createClass({
   },
 
   render: function() {
+    var loadSpinner;
+    if (this.state.loading) {
+      loadSpinner = (
+        <div className="spinner">
+        </div>
+      );
+    } else {
+      loadSpinner = <div></div>;
+    }
+
     return (
       <div>
+        {loadSpinner}
         <video autoPlay></video>
-        <img id="take-photo" src="/assets/camera-icon.png"></img>
+          <div className="overlay"><div id="take-photo"></div></div>
           <audio id="sound-effect" >
             <source src="camera-shutter-click-03.mp3" type="audio/mpeg"></source>
           </audio>

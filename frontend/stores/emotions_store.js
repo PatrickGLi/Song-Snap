@@ -21,7 +21,7 @@ EmotionStore.currentEmotion = function() {
 
 function resetEmotion(emotions) {
   if (emotions.length === 0) {
-    _emotion = null;
+    _emotion = "did not detect";
   } else {
     _emotion = calculateMood(emotions);
   }

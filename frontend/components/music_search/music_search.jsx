@@ -12,7 +12,7 @@ var MusicSearch = React.createClass({
     return ({
       track: null,
       emotion: null,
-      loading: false
+      trackLoading: false
     });
   },
 
@@ -31,8 +31,10 @@ var MusicSearch = React.createClass({
   },
 
   onGetTrack: function() {
-    this.setState({ track: TrackStore.currentTrack(),
-                    loading: false });
+    this.setState({ track: TrackStore.currentTrack() });
+    setTimeout(function(){
+      this.setState({ trackLoading: false });
+    }.bind(this), 1000);
   },
 
   onGetEmotion: function() {
@@ -40,6 +42,9 @@ var MusicSearch = React.createClass({
 
     if (currentEmotion !== null) {
       switch (currentEmotion) {
+          case "did not detect":
+            var response = "sorry, was your face in the frame?"
+            break;
           case "neutral":
             var response = "chill sounds and my usual vibe.";
             $('body').css({
@@ -97,14 +102,19 @@ var MusicSearch = React.createClass({
             });
         }
 
-      this.setState({ emotion: response,
-                      loading: true });
+      this.setState({ emotion: response });
+
+      if (currentEmotion !== "did not detect") {
+        setTimeout(function(){
+          this.setState({ trackLoading: true });
+        }.bind(this), 1000);
+      }
     }
   },
 
   render: function(){
     var loadSpinner;
-    if (this.state.loading) {
+    if (this.state.trackLoading) {
       loadSpinner = (
         <div className="spinner">
         </div>
