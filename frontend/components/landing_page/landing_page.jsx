@@ -46,7 +46,7 @@ var LandingPage = React.createClass({
         <div className="start-buttons">
           <div className="signup-button" data-toggle="modal" data-target="#myModal">try me</div>
           <div className="signin-button" data-toggle="modal" data-target="#myModal2">sign back in</div>
-          <a className="link" href="https://www.youtube.com/watch?v=xgnUa1WfzuU&feature=youtu.be">don't have a soundcloud account? watch a demo</a>
+          <a className="link" href="https://www.youtube.com/watch?v=kCJ1dsj0Jvc&feature=youtu.be">don't have a soundcloud account? watch a demo</a>
         </div>
       );
     } else {
