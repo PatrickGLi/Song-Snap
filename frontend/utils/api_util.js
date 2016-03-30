@@ -45,7 +45,7 @@ var ApiUtil = {
       url: 'api/session',
       type: 'POST',
       data: {
-              user: { username: "guest123",
+              user: { username: "guest",
                       password: "password"
                     }
             },

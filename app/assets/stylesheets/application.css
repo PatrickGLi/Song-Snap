@@ -153,7 +153,7 @@ body{
   position: absolute;
   left: 20px;
   top: 10px;
-  font-size: 35px;
+  font-size: 25px;
   transition: transform 1.2s, color 1s;
 }
 
@@ -177,15 +177,11 @@ body{
     top: 0;
     right: 40px;
     font-size: 80px;
-    -webkit-animation: pulse 3s ease infinite;
-    -moz-animation: pulse 3s ease infinite;
-    animation: pulse 3s ease infinite;
+    transition: color 1s;
 }
 
 .connect-soundcloud:hover {
-  -webkit-animation: none;
-  -moz-animation: none;
-  animation: none;
+  cursor: pointer;
   color: #545454;
 }
 
