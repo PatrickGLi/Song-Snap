@@ -12413,8 +12413,8 @@ d.parent(".dropdown-menu").length&&(d=d.closest("li.dropdown").addClass("active"
 	    Route = __webpack_require__(159).Route,
 	    IndexRoute = __webpack_require__(159).IndexRoute,
 	    LandingPage = __webpack_require__(210),
-	    App = __webpack_require__(246),
-	    MusicSearch = __webpack_require__(254);
+	    App = __webpack_require__(249),
+	    MusicSearch = __webpack_require__(257);
 
 	var routes = React.createElement(
 	  Route,
@@ -36810,6 +36810,7 @@ d.parent(".dropdown-menu").length&&(d=d.closest("li.dropdown").addClass("active"
 	    SessionStore = __webpack_require__(212),
 	    UserStore = __webpack_require__(235),
 	    TrackStore = __webpack_require__(237),
+	    LandingPageActions = __webpack_require__(259),
 	    Face = __webpack_require__(239);
 
 	var LandingPage = React.createClass({
@@ -36824,6 +36825,12 @@ d.parent(".dropdown-menu").length&&(d=d.closest("li.dropdown").addClass("active"
 	  componentDidMount: function () {
 	    this.listener = SessionStore.addListener(this.onSessionChange);
 	    this.listener2 = UserStore.addListener(this.onUserChange);
+
+	    setTimeout(function () {
+	      $('.demo').css("bottom", "0px");
+	      $('.get-info').css("visibility", "hidden");
+	      $('.guest-button').css("right", "20px");
+	    }, 4000);
 	  },
 
 	  componentWillUnmount: function () {
@@ -36847,17 +36854,19 @@ d.parent(".dropdown-menu").length&&(d=d.closest("li.dropdown").addClass("active"
 	    }
 	  },
 
-	  changeBackground: function () {
-	    console.log("hey");
-	    // debugger
-
-	    $('body').css({
-	      background: "#151515",
-	      transition: "background 7s"
-	    });
+	  showGuest: function () {
+	    $('.demo').css("bottom", "0px");
+	    $('.guest-button').css("right", "20px");
+	    $('.get-info').css("visibility", "hidden");
 	  },
 
-	  // background: linear-gradient(156deg, #ff00f5, #ffc40d);
+	  signInAsGuest: function () {
+	    LandingPageActions.loginGuest();
+	  },
+
+	  showVideo: function () {
+	    this.setState({ video: true });
+	  },
 
 	  render: function () {
 	    var button;
@@ -36868,7 +36877,7 @@ d.parent(".dropdown-menu").length&&(d=d.closest("li.dropdown").addClass("active"
 	        React.createElement(
 	          'div',
 	          { className: 'signup-button', 'data-toggle': 'modal', 'data-target': '#myModal' },
-	          'try me'
+	          'sign up'
 	        ),
 	        React.createElement(
 	          'div',
@@ -36882,9 +36891,15 @@ d.parent(".dropdown-menu").length&&(d=d.closest("li.dropdown").addClass("active"
 
 	    return React.createElement(
 	      'div',
-	      null,
+	      { className: 'landing-wrapper' },
+	      React.createElement(
+	        'div',
+	        { className: 'guest-button', onClick: this.signInAsGuest },
+	        'guest login'
+	      ),
+	      React.createElement('iframe', { className: 'demo', id: 'demo', width: '400', height: '300', allowfullscreen: 'allowfullscreen', src: 'https://www.youtube.com/embed/kCJ1dsj0Jvc' }),
 	      button,
-	      React.createElement('div', { className: 'test', onClick: this.changeBackground })
+	      React.createElement('img', { className: 'get-info', onClick: this.showGuest, src: 'assets/info.png' })
 	    );
 	  }
 
@@ -43823,7 +43838,11 @@ d.parent(".dropdown-menu").length&&(d=d.closest("li.dropdown").addClass("active"
 	};
 
 	function resetTrack(tracks) {
-	  _embedded_track = tracks.embedded_track;
+	  if (tracks !== -1) {
+	    _embedded_track = tracks.embedded_track;
+	  } else {
+	    _embedded_track = -1;
+	  }
 
 	  TrackStore.__emitChange();
 	}
@@ -43845,31 +43864,77 @@ d.parent(".dropdown-menu").length&&(d=d.closest("li.dropdown").addClass("active"
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1),
-	    FaceActions = __webpack_require__(240);
+	    FaceActions = __webpack_require__(240),
+	    TrackStore = __webpack_require__(237),
+	    EmotionStore = __webpack_require__(248);
 
 	var Face = React.createClass({
 	  displayName: 'Face',
 
+	  getInitialState: function () {
+	    return { loading: false,
+	      url: false
+	    };
+	  },
+
 	  componentDidMount: function () {
 	    this.getUserMedia();
 	    this.addPictureListener();
+
+	    this.listener = EmotionStore.addListener(this.onGetEmotion);
+	    this.listener2 = TrackStore.addListener(this.onGetTrack);
+	  },
+
+	  componentWillUnmount: function () {
+	    this.listener.remove();
+	    this.listener2.remove();
+	  },
+
+	  onGetTrack: function () {
+	    this.setState({ url: false });
+	  },
+
+	  onGetEmotion: function () {
+	    if (EmotionStore.currentEmotion() === "did not detect") {
+	      this.setState({ url: false,
+	        loading: false
+	      });
+	      this.cameraButton.addEventListener('click', this.getPhoto);
+	    } else {
+	      setTimeout(function () {
+	        this.setState({ loading: false });
+	        this.cameraButton.addEventListener('click', this.getPhoto);
+	      }.bind(this), 1000);
+	    }
 	  },
 
 	  addPictureListener: function () {
-	    var cameraButton = document.getElementById('take-photo');
-	    cameraButton.addEventListener('click', this.getPhoto);
+	    this.cameraButton = document.getElementById('take-photo');
+	    this.cameraButton.addEventListener('click', this.getPhoto);
+	  },
+
+	  componentWillReceiveProps: function (nextProps) {
+	    if (nextProps.tracks !== null) {
+	      this.cameraButton.addEventListener('click', this.getPhoto);
+	    }
 	  },
 
 	  getPhoto: function () {
+	    $(".photo-notice").css("opacity", "0");
+	    this.setState({ loading: true });
+	    var sound = document.getElementById('sound-effect');
+	    sound.play();
+	    var canvas = document.getElementById('canvas');
+	    canvas.width = this.video.videoWidth;
+	    canvas.height = this.video.videoHeight;
+	    canvas.getContext('2d').drawImage(this.video, 0, 0);
+	    var dataURI = canvas.toDataURL('image/jpg');
+	    this.setState({ url: dataURI });
+	    var blob = this.dataURItoBlob(dataURI);
+	    this.cameraButton.removeEventListener('click', this.getPhoto, false);
 	    setTimeout(function () {
-	      var canvas = document.getElementById('canvas');
-	      canvas.width = this.video.videoWidth;
-	      canvas.height = this.video.videoHeight;
-	      canvas.getContext('2d').drawImage(this.video, 0, 0);
-	      var dataURI = canvas.toDataURL('image/jpg');
-	      var blob = this.dataURItoBlob(dataURI);
 	      FaceActions.fetchEmotions(blob);
-	    }.bind(this), 500);
+	    }, 500);
 	  },
 
 	  dataURItoBlob: function (dataURI) {
@@ -43898,11 +43963,41 @@ d.parent(".dropdown-menu").length&&(d=d.closest("li.dropdown").addClass("active"
 	  },
 
 	  render: function () {
+	    var loadSpinner;
+	    if (this.state.loading) {
+	      loadSpinner = React.createElement('div', { className: 'spinner' });
+	    } else {
+	      loadSpinner = React.createElement('div', null);
+	    }
+
+	    var image;
+	    if (this.state.url) {
+	      image = React.createElement('img', { className: 'last-picture', src: this.state.url });
+	    } else {
+	      image = React.createElement('div', null);
+	    }
+
 	    return React.createElement(
 	      'div',
 	      null,
+	      image,
+	      loadSpinner,
+	      React.createElement(
+	        'div',
+	        { className: 'photo-notice' },
+	        'Take a photo'
+	      ),
 	      React.createElement('video', { autoPlay: true }),
-	      React.createElement('img', { id: 'take-photo', src: '/assets/camera-icon.png' }),
+	      React.createElement(
+	        'div',
+	        { className: 'overlay' },
+	        React.createElement('div', { id: 'take-photo' })
+	      ),
+	      React.createElement(
+	        'audio',
+	        { id: 'sound-effect' },
+	        React.createElement('source', { src: 'camera-shutter-click-03.mp3', type: 'audio/mpeg' })
+	      ),
 	      React.createElement('canvas', { id: 'canvas', style: { display: "none" } })
 	    );
 	  }
@@ -43962,9 +44057,28 @@ d.parent(".dropdown-menu").length&&(d=d.closest("li.dropdown").addClass("active"
 	      type: 'POST',
 	      data: { user: credentials },
 	      success: function (response) {
-	        UserActions.receiveUser(response);
 	        SessionActions.receiveCurrentUser(response);
 	        if (!response.errors) {
+	          UserActions.receiveUser(response);
+	          cb();
+	        }
+	      }
+	    });
+	  },
+
+	  createGuestSession: function () {
+	    $.ajax({
+	      url: 'api/session',
+	      type: 'POST',
+	      data: {
+	        user: { username: "guest",
+	          password: "password"
+	        }
+	      },
+	      success: function (response) {
+	        SessionActions.receiveCurrentUser(response);
+	        if (!response.errors) {
+	          UserActions.receiveUser(response);
 	          cb();
 	        }
 	      }
@@ -43994,8 +44108,12 @@ d.parent(".dropdown-menu").length&&(d=d.closest("li.dropdown").addClass("active"
 	      data: blobData,
 	      success: function (data) {
 	        console.log("emotion acquired", data);
+
 	        ApiActions.emotionReceived(data);
-	        ApiActions.getTracks(data);
+
+	        if (data.length > 0) {
+	          ApiActions.getTracks(data);
+	        }
 	      }
 	    });
 	  },
@@ -44085,7 +44203,7 @@ d.parent(".dropdown-menu").length&&(d=d.closest("li.dropdown").addClass("active"
 /* 245 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var EmotionActions = __webpack_require__(255);
+	var EmotionActions = __webpack_require__(246);
 
 	setTimeout(function () {
 	  ApiUtil = __webpack_require__(241);
@@ -44107,14 +44225,96 @@ d.parent(".dropdown-menu").length&&(d=d.closest("li.dropdown").addClass("active"
 /* 246 */
 /***/ function(module, exports, __webpack_require__) {
 
+	var AppDispatcher = __webpack_require__(231),
+	    EmotionConstants = __webpack_require__(247);
+
+	var EmotionActions = {
+	  receiveEmotions: function (emotions) {
+	    AppDispatcher.dispatch({
+	      actionType: EmotionConstants.EMOTION_RECEIVED,
+	      emotions: emotions
+	    });
+	  }
+	};
+
+	module.exports = EmotionActions;
+
+/***/ },
+/* 247 */
+/***/ function(module, exports) {
+
+	var SessionConstants = {
+	  EMOTION_RECEIVED: "EMOTION_RECEIVED",
+	  LISTENER_RECEIVED: "LISTENER_RECEIVED"
+	};
+
+	module.exports = SessionConstants;
+
+/***/ },
+/* 248 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var AppDispatcher = __webpack_require__(231),
+	    Store = __webpack_require__(213).Store;
+	EmotionConstants = __webpack_require__(247);
+
+	var _emotion = null;
+	var _listener = false;
+
+	var EmotionStore = new Store(AppDispatcher);
+
+	EmotionStore.__onDispatch = function (payload) {
+	  switch (payload.actionType) {
+	    case EmotionConstants.EMOTION_RECEIVED:
+	      resetEmotion(payload.emotions);
+	      break;
+	  }
+	};
+
+	EmotionStore.currentEmotion = function () {
+	  return _emotion;
+	};
+
+	function resetEmotion(emotions) {
+	  if (emotions.length === 0) {
+	    _emotion = "did not detect";
+	  } else {
+	    _emotion = calculateMood(emotions);
+	  }
+
+	  EmotionStore.__emitChange();
+	}
+
+	function calculateMood(emotions) {
+	  var highest = 0;
+	  var mood = "";
+
+	  for (var k in emotions[0].scores) {
+	    var convertedValue = parseFloat(emotions[0].scores[k]);
+
+	    if (convertedValue > highest) {
+	      highest = convertedValue;
+	      mood = k;
+	    }
+	  }
+
+	  return mood;
+	}
+
+	module.exports = EmotionStore;
+
+/***/ },
+/* 249 */
+/***/ function(module, exports, __webpack_require__) {
+
 	var React = __webpack_require__(1),
-	    LinkedStateMixin = __webpack_require__(247),
+	    LinkedStateMixin = __webpack_require__(250),
 	    LandingPage = __webpack_require__(210),
 	    UserStore = __webpack_require__(235),
 	    SessionStore = __webpack_require__(212),
-	    AppActions = __webpack_require__(251),
-	    SigninModal = __webpack_require__(252),
-	    SignupModal = __webpack_require__(253);
+	    AppActions = __webpack_require__(254),
+	    SigninModal = __webpack_require__(255),
+	    SignupModal = __webpack_require__(256);
 
 	var App = React.createClass({
 	  displayName: 'App',
@@ -44156,7 +44356,7 @@ d.parent(".dropdown-menu").length&&(d=d.closest("li.dropdown").addClass("active"
 	    var currentUser;
 	    var currentUserId = SessionStore.currentUserId();
 
-	    if (currentUserId !== null) {
+	    if (currentUserId !== null && currentUserId !== -1) {
 	      currentUser = SessionStore.currentUser().username;
 	    } else {
 	      currentUser = "";
@@ -44188,7 +44388,57 @@ d.parent(".dropdown-menu").length&&(d=d.closest("li.dropdown").addClass("active"
 	    return React.createElement(
 	      'div',
 	      null,
+	      React.createElement(
+	        'div',
+	        { className: 'modal fade boxes', id: 'myModal3', tabIndex: '-1', role: 'dialog', 'aria-labelledby': 'myModalLabel' },
+	        React.createElement(
+	          'div',
+	          { className: 'modal-dialog modal-sm', role: 'document' },
+	          React.createElement(
+	            'div',
+	            { className: 'modal-content' },
+	            React.createElement(
+	              'div',
+	              { className: 'modal-header' },
+	              React.createElement(
+	                'button',
+	                { type: 'button', className: 'close', 'data-dismiss': 'modal', 'aria-label': 'Close' },
+	                React.createElement(
+	                  'span',
+	                  { 'aria-hidden': 'true' },
+	                  '×'
+	                )
+	              ),
+	              React.createElement(
+	                'h4',
+	                { className: 'modal-title', id: 'myModalLabel' },
+	                'about songsnap'
+	              )
+	            ),
+	            React.createElement(
+	              'div',
+	              { className: 'modal-body' },
+	              React.createElement(
+	                'p',
+	                null,
+	                'Photograph yourself and get a track for your mood.'
+	              ),
+	              React.createElement('br', null),
+	              React.createElement(
+	                'p',
+	                null,
+	                'Try happy, sad, angry, disgusted, contemptful, surprised, and neutral faces.'
+	              )
+	            )
+	          )
+	        )
+	      ),
 	      logout,
+	      React.createElement(
+	        'div',
+	        { className: 'about-button', 'data-toggle': 'modal', 'data-target': '#myModal3' },
+	        'about songsnap'
+	      ),
 	      React.createElement(
 	        'div',
 	        { className: 'song-snap-title' },
@@ -44205,13 +44455,13 @@ d.parent(".dropdown-menu").length&&(d=d.closest("li.dropdown").addClass("active"
 	module.exports = App;
 
 /***/ },
-/* 247 */
+/* 250 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = __webpack_require__(248);
+	module.exports = __webpack_require__(251);
 
 /***/ },
-/* 248 */
+/* 251 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -44228,8 +44478,8 @@ d.parent(".dropdown-menu").length&&(d=d.closest("li.dropdown").addClass("active"
 
 	'use strict';
 
-	var ReactLink = __webpack_require__(249);
-	var ReactStateSetters = __webpack_require__(250);
+	var ReactLink = __webpack_require__(252);
+	var ReactStateSetters = __webpack_require__(253);
 
 	/**
 	 * A simple mixin around ReactLink.forState().
@@ -44252,7 +44502,7 @@ d.parent(".dropdown-menu").length&&(d=d.closest("li.dropdown").addClass("active"
 	module.exports = LinkedStateMixin;
 
 /***/ },
-/* 249 */
+/* 252 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -44326,7 +44576,7 @@ d.parent(".dropdown-menu").length&&(d=d.closest("li.dropdown").addClass("active"
 	module.exports = ReactLink;
 
 /***/ },
-/* 250 */
+/* 253 */
 /***/ function(module, exports) {
 
 	/**
@@ -44435,7 +44685,7 @@ d.parent(".dropdown-menu").length&&(d=d.closest("li.dropdown").addClass("active"
 	module.exports = ReactStateSetters;
 
 /***/ },
-/* 251 */
+/* 254 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var ApiUtil = __webpack_require__(241);
@@ -44462,12 +44712,12 @@ d.parent(".dropdown-menu").length&&(d=d.closest("li.dropdown").addClass("active"
 	module.exports = AppActions;
 
 /***/ },
-/* 252 */
+/* 255 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1),
-	    LinkedStateMixin = __webpack_require__(247),
-	    AppActions = __webpack_require__(251),
+	    LinkedStateMixin = __webpack_require__(250),
+	    AppActions = __webpack_require__(254),
 	    SessionStore = __webpack_require__(212),
 	    UserStore = __webpack_require__(235),
 	    History = __webpack_require__(159).History;
@@ -44580,8 +44830,12 @@ d.parent(".dropdown-menu").length&&(d=d.closest("li.dropdown").addClass("active"
 	              ),
 	              React.createElement(
 	                'div',
-	                null,
-	                this.state.errors
+	                { className: 'errors' },
+	                React.createElement(
+	                  'div',
+	                  null,
+	                  this.state.errors
+	                )
 	              )
 	            )
 	          )
@@ -44595,12 +44849,12 @@ d.parent(".dropdown-menu").length&&(d=d.closest("li.dropdown").addClass("active"
 	module.exports = SigninModal;
 
 /***/ },
-/* 253 */
+/* 256 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1),
-	    LinkedStateMixin = __webpack_require__(247),
-	    AppActions = __webpack_require__(251),
+	    LinkedStateMixin = __webpack_require__(250),
+	    AppActions = __webpack_require__(254),
 	    UserStore = __webpack_require__(235),
 	    SessionStore = __webpack_require__(212),
 	    History = __webpack_require__(159).History;
@@ -44662,6 +44916,19 @@ d.parent(".dropdown-menu").length&&(d=d.closest("li.dropdown").addClass("active"
 	  },
 
 	  render: function () {
+	    var errors;
+
+	    if (this.state.errors.length > 0) {
+	      errors = this.state.errors.map(function (error, index) {
+	        return React.createElement(
+	          'div',
+	          { key: index },
+	          error
+	        );
+	      });
+	    } else {
+	      errors = React.createElement('div', null);
+	    }
 
 	    return React.createElement(
 	      'div',
@@ -44696,7 +44963,7 @@ d.parent(".dropdown-menu").length&&(d=d.closest("li.dropdown").addClass("active"
 	            React.createElement(
 	              'div',
 	              { className: 'modal-body' },
-	              'photograph yourself. get a playlist for your mood.'
+	              'photograph yourself. get a track for your mood.'
 	            ),
 	            React.createElement(
 	              'div',
@@ -44729,8 +44996,8 @@ d.parent(".dropdown-menu").length&&(d=d.closest("li.dropdown").addClass("active"
 	              ),
 	              React.createElement(
 	                'div',
-	                null,
-	                this.state.errors
+	                { className: 'errors' },
+	                errors
 	              )
 	            )
 	          )
@@ -44744,13 +45011,15 @@ d.parent(".dropdown-menu").length&&(d=d.closest("li.dropdown").addClass("active"
 	module.exports = SignupModal;
 
 /***/ },
-/* 254 */
+/* 257 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1),
 	    SessionStore = __webpack_require__(212),
 	    TrackStore = __webpack_require__(237),
-	    EmotionStore = __webpack_require__(257),
+	    EmotionStore = __webpack_require__(248),
+	    UserStore = __webpack_require__(235),
+	    MusicSearchActions = __webpack_require__(258),
 	    ReactConstants = __webpack_require__(211),
 	    Face = __webpack_require__(239);
 
@@ -44760,7 +45029,8 @@ d.parent(".dropdown-menu").length&&(d=d.closest("li.dropdown").addClass("active"
 	  getInitialState: function () {
 	    return {
 	      track: null,
-	      emotion: null
+	      emotion: null,
+	      trackLoading: false
 	    };
 	  },
 
@@ -44775,19 +45045,96 @@ d.parent(".dropdown-menu").length&&(d=d.closest("li.dropdown").addClass("active"
 	  },
 
 	  onGetTrack: function () {
-	    this.setState({ track: TrackStore.currentTrack() });
+	    this.setState({ track: TrackStore.currentTrack(),
+	      trackLoading: false });
 	  },
 
 	  onGetEmotion: function () {
 	    var currentEmotion = EmotionStore.currentEmotion();
-	    // this.changeBackground(currentEmotion);
-	    this.setState({ emotion: EmotionStore.currentEmotion() });
+
+	    if (currentEmotion !== null) {
+	      switch (currentEmotion) {
+	        case "did not detect":
+	          var response = "sorry, was your face in the frame?";
+	          break;
+	        case "neutral":
+	          var response = "chill sounds and my usual vibe.";
+	          $('body').css({
+	            background: "#595959",
+	            transition: "background 7s"
+	          });
+	          break;
+	        case "anger":
+	          var response = "feeling a little Angry?";
+	          $('body').css({
+	            background: "#190000",
+	            transition: "background 7s"
+	          });
+	          break;
+	        case "contempt":
+	          var response = "feeling some contempt, hmph..";
+	          $('body').css({
+	            background: "#ff8f66",
+	            transition: "background 7s"
+	          });
+	          break;
+	        case "disgust":
+	          var response = "looking for something nasty.";
+	          $('body').css({
+	            background: "#001900",
+	            transition: "background 7s"
+	          });
+	          break;
+	        case "fear":
+	          var response = "don't be scared.";
+	          $('body').css({
+	            background: "#990000",
+	            transition: "background 7s"
+	          });
+	          break;
+	        case "happiness":
+	          var response = "feeling happy or upbeat : )";
+	          $('body').css({
+	            background: "#ffa5d2",
+	            transition: "background 7s"
+	          });
+	          break;
+	        case "sadness":
+	          var response = "feeling sad.";
+	          $('body').css({
+	            background: "#b5dbe8",
+	            transition: "background 7s"
+	          });
+	          break;
+	        case "surprise":
+	          var response = "surprise!";
+	          $('body').css({
+	            background: "#885ead",
+	            transition: "background 7s"
+	          });
+	      }
+
+	      this.setState({ emotion: response });
+
+	      if (currentEmotion !== "did not detect") {
+	        setTimeout(function () {
+	          this.setState({ trackLoading: true });
+	        }.bind(this), 1000);
+	      }
+	    }
 	  },
 
 	  render: function () {
+	    var loadSpinner;
+	    if (this.state.trackLoading) {
+	      loadSpinner = React.createElement('div', { className: 'spinner' });
+	    } else {
+	      loadSpinner = React.createElement('div', null);
+	    }
+
 	    var cam;
-	    if (SessionStore.currentAccessToken() !== null && SessionStore.currentAccessToken() !== "-1") {
-	      cam = React.createElement(Face, null);
+	    if (SessionStore.currentAccessToken() !== null && SessionStore.currentAccessToken() !== "-1" && SessionStore.currentAccessToken() !== "") {
+	      cam = React.createElement(Face, { tracks: this.state.track });
 	    } else {
 	      cam = React.createElement(
 	        'form',
@@ -44797,7 +45144,7 @@ d.parent(".dropdown-menu").length&&(d=d.closest("li.dropdown").addClass("active"
 	    }
 
 	    var result;
-	    if (this.state.track !== null) {
+	    if (this.state.track !== null && this.state.track !== -1) {
 	      trackString = this.state.track['html'];
 	      result = React.createElement('div', { className: 'filler', dangerouslySetInnerHTML: { __html: trackString } });
 	    } else {
@@ -44818,6 +45165,7 @@ d.parent(".dropdown-menu").length&&(d=d.closest("li.dropdown").addClass("active"
 	    return React.createElement(
 	      'div',
 	      null,
+	      loadSpinner,
 	      emotion,
 	      cam,
 	      result
@@ -44828,80 +45176,32 @@ d.parent(".dropdown-menu").length&&(d=d.closest("li.dropdown").addClass("active"
 	module.exports = MusicSearch;
 
 /***/ },
-/* 255 */
+/* 258 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var AppDispatcher = __webpack_require__(231),
-	    EmotionConstants = __webpack_require__(256);
+	var ApiUtil = __webpack_require__(241);
 
-	var EmotionActions = {
-	  receiveEmotions: function (emotions) {
-	    AppDispatcher.dispatch({
-	      actionType: EmotionConstants.EMOTION_RECEIVED,
-	      emotions: emotions
-	    });
+	var MusicSearchActions = {
+	  updateUser: function (currentUser) {
+	    ApiUtil.updateUser(currentUser);
 	  }
 	};
 
-	module.exports = EmotionActions;
+	module.exports = MusicSearchActions;
 
 /***/ },
-/* 256 */
-/***/ function(module, exports) {
-
-	var SessionConstants = {
-	  EMOTION_RECEIVED: "EMOTION_RECEIVED"
-	};
-
-	module.exports = SessionConstants;
-
-/***/ },
-/* 257 */
+/* 259 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var AppDispatcher = __webpack_require__(231),
-	    Store = __webpack_require__(213).Store;
-	EmotionConstants = __webpack_require__(256);
+	var ApiUtil = __webpack_require__(241);
 
-	var _emotion = null;
-
-	var EmotionStore = new Store(AppDispatcher);
-
-	EmotionStore.__onDispatch = function (payload) {
-	  switch (payload.actionType) {
-	    case EmotionConstants.EMOTION_RECEIVED:
-	      resetEmotion(payload.emotions);
-	      break;
+	var LandingPageActions = {
+	  loginGuest: function () {
+	    ApiUtil.createGuestSession();
 	  }
 	};
 
-	EmotionStore.currentEmotion = function () {
-	  return _emotion;
-	};
-
-	function resetEmotion(emotions) {
-	  _emotion = calculateMood(emotions);
-
-	  EmotionStore.__emitChange();
-	}
-
-	function calculateMood(emotions) {
-	  var highest = 0;
-	  var mood = "";
-
-	  for (var k in emotions[0].scores) {
-	    var convertedValue = parseFloat(emotions[0].scores[k]);
-
-	    if (convertedValue > highest) {
-	      highest = convertedValue;
-	      mood = k;
-	    }
-	  }
-
-	  return mood;
-	}
-
-	module.exports = EmotionStore;
+	module.exports = LandingPageActions;
 
 /***/ }
 /******/ ]);

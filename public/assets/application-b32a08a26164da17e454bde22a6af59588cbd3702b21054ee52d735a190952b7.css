@@ -87,6 +87,7 @@ body {
  */
 
 
+
 body{
   font-family: 'Raleway', 'sans-serif';
   font-weight: 300;
@@ -144,6 +145,12 @@ body{
   text-align: center;
   margin: 0 auto;
 }
+.demo {
+  position: absolute;;
+  right: 0px;
+  bottom: -310px;
+  transition: bottom 1s;
+}
 
 .start-buttons {
   position: relative;
@@ -162,9 +169,21 @@ body{
   right: -100px;
 }
 
+.guest-button {
+  font-size: 30px;
+  position: absolute;
+  bottom: 305px;
+  right: -290px;
+  transition: transform 1s, color 1s, right 1s;
+}
+
+.guest-button:hover {
+  cursor: pointer;
+  color: #151515;
+}
+
 .signin-button:hover {
   cursor: pointer;
-  transform: perspective(50em) rotateY(40deg);
   color: #151515;
 }
 
@@ -179,7 +198,6 @@ body{
 
 .signup-button:hover {
   cursor: pointer;
-  transform: perspective(50em) rotateY(40deg);
   color: #151515;
 }
 
@@ -190,12 +208,11 @@ body{
   left: 130px;
   top: 200px;
   font-size: 20px;
-  transition: transform 1.2s, color 1.2s;
+  transition: transform 1.2s, color 1s;
 }
 
 .about-button:hover {
   cursor: pointer;
-  transform: perspective(50em) rotateY(40deg);
   color: #151515;
 }
 
@@ -208,13 +225,12 @@ body{
   position: absolute;
   left: 20px;
   top: 10px;
-  font-size: 35px;
-  transition: transform 1.2s, color 1.2s;
+  font-size: 25px;
+  transition: transform 1.2s, color 1s;
 }
 
 .logout:hover {
   cursor: pointer;
-  transform: perspective(50em) rotateY(40deg);
   color: #151515;
 }
 
@@ -233,15 +249,11 @@ body{
     top: 0;
     right: 40px;
     font-size: 80px;
-    -webkit-animation: pulse 3s ease infinite;
-    -moz-animation: pulse 3s ease infinite;
-    animation: pulse 3s ease infinite;
+    transition: color 1s;
 }
 
 .connect-soundcloud:hover {
-  -webkit-animation: none;
-  -moz-animation: none;
-  animation: none;
+  cursor: pointer;
   color: #151515;
 }
 
@@ -259,34 +271,48 @@ input:focus {
 
 video {
   width: 400px;
-position: absolute;
-top: 25px;
-left: 900px;
+  position: absolute;
+  top: 30px;
+  left: 900px;
   z-index: -100;
   border-radius: 40px;
   border: 5px solid white;
-  /*border-bottom: 5px solid white;
-  border-left: 5px solid white;*/
+}
+
+.last-picture {
+  width: 400px;
+  position: absolute;
+  top: 30px;
+  left: 900px;
+  border-radius: 40px;
+  border: 5px solid white;
 }
 
 #take-photo {
-  position:absolute;
-  z-index: 100;
-  left: 820px;
-  top: 270px;
-  width: 150px;
-  transition: border 1s;
-  border-radius: 10px;
-  transition: transform 1s;
+  background: url('/assets/camera.png');
+  background-position: center;
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  width: 100%;
+  height: 100%;
+  /*border-radius: 24px;*/
+  /*transition: background 1s;*/
 }
 
 #take-photo:hover {
-  cursor: crosshair;
-  transform: translateY(-10px);
+  cursor: pointer;
+  opacity: .7;
 }
-
-#take-photo:active {
-  color: #151515;
+.overlay {
+  /*border: 5px solid white;*/
+  z-index: 100;
+  position:absolute;
+  left: 805px;
+  top: 257px;
+  width: 80px;
+  height: 80px;
+  /*border-radius: 30px;*/
+  /*background-color: #151515;*/
 }
 
 .emotion {
@@ -311,7 +337,7 @@ left: 900px;
   width: 100px;
   height: 100px;
   margin: 100px auto;
-  background-color: #333;
+  background-color: white;
 
   border-radius: 100%;
   -webkit-animation: sk-scaleout 1.0s infinite ease-in-out;
@@ -348,3 +374,43 @@ left: 900px;
   margin-top: 13px;
   margin-right: 20px;
 }
+
+.get-info {
+  width: 50px;
+  height: 50px;
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+}
+
+.get-info:hover {
+  cursor: pointer;
+}
+
+.photo-notice {
+  font-size: 20px;
+  position:absolute;
+  right: 442px;
+  top: 340px;
+  transition: opacity .5s;
+  -webkit-animation: pulse 3s ease infinite;
+    -moz-animation: pulse 3s ease infinite;
+    animation: pulse 3s ease infinite;
+}
+
+@-webkit-keyframes pulse {
+   0% { -webkit-transform: scale(1); }
+   50% { -webkit-transform: scale(1.1); }
+   100% { -webkit-transform: scale(1); }
+ }
+
+ @keyframes pulse {
+   0% { transform: scale(1); }
+   50% { transform: scale(1.1); }
+   100% { transform: scale(1); }
+ }
+
+ .pulse {
+   -webkit-animation-name: pulse;
+   animation-name: pulse;
+ }

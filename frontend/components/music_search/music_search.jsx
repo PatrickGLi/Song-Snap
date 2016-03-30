@@ -149,7 +149,7 @@ var MusicSearch = React.createClass({
     }
 
     return (
-      <div>
+      <div>  
         {loadSpinner}
         {emotion}
         {cam}

@@ -76,7 +76,7 @@ body{
 .demo {
   position: absolute;;
   right: 0px;
-  bottom: -400px;
+  bottom: -310px;
   transition: bottom 1s;
 }
 
@@ -101,18 +101,18 @@ body{
   font-size: 30px;
   position: absolute;
   bottom: 305px;
-  right: -250px;
+  right: -290px;
   transition: transform 1s, color 1s, right 1s;
 }
 
 .guest-button:hover {
   cursor: pointer;
-  color: #545454;
+  color: #151515;
 }
 
 .signin-button:hover {
   cursor: pointer;
-  color: #545454;
+  color: #151515;
 }
 
 .signup-button {
@@ -126,7 +126,7 @@ body{
 
 .signup-button:hover {
   cursor: pointer;
-  color: #545454;
+  color: #151515;
 }
 
 .about-button {
@@ -141,11 +141,11 @@ body{
 
 .about-button:hover {
   cursor: pointer;
-  color: #545454;
+  color: #151515;
 }
 
 .boxes {
-  color: #545454;
+  color: #151515;
 }
 
 .logout {
@@ -159,7 +159,7 @@ body{
 
 .logout:hover {
   cursor: pointer;
-  color: #545454;
+  color: #151515;
 }
 
 .username {
@@ -182,7 +182,7 @@ body{
 
 .connect-soundcloud:hover {
   cursor: pointer;
-  color: #545454;
+  color: #151515;
 }
 
 input:focus {
@@ -240,7 +240,7 @@ video {
   width: 80px;
   height: 80px;
   /*border-radius: 30px;*/
-  /*background-color: #545454;*/
+  /*background-color: #151515;*/
 }
 
 .emotion {
@@ -302,3 +302,43 @@ video {
   margin-top: 13px;
   margin-right: 20px;
 }
+
+.get-info {
+  width: 50px;
+  height: 50px;
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+}
+
+.get-info:hover {
+  cursor: pointer;
+}
+
+.photo-notice {
+  font-size: 20px;
+  position:absolute;
+  right: 442px;
+  top: 340px;
+  transition: opacity .5s;
+  -webkit-animation: pulse 3s ease infinite;
+    -moz-animation: pulse 3s ease infinite;
+    animation: pulse 3s ease infinite;
+}
+
+@-webkit-keyframes pulse {
+   0% { -webkit-transform: scale(1); }
+   50% { -webkit-transform: scale(1.1); }
+   100% { -webkit-transform: scale(1); }
+ }
+
+ @keyframes pulse {
+   0% { transform: scale(1); }
+   50% { transform: scale(1.1); }
+   100% { transform: scale(1); }
+ }
+
+ .pulse {
+   -webkit-animation-name: pulse;
+   animation-name: pulse;
+ }

@@ -53,6 +53,7 @@ var Face = React.createClass({
   },
 
   getPhoto:function() {
+    $(".photo-notice").css("opacity", "0");
     this.setState({ loading: true });
     var sound = document.getElementById('sound-effect');
     sound.play();
@@ -122,6 +123,7 @@ var Face = React.createClass({
       <div>
         {image}
         {loadSpinner}
+        <div className="photo-notice">Take a photo</div>
         <video autoPlay></video>
           <div className="overlay"><div id="take-photo"></div></div>
           <audio id="sound-effect" >

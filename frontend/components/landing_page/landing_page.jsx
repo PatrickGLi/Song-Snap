@@ -19,10 +19,9 @@ var LandingPage = React.createClass({
 
     setTimeout(function() {
       $('.demo').css( "bottom", "0px");
-      setTimeout(function() {
-        $('.guest-button').css( "right", "20px");
-      }, 5000);
-    }, 3000);
+      $('.get-info').css( "visibility", "hidden");
+      $('.guest-button').css( "right", "20px");
+    }, 4000);
   },
 
   componentWillUnmount: function() {
@@ -44,6 +43,12 @@ var LandingPage = React.createClass({
     } else {
       this.setState({ user: false });
     }
+  },
+
+  showGuest: function() {
+    $('.demo').css( "bottom", "0px");
+    $('.guest-button').css( "right", "20px");
+    $('.get-info').css( "visibility", "hidden");
   },
 
   signInAsGuest: function() {
@@ -70,9 +75,10 @@ var LandingPage = React.createClass({
 
     return(
       <div className="landing-wrapper">
-        <div className="guest-button" onClick={this.signInAsGuest}>try our guest login</div>
+        <div className="guest-button" onClick={this.signInAsGuest}>guest login</div>
         <iframe className="demo" id="demo" width="400" height="300" allowfullscreen="allowfullscreen" src="https://www.youtube.com/embed/kCJ1dsj0Jvc"></iframe>
         {button}
+        <img className="get-info" onClick={this.showGuest} src="assets/info.png"></img>
       </div>
     );
   }

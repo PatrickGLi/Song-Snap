@@ -24465,10 +24465,9 @@
 
 	    setTimeout(function () {
 	      $('.demo').css("bottom", "0px");
-	      setTimeout(function () {
-	        $('.guest-button').css("right", "20px");
-	      }, 5000);
-	    }, 3000);
+	      $('.get-info').css("visibility", "hidden");
+	      $('.guest-button').css("right", "20px");
+	    }, 4000);
 	  },
 
 	  componentWillUnmount: function () {
@@ -24490,6 +24489,12 @@
 	    } else {
 	      this.setState({ user: false });
 	    }
+	  },
+
+	  showGuest: function () {
+	    $('.demo').css("bottom", "0px");
+	    $('.guest-button').css("right", "20px");
+	    $('.get-info').css("visibility", "hidden");
 	  },
 
 	  signInAsGuest: function () {
@@ -24527,10 +24532,11 @@
 	      React.createElement(
 	        'div',
 	        { className: 'guest-button', onClick: this.signInAsGuest },
-	        'try our guest login'
+	        'guest login'
 	      ),
 	      React.createElement('iframe', { className: 'demo', id: 'demo', width: '400', height: '300', allowfullscreen: 'allowfullscreen', src: 'https://www.youtube.com/embed/kCJ1dsj0Jvc' }),
-	      button
+	      button,
+	      React.createElement('img', { className: 'get-info', onClick: this.showGuest, src: 'assets/info.png' })
 	    );
 	  }
 
@@ -31551,6 +31557,7 @@
 	  },
 
 	  getPhoto: function () {
+	    $(".photo-notice").css("opacity", "0");
 	    this.setState({ loading: true });
 	    var sound = document.getElementById('sound-effect');
 	    sound.play();
@@ -31612,6 +31619,11 @@
 	      null,
 	      image,
 	      loadSpinner,
+	      React.createElement(
+	        'div',
+	        { className: 'photo-notice' },
+	        'Take a photo'
+	      ),
 	      React.createElement('video', { autoPlay: true }),
 	      React.createElement(
 	        'div',
@@ -32047,6 +32059,12 @@
 	                'p',
 	                null,
 	                'Photograph yourself and get a track for your mood.'
+	              ),
+	              React.createElement('br', null),
+	              React.createElement(
+	                'p',
+	                null,
+	                'Try happy, sad, angry, disgusted, contemptful, surprised, and neutral faces.'
 	              )
 	            )
 	          )

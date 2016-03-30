@@ -165,7 +165,7 @@ body{
 .signin-button:hover {
   cursor: pointer;
   transform: perspective(50em) rotateY(40deg);
-  color: #545454;
+  color: #151515;
 }
 
 .signup-button {
@@ -180,11 +180,11 @@ body{
 .signup-button:hover {
   cursor: pointer;
   transform: perspective(50em) rotateY(40deg);
-  color: #545454;
+  color: #151515;
 }
 
 .boxes {
-  color: #545454;
+  color: #151515;
 }
 
 .logout {
@@ -199,7 +199,7 @@ body{
 .logout:hover {
   cursor: pointer;
   transform: perspective(50em) rotateY(40deg);
-  color: #545454;
+  color: #151515;
 }
 
 .username {
@@ -226,7 +226,7 @@ body{
   -webkit-animation: none;
   -moz-animation: none;
   animation: none;
-  color: #545454;
+  color: #151515;
 }
 
 input:focus {
@@ -270,7 +270,7 @@ left: 900px;
 }
 
 #take-photo:active {
-  color: #545454;
+  color: #151515;
 }
 
 .emotion {

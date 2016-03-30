@@ -81,6 +81,8 @@ var App = React.createClass({
               </div>
               <div className="modal-body">
                 <p>Photograph yourself and get a track for your mood.</p>
+                <br/>
+                <p>Try happy, sad, angry, disgusted, contemptful, surprised, and neutral faces.</p>
               </div>
             </div>
           </div>
