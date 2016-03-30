@@ -107,12 +107,12 @@ body{
 
 .guest-button:hover {
   cursor: pointer;
-  color: #151515;
+  color: #abab9a;
 }
 
 .signin-button:hover {
   cursor: pointer;
-  color: #151515;
+  color: #abab9a;
 }
 
 .signup-button {
@@ -126,7 +126,7 @@ body{
 
 .signup-button:hover {
   cursor: pointer;
-  color: #151515;
+  color: #abab9a;
 }
 
 .about-button {
@@ -141,11 +141,11 @@ body{
 
 .about-button:hover {
   cursor: pointer;
-  color: #151515;
+  color: #abab9a;
 }
 
 .boxes {
-  color: #151515;
+  color: #3f3f3f;
 }
 
 .logout {
@@ -159,7 +159,7 @@ body{
 
 .logout:hover {
   cursor: pointer;
-  color: #151515;
+  color: #abab9a;
 }
 
 .username {
@@ -182,7 +182,7 @@ body{
 
 .connect-soundcloud:hover {
   cursor: pointer;
-  color: #151515;
+  color: #abab9a;
 }
 
 input:focus {
@@ -241,7 +241,7 @@ video {
   width: 80px;
   height: 80px;
   /*border-radius: 30px;*/
-  /*background-color: #151515;*/
+  /*background-color: #abab9a;*/
 }
 
 .emotion {

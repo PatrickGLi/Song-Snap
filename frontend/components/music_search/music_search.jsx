@@ -40,7 +40,7 @@ var MusicSearch = React.createClass({
             var response = "sorry, was your face in the frame?"
             break;
           case "neutral":
-            var response = "chill sounds and my usual vibe.";
+            var response = "your sounds for a chill mood.";
             $('body').css({
             background: "#595959",
             transition: "background 7s"
@@ -149,7 +149,7 @@ var MusicSearch = React.createClass({
     }
 
     return (
-      <div>  
+      <div>
         {loadSpinner}
         {emotion}
         {cam}
