@@ -24447,6 +24447,7 @@
 	    SessionStore = __webpack_require__(212),
 	    UserStore = __webpack_require__(235),
 	    TrackStore = __webpack_require__(237),
+	    LandingPageActions = __webpack_require__(259),
 	    Face = __webpack_require__(239);
 
 	var LandingPage = React.createClass({
@@ -24461,6 +24462,13 @@
 	  componentDidMount: function () {
 	    this.listener = SessionStore.addListener(this.onSessionChange);
 	    this.listener2 = UserStore.addListener(this.onUserChange);
+
+	    setTimeout(function () {
+	      $('.demo').css("bottom", "0px");
+	      setTimeout(function () {
+	        $('.guest-button').css("right", "20px");
+	      }, 5000);
+	    }, 3000);
 	  },
 
 	  componentWillUnmount: function () {
@@ -24484,6 +24492,14 @@
 	    }
 	  },
 
+	  signInAsGuest: function () {
+	    LandingPageActions.loginGuest();
+	  },
+
+	  showVideo: function () {
+	    this.setState({ video: true });
+	  },
+
 	  render: function () {
 	    var button;
 	    if (!this.state.user) {
@@ -24493,17 +24509,12 @@
 	        React.createElement(
 	          'div',
 	          { className: 'signup-button', 'data-toggle': 'modal', 'data-target': '#myModal' },
-	          'try me'
+	          'sign up'
 	        ),
 	        React.createElement(
 	          'div',
 	          { className: 'signin-button', 'data-toggle': 'modal', 'data-target': '#myModal2' },
 	          'sign back in'
-	        ),
-	        React.createElement(
-	          'a',
-	          { className: 'link', href: 'https://www.youtube.com/watch?v=kCJ1dsj0Jvc&feature=youtu.be' },
-	          'don\'t have a soundcloud account? watch a demo'
 	        )
 	      );
 	    } else {
@@ -24512,7 +24523,13 @@
 
 	    return React.createElement(
 	      'div',
-	      null,
+	      { className: 'landing-wrapper' },
+	      React.createElement(
+	        'div',
+	        { className: 'guest-button', onClick: this.signInAsGuest },
+	        'try our guest login'
+	      ),
+	      React.createElement('iframe', { className: 'demo', id: 'demo', width: '400', height: '300', allowfullscreen: 'allowfullscreen', src: 'https://www.youtube.com/embed/kCJ1dsj0Jvc' }),
 	      button
 	    );
 	  }
@@ -31674,6 +31691,25 @@
 	    });
 	  },
 
+	  createGuestSession: function () {
+	    $.ajax({
+	      url: 'api/session',
+	      type: 'POST',
+	      data: {
+	        user: { username: "guest123",
+	          password: "password"
+	        }
+	      },
+	      success: function (response) {
+	        SessionActions.receiveCurrentUser(response);
+	        if (!response.errors) {
+	          UserActions.receiveUser(response);
+	          cb();
+	        }
+	      }
+	    });
+	  },
+
 	  destroySession: function () {
 	    $.ajax({
 	      url: 'api/session',
@@ -32010,7 +32046,7 @@
 	              React.createElement(
 	                'p',
 	                null,
-	                'Hey, this is a test project by Patrick Li. Photograph yourself and get a track that matches your expression. You can try happy, sad, angry, disgusted, contemptful, surprised, and neutral faces. Click the camera button to take the photo, and have fun!'
+	                'Photograph yourself and get a track for your mood.'
 	              )
 	            )
 	          )
@@ -32771,6 +32807,20 @@
 	};
 
 	module.exports = MusicSearchActions;
+
+/***/ },
+/* 259 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var ApiUtil = __webpack_require__(241);
+
+	var LandingPageActions = {
+	  loginGuest: function () {
+	    ApiUtil.createGuestSession();
+	  }
+	};
+
+	module.exports = LandingPageActions;
 
 /***/ }
 /******/ ]);

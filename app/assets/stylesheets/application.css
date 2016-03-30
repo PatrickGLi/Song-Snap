@@ -73,6 +73,12 @@ body{
   text-align: center;
   margin: 0 auto;
 }
+.demo {
+  position: absolute;;
+  right: 0px;
+  bottom: -400px;
+  transition: bottom 1s;
+}
 
 .start-buttons {
   position: relative;
@@ -91,10 +97,22 @@ body{
   right: -100px;
 }
 
+.guest-button {
+  font-size: 30px;
+  position: absolute;
+  bottom: 305px;
+  right: -250px;
+  transition: transform 1s, color 1s, right 1s;
+}
+
+.guest-button:hover {
+  cursor: pointer;
+  color: #545454;
+}
+
 .signin-button:hover {
   cursor: pointer;
-  transform: perspective(50em) rotateY(40deg);
-  color: grey;
+  color: #545454;
 }
 
 .signup-button {
@@ -108,8 +126,7 @@ body{
 
 .signup-button:hover {
   cursor: pointer;
-  transform: perspective(50em) rotateY(40deg);
-  color: grey;
+  color: #545454;
 }
 
 .about-button {
@@ -119,17 +136,16 @@ body{
   left: 130px;
   top: 200px;
   font-size: 20px;
-  transition: transform 1.2s, color 1.2s;
+  transition: transform 1.2s, color 1s;
 }
 
 .about-button:hover {
   cursor: pointer;
-  transform: perspective(50em) rotateY(40deg);
-  color: grey;
+  color: #545454;
 }
 
 .boxes {
-  color: grey;
+  color: #545454;
 }
 
 .logout {
@@ -138,13 +154,12 @@ body{
   left: 20px;
   top: 10px;
   font-size: 35px;
-  transition: transform 1.2s, color 1.2s;
+  transition: transform 1.2s, color 1s;
 }
 
 .logout:hover {
   cursor: pointer;
-  transform: perspective(50em) rotateY(40deg);
-  color: grey;
+  color: #545454;
 }
 
 .username {
@@ -171,7 +186,7 @@ body{
   -webkit-animation: none;
   -moz-animation: none;
   animation: none;
-  color: grey;
+  color: #545454;
 }
 
 input:focus {
@@ -229,7 +244,7 @@ video {
   width: 80px;
   height: 80px;
   /*border-radius: 30px;*/
-  /*background-color: grey;*/
+  /*background-color: #545454;*/
 }
 
 .emotion {
@@ -290,20 +305,4 @@ video {
   display: inline-block;
   margin-top: 13px;
   margin-right: 20px;
-}
-
-a{
-  color: white;
-  position: absolute;
-  left: 100px;
-  top: 250px;
-  font-size: 30px;
-  transition: transform 1.2s, color 1.2s;
-}
-
-a:hover {
-  cursor: pointer;
-  transform: perspective(50em) rotateY(40deg);
-  color: grey;
-  text-decoration: none;
 }

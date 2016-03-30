@@ -80,7 +80,7 @@ var App = React.createClass({
                 <h4 className="modal-title" id="myModalLabel">about songsnap</h4>
               </div>
               <div className="modal-body">
-                <p>Hey, this is a test project by Patrick Li. Photograph yourself and get a track that matches your expression. You can try happy, sad, angry, disgusted, contemptful, surprised, and neutral faces. Click the camera button to take the photo, and have fun!</p>
+                <p>Photograph yourself and get a track for your mood.</p>
               </div>
             </div>
           </div>

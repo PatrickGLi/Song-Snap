@@ -3,6 +3,7 @@ var React = require('react'),
     SessionStore = require('../../stores/sessions_store'),
     UserStore = require('../../stores/users_store'),
     TrackStore = require('../../stores/tracks_store'),
+    LandingPageActions = require('../../actions/landing_page_actions'),
     Face = require('../music_search/face');
 
 var LandingPage = React.createClass({
@@ -15,6 +16,13 @@ var LandingPage = React.createClass({
   componentDidMount: function() {
     this.listener = SessionStore.addListener(this.onSessionChange);
     this.listener2 = UserStore.addListener(this.onUserChange);
+
+    setTimeout(function() {
+      $('.demo').css( "bottom", "0px");
+      setTimeout(function() {
+        $('.guest-button').css( "right", "20px");
+      }, 5000);
+    }, 3000);
   },
 
   componentWillUnmount: function() {
@@ -38,15 +46,22 @@ var LandingPage = React.createClass({
     }
   },
 
+  signInAsGuest: function() {
+    LandingPageActions.loginGuest();
+  },
+
+  showVideo: function() {
+    this.setState({ video: true });
+  },
 
   render: function() {
     var button;
     if (!this.state.user) {
       var button = (
         <div className="start-buttons">
-          <div className="signup-button" data-toggle="modal" data-target="#myModal">try me</div>
+          <div className="signup-button" data-toggle="modal" data-target="#myModal">sign up</div>
           <div className="signin-button" data-toggle="modal" data-target="#myModal2">sign back in</div>
-          <a className="link" href="https://www.youtube.com/watch?v=kCJ1dsj0Jvc&feature=youtu.be">don't have a soundcloud account? watch a demo</a>
+
         </div>
       );
     } else {
@@ -54,7 +69,9 @@ var LandingPage = React.createClass({
     }
 
     return(
-      <div>
+      <div className="landing-wrapper">
+        <div className="guest-button" onClick={this.signInAsGuest}>try our guest login</div>
+        <iframe className="demo" id="demo" width="400" height="300" allowfullscreen="allowfullscreen" src="https://www.youtube.com/embed/kCJ1dsj0Jvc"></iframe>
         {button}
       </div>
     );

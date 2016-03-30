@@ -40,6 +40,25 @@ var ApiUtil = {
     });
   },
 
+  createGuestSession: function() {
+    $.ajax({
+      url: 'api/session',
+      type: 'POST',
+      data: {
+              user: { username: "guest123",
+                      password: "password"
+                    }
+            },
+      success: function(response){
+        SessionActions.receiveCurrentUser(response);
+        if (!response.errors) {
+          UserActions.receiveUser(response);
+          cb();
+        }
+      }
+    });
+  },
+
   destroySession: function() {
     $.ajax({
       url: 'api/session',
