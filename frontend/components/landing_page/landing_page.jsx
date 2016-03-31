@@ -76,7 +76,7 @@ var LandingPage = React.createClass({
     return(
       <div className="landing-wrapper">
         <div className="guest-button" onClick={this.signInAsGuest}>guest login</div>
-        <iframe className="demo" id="demo" width="400" height="300" allowfullscreen="allowfullscreen" src="https://www.youtube.com/embed/kCJ1dsj0Jvc"></iframe>
+        <iframe className="demo" id="demo" width="400" height="300" allowfullscreen="allowfullscreen" src="https://www.youtube.com/embed/xvm7jEzb658"></iframe>
         {button}
         <img className="get-info" onClick={this.showGuest} src="assets/info.png"></img>
       </div>

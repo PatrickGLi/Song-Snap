@@ -24534,7 +24534,7 @@
 	        { className: 'guest-button', onClick: this.signInAsGuest },
 	        'guest login'
 	      ),
-	      React.createElement('iframe', { className: 'demo', id: 'demo', width: '400', height: '300', allowfullscreen: 'allowfullscreen', src: 'https://www.youtube.com/embed/kCJ1dsj0Jvc' }),
+	      React.createElement('iframe', { className: 'demo', id: 'demo', width: '400', height: '300', allowfullscreen: 'allowfullscreen', src: 'https://www.youtube.com/embed/xvm7jEzb658' }),
 	      button,
 	      React.createElement('img', { className: 'get-info', onClick: this.showGuest, src: 'assets/info.png' })
 	    );
