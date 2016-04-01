@@ -51,10 +51,6 @@ var ApiUtil = {
             },
       success: function(response){
         SessionActions.receiveCurrentUser(response);
-        if (!response.errors) {
-          UserActions.receiveUser(response);
-          cb();
-        }
       }
     });
   },
