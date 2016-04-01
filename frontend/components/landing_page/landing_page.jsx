@@ -51,8 +51,12 @@ var LandingPage = React.createClass({
     $('.get-info').css( "visibility", "hidden");
   },
 
+  goToMusic: function() {
+    this.props.history.pushState(null, "music");
+  },
+
   signInAsGuest: function() {
-    LandingPageActions.loginGuest();
+    LandingPageActions.loginGuest(this.goToMusic);
   },
 
   showVideo: function() {

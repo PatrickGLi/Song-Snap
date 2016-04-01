@@ -40,7 +40,7 @@ var ApiUtil = {
     });
   },
 
-  createGuestSession: function() {
+  createGuestSession: function(cb) {
     $.ajax({
       url: 'api/session',
       type: 'POST',
@@ -51,6 +51,10 @@ var ApiUtil = {
             },
       success: function(response){
         SessionActions.receiveCurrentUser(response);
+        if (!response.errors) {
+          UserActions.receiveUser(response);
+          cb();
+        }
       }
     });
   },

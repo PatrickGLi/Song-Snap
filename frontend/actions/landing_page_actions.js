@@ -1,8 +1,8 @@
 var ApiUtil = require('../utils/api_util');
 
 var LandingPageActions = {
-  loginGuest: function() {
-    ApiUtil.createGuestSession();
+  loginGuest: function(cb) {
+    ApiUtil.createGuestSession(cb);
   }
 };
 
