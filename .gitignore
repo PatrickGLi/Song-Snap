@@ -8,6 +8,7 @@
 /.bundle
 node_modules
 bundle.js
+.DS_Store
 
 # Ignore the default SQLite database.
 /db/*.sqlite3
