@@ -319,7 +319,7 @@ video {
 .photo-notice {
   font-size: 20px;
   position:absolute;
-  right: 442px;
+  left: 805px;
   top: 340px;
   transition: opacity .5s;
   -webkit-animation: pulse 3s ease infinite;
