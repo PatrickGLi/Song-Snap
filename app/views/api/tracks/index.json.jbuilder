@@ -8,4 +8,3 @@
 
 json.filtered_tracks @filtered_tracks
 json.embedded_track @embed_single_track
-json.me @me

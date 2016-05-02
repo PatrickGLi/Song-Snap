@@ -8,9 +8,11 @@ class CreateTracks < ActiveRecord::Migration
       t.string :width
       t.string :html, null: false
       t.integer :user_id, null: false
+      t.string :genre, null: false
+      t.string :tag_list, null: false
       t.timestamps null: false
     end
-    
-    add_index :songs, :user_id
+
+    add_index :tracks, :user_id
   end
 end
