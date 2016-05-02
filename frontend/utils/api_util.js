@@ -81,8 +81,6 @@ var ApiUtil = {
                // Request body
                data: blobData,
                success: function(data) {
-                 console.log("emotion acquired", data);
-
                  ApiActions.emotionReceived(data);
 
                  if (data.length > 0) {
