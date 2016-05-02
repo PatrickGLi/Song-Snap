@@ -1,6 +1,6 @@
-class CreateSongs < ActiveRecord::Migration
+class CreateTracks < ActiveRecord::Migration
   def change
-    create_table :songs do |t|
+    create_table :tracks do |t|
       t.string :title, null: false
       t.string :author_name, null: false
       t.text :description
@@ -10,7 +10,7 @@ class CreateSongs < ActiveRecord::Migration
       t.integer :user_id, null: false
       t.timestamps null: false
     end
-
+    
     add_index :songs, :user_id
   end
 end

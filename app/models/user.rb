@@ -5,7 +5,7 @@ class User < ActiveRecord::Base
   after_initialize :ensure_session_token
 
   attr_reader :password
-  has_many :songs
+  has_many :tracks
 
   def password=(password)
     @password = password
