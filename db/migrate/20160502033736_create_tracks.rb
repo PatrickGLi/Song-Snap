@@ -12,4 +12,4 @@ class CreateTracks < ActiveRecord::Migration
 
     add_index :tracks, :user_id
   end
-end
+ende
