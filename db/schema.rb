@@ -17,17 +17,14 @@ ActiveRecord::Schema.define(version: 20160502033736) do
   enable_extension "plpgsql"
 
   create_table "tracks", force: :cascade do |t|
-    t.string   "title",       null: false
-    t.string   "author_name", null: false
+    t.string   "title",         null: false
+    t.string   "permalink_url", null: false
     t.text     "description"
-    t.integer  "height"
-    t.string   "width"
-    t.string   "html",        null: false
-    t.integer  "user_id",     null: false
-    t.string   "genre",       null: false
-    t.string   "tag_list",    null: false
-    t.datetime "created_at",  null: false
-    t.datetime "updated_at",  null: false
+    t.integer  "user_id",       null: false
+    t.string   "genre",         null: false
+    t.string   "tag_list",      null: false
+    t.datetime "created_at",    null: false
+    t.datetime "updated_at",    null: false
   end
 
   add_index "tracks", ["user_id"], name: "index_tracks_on_user_id", using: :btree

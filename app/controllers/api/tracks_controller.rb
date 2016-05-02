@@ -23,6 +23,15 @@ class Api::TracksController < ApplicationController
         tracks.concat(playlist.tracks)
       end
 
+      tracks.each do |track|
+        Track.create({ title: track.title,
+                    permalink_url: track.permalink_url,
+                    description: track.description,
+                    user_id: current_user.id,
+                    genre: track.genre,
+                    tag_list: track.tag_list })
+      end
+
       filtered_tracks = filter_tracks(tracks, mood)
 
       unless filtered_tracks.nil? || filtered_tracks.empty?
@@ -33,7 +42,15 @@ class Api::TracksController < ApplicationController
 
       return [filtered_tracks, embed_single_track]
     else
-      filtered_tracks = filter_tracks(current_user.tracks)
+      filtered_tracks = filter_tracks(current_user.tracks, mood)
+
+      unless filtered_tracks.nil? || filtered_tracks.empty?
+        embed_single_track = current_user.soundcloud_client.get('/oembed', :url => filtered_tracks.sample.permalink_url, autoplay: true)
+      else
+        embed_single_track = -1
+      end
+
+      return [filtered_tracks, embed_single_track]
     end
   end
 
