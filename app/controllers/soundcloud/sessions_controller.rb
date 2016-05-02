@@ -18,12 +18,11 @@ class Soundcloud::SessionsController < ApplicationController
 
   private
   def soundcloud_connected_url
-    "https://song-snap.herokuapp.com/soundcloud/connected"
-    # "http://localhost:3000/soundcloud/connected"
+    # "https://song-snap.herokuapp.com/soundcloud/connected"
+    "http://localhost:3000/soundcloud/connected"
   end
 
   def soundcloud_client
-    return @soundcloud_client if @soundcloud_client
-    @soundcloud_client = User.soundcloud_client(:redirect_uri  => soundcloud_connected_url)
+    @soundcloud_client ||= User.soundcloud_client(:redirect_uri  => soundcloud_connected_url)
   end
 end
